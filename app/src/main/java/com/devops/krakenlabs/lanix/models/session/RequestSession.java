@@ -6,7 +6,7 @@ package com.devops.krakenlabs.lanix.models.session;
  */
 
 public class RequestSession {
-    private static String TAG = RequestSession.class.getSimpleName();
+    public static String TAG = RequestSession.class.getSimpleName();
     private String IdentificadorSesion;
     private String Modelo;
     private String IMEI;
