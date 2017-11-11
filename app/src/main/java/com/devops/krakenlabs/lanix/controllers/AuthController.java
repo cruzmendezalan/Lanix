@@ -3,6 +3,8 @@ package com.devops.krakenlabs.lanix.controllers;
 import android.content.Context;
 
 import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.models.session.RequestSession;
+import com.devops.krakenlabs.lanix.models.session.User;
 
 import java.util.ArrayList;
 
@@ -15,8 +17,7 @@ public class AuthController {
     private static final String TAG = AuthController.class.getSimpleName();
     private static AuthController authController;
     private Context context;
-    private String user;
-    private String id;
+    private User user;
 
     //Singleton
     public static synchronized AuthController getInstance(Context context){
@@ -36,6 +37,11 @@ public class AuthController {
             ArrayList<String> rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(user,pasword);
             if (rulesViolated == null){//
                 //hacer login
+                /**
+                 * una vez que el usuario y la contraseña pasan por validaciones locales
+                 * construimos el objeto que sera enviado al servicio
+                 */
+                RequestSession requestSession = new RequestSession();
                 NetworkController networkController = lanixApplication.getNetworkController();
                 return null;
             }

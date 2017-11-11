@@ -5,8 +5,8 @@ package com.devops.krakenlabs.lanix.models.session;
  * cruzmendezalan@gmail.com
  */
 
-public class Session {
-    public static String TAG = Session.class.getSimpleName();
+public class User {
+    public static String TAG = User.class.getSimpleName();
     private Promotor Promotor;
     private Error Error;
     private Sesion Sesion;
