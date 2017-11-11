@@ -9,6 +9,19 @@ import java.util.ArrayList;
  */
 
 public class MiddlewareController {
+    public static String TAG = MiddlewareController.class.getSimpleName();
+    private static MiddlewareController middlewareController;
+    //Singleton
+    public static synchronized MiddlewareController getInstance(){
+        if (middlewareController == null){
+            middlewareController = new MiddlewareController();
+        }
+        return middlewareController;
+    }
+
+    public MiddlewareController() {
+    }
+
     /**
      *
      * @param user
@@ -16,7 +29,7 @@ public class MiddlewareController {
      * @return null  si cumple con las reglas
      */
     public static ArrayList<String> validateCredentials(String user, String password){
-        // TODO: 11/11/17 agregar reglas de login 
+        // TODO: 11/11/17 agregar reglas de login
         return null;
     }
     private boolean isEmailValid(String email) {

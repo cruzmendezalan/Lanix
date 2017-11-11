@@ -1,8 +1,10 @@
 package com.devops.krakenlabs.lanix.base;
 
 import android.app.Application;
-import android.content.Context;
-import android.util.Log;
+
+import com.devops.krakenlabs.lanix.controllers.AuthController;
+import com.devops.krakenlabs.lanix.controllers.MiddlewareController;
+import com.devops.krakenlabs.lanix.controllers.NetworkController;
 
 /**
  * Created by Alan Giovani Cruz Méndez on 11/11/17 13:24.
@@ -13,7 +15,13 @@ public class LanixApplication extends Application {
     private static String TAG = LanixApplication.class.getSimpleName();
     private static LanixApplication lanixApplication;
 
-    public Context getInstance(){
+    //Controladores de aplicación
+    private AuthController authController;
+    private MiddlewareController middlewareController;
+    private NetworkController networkController;
+
+
+    public static LanixApplication getInstance(){
         if (lanixApplication == null){
             lanixApplication = new LanixApplication();
         }
@@ -23,8 +31,22 @@ public class LanixApplication extends Application {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "onCreate() called");
         super.onCreate();
-        lanixApplication = this;
+        lanixApplication     = this;
+        authController       = AuthController.getInstance(this);//Usuario
+        middlewareController = MiddlewareController.getInstance(); //reglas de negocio, validaciones
+        networkController    = NetworkController.getInstance(this); //Consumo de red
+    }
+
+    public AuthController getAuthController() {
+        return authController;
+    }
+
+    public MiddlewareController getMiddlewareController() {
+        return middlewareController;
+    }
+
+    public NetworkController getNetworkController() {
+        return networkController;
     }
 }
