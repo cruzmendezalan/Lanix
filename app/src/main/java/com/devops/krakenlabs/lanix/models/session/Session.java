@@ -7,63 +7,43 @@ package com.devops.krakenlabs.lanix.models.session;
 
 public class Session {
     public static String TAG = Session.class.getSimpleName();
-    private String TokenDispositivo;
-    private String VersionApp;
-    private String SesionValida;
-    private String ActualizarCatalogos;
-    private String RutaDeDescargaApp;
+    private Promotor Promotor;
     private Error Error;
+    private Sesion Sesion;
 
-    public String getTokenDispositivo (){
-        return TokenDispositivo;
+    public Promotor getPromotor ()
+    {
+        return Promotor;
     }
 
-    public void setTokenDispositivo (String TokenDispositivo){
-        this.TokenDispositivo = TokenDispositivo;
+    public void setPromotor (Promotor Promotor)
+    {
+        this.Promotor = Promotor;
     }
 
-    public String getVersionApp (){
-        return VersionApp;
-    }
-
-    public void setVersionApp (String VersionApp){
-        this.VersionApp = VersionApp;
-    }
-
-    public String getSesionValida (){
-        return SesionValida;
-    }
-
-    public void setSesionValida (String SesionValida){
-        this.SesionValida = SesionValida;
-    }
-
-    public String getActualizarCatalogos (){
-        return ActualizarCatalogos;
-    }
-
-    public void setActualizarCatalogos (String ActualizarCatalogos){
-        this.ActualizarCatalogos = ActualizarCatalogos;
-    }
-
-    public String getRutaDeDescargaApp (){
-        return RutaDeDescargaApp;
-    }
-
-    public void setRutaDeDescargaApp (String RutaDeDescargaApp){
-        this.RutaDeDescargaApp = RutaDeDescargaApp;
-    }
-
-    public Error getError (){
+    public Error getError ()
+    {
         return Error;
     }
 
-    public void setError (Error Error){
+    public void setError (Error Error)
+    {
         this.Error = Error;
     }
 
+    public Sesion getSesion ()
+    {
+        return Sesion;
+    }
+
+    public void setSesion (Sesion Sesion)
+    {
+        this.Sesion = Sesion;
+    }
+
     @Override
-    public String toString(){
-        return TAG+" [TokenDispositivo = "+TokenDispositivo+", VersionApp = "+VersionApp+", SesionValida = "+SesionValida+", ActualizarCatalogos = "+ActualizarCatalogos+", RutaDeDescargaApp = "+RutaDeDescargaApp+", Error = "+Error+"]";
+    public String toString()
+    {
+        return TAG+" [Promotor = "+Promotor+", Error = "+Error+", Sesion = "+Sesion+"]";
     }
 }

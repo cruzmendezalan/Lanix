@@ -7,90 +7,36 @@ package com.devops.krakenlabs.lanix.models.session;
 
 public class RequestSession {
     public static String TAG = RequestSession.class.getSimpleName();
-    private String IdentificadorSesion;
-    private String Modelo;
-    private String IMEI;
-    private String VersionApp;
-    private String IdentificadorDispositivo;
-    private String NumeroDeSerie;
-    private String Nombre;
-    private String VersionSO;
-    private String VersionCatalogos;
+    private String Usuario;
+    private String TokenDispositivo;
+    private String Contrasenia;
 
-    public String getIdentificadorSesion (){
-        return IdentificadorSesion;
+    public String getUsuario (){
+        return Usuario;
     }
 
-    public void setIdentificadorSesion (String IdentificadorSesion){
-        this.IdentificadorSesion = IdentificadorSesion;
+    public void setUsuario (String Usuario){
+        this.Usuario = Usuario;
     }
 
-    public String getModelo (){
-        return Modelo;
+    public String getTokenDispositivo (){
+        return TokenDispositivo;
     }
 
-    public void setModelo (String Modelo){
-        this.Modelo = Modelo;
+    public void setTokenDispositivo (String TokenDispositivo){
+        this.TokenDispositivo = TokenDispositivo;
     }
 
-    public String getIMEI (){
-        return IMEI;
+    public String getContrasenia (){
+        return Contrasenia;
     }
 
-    public void setIMEI (String IMEI){
-        this.IMEI = IMEI;
-    }
-
-    public String getVersionApp (){
-        return VersionApp;
-    }
-
-    public void setVersionApp (String VersionApp){
-        this.VersionApp = VersionApp;
-    }
-
-    public String getIdentificadorDispositivo (){
-        return IdentificadorDispositivo;
-    }
-
-    public void setIdentificadorDispositivo (String IdentificadorDispositivo){
-        this.IdentificadorDispositivo = IdentificadorDispositivo;
-    }
-
-    public String getNumeroDeSerie (){
-        return NumeroDeSerie;
-    }
-
-    public void setNumeroDeSerie (String NumeroDeSerie){
-        this.NumeroDeSerie = NumeroDeSerie;
-    }
-
-    public String getNombre (){
-        return Nombre;
-    }
-
-    public void setNombre (String Nombre){
-        this.Nombre = Nombre;
-    }
-
-    public String getVersionSO (){
-        return VersionSO;
-    }
-
-    public void setVersionSO (String VersionSO){
-        this.VersionSO = VersionSO;
-    }
-
-    public String getVersionCatalogos (){
-        return VersionCatalogos;
-    }
-
-    public void setVersionCatalogos (String VersionCatalogos){
-        this.VersionCatalogos = VersionCatalogos;
+    public void setContrasenia (String Contrasenia){
+        this.Contrasenia = Contrasenia;
     }
 
     @Override
     public String toString(){
-        return TAG+" [IdentificadorSesion = "+IdentificadorSesion+", Modelo = "+Modelo+", IMEI = "+IMEI+", VersionApp = "+VersionApp+", IdentificadorDispositivo = "+IdentificadorDispositivo+", NumeroDeSerie = "+NumeroDeSerie+", Nombre = "+Nombre+", VersionSO = "+VersionSO+", VersionCatalogos = "+VersionCatalogos+"]";
+        return TAG+" [Usuario = "+Usuario+", TokenDispositivo = "+TokenDispositivo+", Contrasenia = "+Contrasenia+"]";
     }
 }
