@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:text="V 0.5"
+        android:text="V 0.7"
         android:layout_alignParentRight="true"
         android:layout_marginRight="25dp"
         android:layout_centerVertical="true"
