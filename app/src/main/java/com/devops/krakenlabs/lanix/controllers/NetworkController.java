@@ -61,8 +61,7 @@ public class NetworkController {
     private Properties initProperties(){
         properties = new Properties();
         try {
-            inputStream = new FileInputStream("services.properties");
-            properties.load(inputStream);
+            properties.load(context.getAssets().open("services.properties"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -81,5 +80,10 @@ public class NetworkController {
 
     public RequestQueue getQueue() {
         return queue;
+    }
+
+    public String getServiceUrl(String service) {
+        String url = properties.getProperty("ProductionUrl"); //Lógica para url de desarrollo y producción aqui
+        return url + properties.getProperty(service);
     }
 }
