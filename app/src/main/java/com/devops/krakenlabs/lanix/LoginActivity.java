@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -286,6 +287,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Log.e(TAG, "sessionComplete() called");
         showProgress(false);
         hideKeyboard();
+        // TODO: 12/11/17 implementar si falló la sesion
+        Intent home = new Intent(this, HomeActivity.class);
+        startActivity(home);
     }
 
 
