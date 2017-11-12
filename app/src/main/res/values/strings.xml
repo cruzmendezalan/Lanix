@@ -12,4 +12,20 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."
     </string>
+
+    <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string>
+    <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
+    <string name="my_location_demo_label">My Location Demo</string>
+
+    <string name="pin_content_desc">PIN input field</string>
+    <string name="pin_label_text">PIN</string>
+
+    <string name="take_picture">Take picture</string>
+    <string name="msg_registro">Registra tus horarios de entrada y salida, así como tus horarios de omida.  Selecciona el botón correspondiente para realizar el registro.</string>
+    <string name="msg_hra_entrada">HORA DE ENTRADA</string>
+    <string name="msg_regreso_comida">REGRESO DE COMIDA</string>
+    <string name="hora_de_salida">HORA DE SALIDA</string>
+    <string name="goto_icon"><![CDATA[>]]></string>
+    <string name="salida_a_comer">SALIDA A COMER</string>
 </resources>
