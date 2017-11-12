@@ -37,12 +37,13 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/email"
+                    android:id="@+id/user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
+                    android:hint="@string/prompt_user"
+                    android:inputType="text"
                     android:maxLines="1"
+                    android:text="BE000002"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -60,6 +61,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
+                    android:text="Password01"
                     android:maxLines="1"
                     android:singleLine="true" />
 
