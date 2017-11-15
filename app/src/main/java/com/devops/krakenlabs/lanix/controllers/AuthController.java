@@ -1,12 +1,20 @@
 package com.devops.krakenlabs.lanix.controllers;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.devops.krakenlabs.lanix.LoginActivity;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.models.device.Device;
@@ -32,9 +40,11 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     private User user;
     private Device device;
 
+    private static int MY_PERMISSIONS_REQUEST_ACCESS_TELEPHONY_SERVICE;
+
     //Singleton
-    public static synchronized AuthController getInstance(Context context){
-        if (authController == null){
+    public static synchronized AuthController getInstance(Context context) {
+        if (authController == null) {
             authController = new AuthController(context);
         }
         return authController;
@@ -42,7 +52,6 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     public AuthController(Context context) {
         this.context = context;
-        syncDevice();
     }
 
     public SessionNotifier getSessionNotifier() {
@@ -53,46 +62,64 @@ public class AuthController implements Response.ErrorListener, Response.Listener
         this.sessionNotifier = sessionNotifier;
     }
 
-    public ArrayList<String> login(String username, String pasword){
+    public ArrayList<String> login(String username, String pasword) {
         Log.d(TAG, "login() called with: username = [" + username + "], pasword = [" + pasword + "]");
         try {
             LanixApplication lanixApplication = LanixApplication.getInstance();
-            ArrayList<String> rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(username,pasword);
-            if (rulesViolated == null && device != null){//
+            ArrayList<String> rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(username, pasword);
+            if (rulesViolated == null && device != null) {//
                 //hacer login
                 /**
                  * una vez que el usuario y la contraseña pasan por validaciones locales
                  * construimos el objeto que sera enviado al servicio
                  */
-                RequestSession requestSession = new RequestSession(username,device.getTokenDispositivo(), pasword);
+                RequestSession requestSession = new RequestSession(username, device.getTokenDispositivo(), pasword);
                 NetworkController networkController = lanixApplication.getNetworkController();
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-                                                                        networkController.getServiceUrl(User.TAG),
-                                                                        requestSession.toJson(),
-                                                                        this,
-                                                                        this);
+                        networkController.getServiceUrl(User.TAG),
+                        requestSession.toJson(),
+                        this,
+                        this);
                 networkController.getQueue().add(jsObjRequest);
                 return null;
             }
             return rulesViolated;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void syncDevice(){
+
+    public void syncDevice() {
         try {
+            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(TAG, "syncDevice: NO HAY PERMISOS" );
+                if (context instanceof LoginActivity){
+                    LoginActivity la = (LoginActivity) context;
+                    la.mayRequestDevice();
+                }else{
+                    Log.e(TAG, "syncDevice: NO ES INSTANCIA DE LOGIN" );
+                }
+                return;
+            }
+            String deviceid = manager.getDeviceId();
+
+            //Device Id is IMEI number
+
+            Log.d("msg", "Device id " + deviceid);
             DeviceRequest deviceRequest = new DeviceRequest("",
                     "SL-A50 mini",
-                    "352437061386981",
+                    manager.getDeviceId(),
                     "1.0.0",
-                    "db388a3951fecd2b",
-                    "0123456789ABCDEF",
+                    (user==null?"":user.getSesion().getIdentificador()),
+                    manager.getDeviceId(),
                     "SL-A50 mini",
-                    "4.4.2",
+                    manager.getDeviceSoftwareVersion(),
                     "1978-12-25"
                     );
+            Log.e(TAG, "syncDevice: "+deviceRequest.toJson().toString() );
             LanixApplication lanixApplication   = LanixApplication.getInstance();
             NetworkController networkController = lanixApplication.getNetworkController();
             JsonObjectRequest requestSyncDevice = new JsonObjectRequest(Request.Method.POST,
@@ -134,5 +161,9 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     public User getUser() {
         return user;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }
