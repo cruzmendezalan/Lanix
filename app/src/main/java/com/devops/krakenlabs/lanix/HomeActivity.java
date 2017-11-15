@@ -8,10 +8,20 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.controllers.GPSController;
+import com.devops.krakenlabs.lanix.controllers.NetworkController;
+import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,12 +30,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class HomeActivity extends FragmentActivity implements OnMapReadyCallback {
+public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, Response.Listener<JSONObject>,Response.ErrorListener {
     public static String TAG = HomeActivity.class.getSimpleName();
     private GoogleMap mapa;
     private ArrayList permissionsToRequest;
@@ -35,7 +49,15 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int ALL_PERMISSIONS_RESULT = 101;
     private GPSController GPSController;
     private boolean isPaused;
+    private double latitude;
+    private double longitude;
 
+    private CardView cardEntrada;
+    private CardView cardSalidaC;
+    private CardView cardRegresoC;
+    private CardView cardSalida;
+
+    private AuthController authController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +76,19 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             if (permissionsToRequest.size() > 0)
                 requestPermissions((String[]) permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
+        authController = LanixApplication.getInstance().getAuthController();
+
+        /**
+         * init ui
+         */
+        cardEntrada  = findViewById(R.id.cv_entrada);
+        cardSalidaC  = findViewById(R.id.cv_salida_comer);
+        cardRegresoC = findViewById(R.id.cv_regreso_comer);
+        cardSalida   = findViewById(R.id.cv_salida);
+        cardEntrada.setOnClickListener(this);
+        cardSalidaC  .setOnClickListener(this);
+        cardRegresoC .setOnClickListener(this);
+        cardSalida   .setOnClickListener(this);
     }
 
 
@@ -163,8 +198,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         if (mapa != null){
             GPSController = new GPSController(HomeActivity.this);
             if (GPSController.canGetLocation()) {
-                double longitude = GPSController.getLongitude();
-                double latitude = GPSController.getLatitude();
+                longitude = GPSController.getLongitude();
+                latitude  = GPSController.getLatitude();
                 LatLng latLng = new LatLng(latitude, longitude);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
                 mapa.clear();
@@ -187,5 +222,71 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
             }.start();
         }
+    }
+
+    private void eventoUsuario(String evento){
+        try{
+            if (latitude != 0 && longitude != 0){
+                Calendar c = Calendar.getInstance();
+                System.out.println("Current time => "+c.getTime());
+
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm");
+                String formattedDate = df.format(c.getTime());
+                Log.e(TAG, "eventoUsuario: "+formattedDate );
+                EventEntradaRequest eventEntradaRequest = new EventEntradaRequest(Double.toString(latitude),
+                        authController.getUser().getSesion().getIdentificador(),
+                        evento,
+                        "",
+                        Double.toString(longitude),
+                        formattedDate );
+                Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toJson().toString() );
+                NetworkController networkController = LanixApplication.getInstance().getNetworkController();
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
+                        networkController.getServiceUrl(eventEntradaRequest.TAG),
+                        eventEntradaRequest.toJson(),
+                        this,
+                        this);
+                networkController.getQueue().add(jsObjRequest);
+            }else{
+                Log.e(TAG, "eventoUsuario: AHORITA NO JOVEN");
+            }
+
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+            case R.id.cv_entrada:{
+                eventoUsuario("1");
+                break;
+            }
+            case R.id.cv_salida_comer:{
+                eventoUsuario("2");
+                break;
+            }
+            case R.id.cv_regreso_comer:{
+                eventoUsuario("3");
+                break;
+            }
+            case R.id.cv_salida:{
+                eventoUsuario("4");
+                break;
+            }
+            default:{
+                Log.e(TAG, "onClick: COCAS" );
+            }
+        }
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        Log.w(TAG, "onResponse() called with: response = [" + response + "]");
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
     }
 }

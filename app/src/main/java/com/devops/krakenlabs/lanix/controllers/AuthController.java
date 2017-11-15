@@ -131,4 +131,8 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             e.printStackTrace();
         }
     }
+
+    public User getUser() {
+        return user;
+    }
 }
