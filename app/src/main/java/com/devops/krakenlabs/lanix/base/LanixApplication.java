@@ -3,7 +3,6 @@ package com.devops.krakenlabs.lanix.base;
 import android.app.Application;
 
 import com.devops.krakenlabs.lanix.controllers.AuthController;
-import com.devops.krakenlabs.lanix.controllers.GPSController;
 import com.devops.krakenlabs.lanix.controllers.MiddlewareController;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
 
@@ -20,7 +19,6 @@ public class LanixApplication extends Application {
     private AuthController authController;
     private MiddlewareController middlewareController;
     private NetworkController networkController;
-    private GPSController gpsController;
 
 
     public static LanixApplication getInstance(){
@@ -38,7 +36,6 @@ public class LanixApplication extends Application {
         middlewareController = MiddlewareController.getInstance(); //reglas de negocio, validaciones
         networkController    = NetworkController.getInstance(this); //Consumo de red
         authController       = AuthController.getInstance(this);//Usuario
-        gpsController        = GPSController.getInstance(this);//GPS
 
     }
 
@@ -52,9 +49,5 @@ public class LanixApplication extends Application {
 
     public NetworkController getNetworkController() {
         return networkController;
-    }
-
-    public GPSController getGpsController() {
-        return gpsController;
     }
 }
