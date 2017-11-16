@@ -3,11 +3,13 @@ package com.devops.krakenlabs.lanix;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_PHONE_STATE;
 
 /**
  * A login screen that offers login via email/password.
@@ -51,6 +54,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int REQUEST_READ_PHONE_STATE = 1;
+
+    AuthController authController;
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -88,6 +94,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        authController = LanixApplication.getInstance().getAuthController();
+        authController.setContext(this);
+        authController.syncDevice();
     }
 
     private void populateAutoComplete() {
@@ -120,6 +129,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return false;
     }
 
+    public boolean mayRequestDevice(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            Log.e(TAG, "mayRequestDevice: return true;" );
+            return true;
+        }else{
+            requestPermissions(new String[]{READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+            Log.e(TAG, "mayRequestDevice: Build.VERSION.SDK_INT < Build.VERSION_CODES.M" );
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(READ_PHONE_STATE)) {
+                requestPermissions(new String[]{READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+            } else {
+                requestPermissions(new String[]{READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+            }
+        }
+        return false;
+    }
+
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -130,6 +162,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
             }
+        }
+        if (requestCode == REQUEST_READ_PHONE_STATE) {
+            authController.syncDevice();
         }
     }
 
@@ -168,7 +203,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
             hideKeyboard();
-            AuthController authController = LanixApplication.getInstance().getAuthController();
             authController.setSessionNotifier(this);
             ArrayList<String> localValidations = authController.login(email,password);
             if (localValidations == null){

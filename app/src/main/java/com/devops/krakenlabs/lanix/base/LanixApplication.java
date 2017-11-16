@@ -36,6 +36,7 @@ public class LanixApplication extends Application {
         middlewareController = MiddlewareController.getInstance(); //reglas de negocio, validaciones
         networkController    = NetworkController.getInstance(this); //Consumo de red
         authController       = AuthController.getInstance(this);//Usuario
+
     }
 
     public AuthController getAuthController() {
