@@ -110,12 +110,12 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
             Log.d("msg", "Device id " + deviceid);
             DeviceRequest deviceRequest = new DeviceRequest("",
-                    "SL-A50 mini",
+                    "",
                     manager.getDeviceId(),
-                    "1.0.0",
+                    "0.7.0",
                     (user==null?"":user.getSesion().getIdentificador()),
                     manager.getDeviceId(),
-                    "SL-A50 mini",
+                    "",
                     manager.getDeviceSoftwareVersion(),
                     "1978-12-25"
                     );
@@ -141,7 +141,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+        Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
     }
 
 
@@ -151,6 +151,9 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             Log.e(TAG, "onResponse() called with: response = [" + response + "]");
             Gson gson = new Gson();
             user = gson.fromJson(response.toString(), User.class);
+            if (user.getError().getNo() != 0){
+                user = null;
+            }
             if (sessionNotifier != null){
                 sessionNotifier.sessionComplete();
             }

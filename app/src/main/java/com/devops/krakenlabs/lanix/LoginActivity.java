@@ -186,11 +186,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         boolean cancel = false;
         View focusView = null;
-
+        Log.e(TAG, "attemptLogin: "+email+ "   "+password );
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+        if (!isPasswordValid(password)) {
+            mEmailView.setError(getString(R.string.error_invalid_password));
+            focusView = mEmailView;
             cancel = true;
         }
 
@@ -198,6 +198,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            return;
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -322,8 +323,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         showProgress(false);
         hideKeyboard();
         // TODO: 12/11/17 implementar si falló la sesion
-        Intent home = new Intent(this, HomeActivity.class);
-        startActivity(home);
+        if (authController.getUser() != null){
+            Intent home = new Intent(this, HomeActivity.class);
+            startActivity(home);
+        }else{
+            mEmailView.setError(getString(R.string.error_invalid_password));
+            mEmailView.requestFocus();
+        }
+
     }
 
 

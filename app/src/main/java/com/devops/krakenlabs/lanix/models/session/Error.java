@@ -7,13 +7,13 @@ package com.devops.krakenlabs.lanix.models.session;
 
 public class Error {
     public static String TAG = Error.class.getSimpleName();
-    private String No;
+    private int No;
 
-    public String getNo () {
+    public int getNo () {
         return No;
     }
 
-    public void setNo (String No) {
+    public void setNo (int No) {
         this.No = No;
     }
 

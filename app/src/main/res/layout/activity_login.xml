@@ -43,7 +43,6 @@
                     android:hint="@string/prompt_user"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:text="BE000002"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -61,7 +60,6 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
-                    android:text="Password01"
                     android:maxLines="1"
                     android:singleLine="true" />
 
