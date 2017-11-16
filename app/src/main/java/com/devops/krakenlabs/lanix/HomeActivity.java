@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,6 +23,7 @@ import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.controllers.GPSController;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
+import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -58,6 +61,16 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private CardView cardSalida;
 
     private AuthController authController;
+    private MaterialDialog notificacionDialog;
+
+    private String dateTime;
+    private String evento;
+    private String POSITIVE_MSG = "LISTO!";
+
+    private static String HORAENTRADA       = "1";
+    private static String HORASALIDA        = "4";
+    private static String HORASALIDACOMIDA  = "2";
+    private static String HORAENTRADACOMIDA = "3";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +98,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         cardSalidaC  = findViewById(R.id.cv_salida_comer);
         cardRegresoC = findViewById(R.id.cv_regreso_comer);
         cardSalida   = findViewById(R.id.cv_salida);
-        cardEntrada.setOnClickListener(this);
+        cardEntrada  .setOnClickListener(this);
         cardSalidaC  .setOnClickListener(this);
         cardRegresoC .setOnClickListener(this);
         cardSalida   .setOnClickListener(this);
@@ -170,7 +183,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GPSController.stopListener();
+        if (GPSController != null){
+            GPSController.stopListener();
+        }
         isPaused = true;
     }
 
@@ -227,18 +242,26 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private void eventoUsuario(String evento){
         try{
             if (latitude != 0 && longitude != 0){
+                showDialog("LANIX", "Enviando información", null);
                 Calendar c = Calendar.getInstance();
-                System.out.println("Current time => "+c.getTime());
-
+                if (evento.equals(HORAENTRADA)){
+                    evento = "Se a registrado tu hora de entrada a ";
+                }else if(evento.equals(HORAENTRADACOMIDA)){
+                    evento = "Se a registrado tu hora de entrada despues de comida a ";
+                }else if(evento.equals(HORASALIDACOMIDA)){
+                    evento = "Se a registrado tu hora de salida a comer a ";
+                }else if(evento.equals(HORASALIDA)){
+                    evento = "Se a registrado tu salida a ";
+                }
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm");
-                String formattedDate = df.format(c.getTime());
-                Log.e(TAG, "eventoUsuario: "+formattedDate );
+                String dateTime = df.format(c.getTime());
+                Log.e(TAG, "eventoUsuario: "+dateTime );
                 EventEntradaRequest eventEntradaRequest = new EventEntradaRequest(Double.toString(latitude),
                         authController.getUser().getSesion().getIdentificador(),
                         evento,
                         "",
                         Double.toString(longitude),
-                        formattedDate );
+                        dateTime );
                 Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toJson().toString() );
                 NetworkController networkController = LanixApplication.getInstance().getNetworkController();
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
@@ -259,19 +282,19 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         int id = view.getId();
         switch (id){
             case R.id.cv_entrada:{
-                eventoUsuario("1");
+                eventoUsuario(HORAENTRADA);
                 break;
             }
             case R.id.cv_salida_comer:{
-                eventoUsuario("2");
+                eventoUsuario(HORASALIDACOMIDA);
                 break;
             }
             case R.id.cv_regreso_comer:{
-                eventoUsuario("3");
+                eventoUsuario(HORAENTRADACOMIDA);
                 break;
             }
             case R.id.cv_salida:{
-                eventoUsuario("4");
+                eventoUsuario(HORASALIDACOMIDA);
                 break;
             }
             default:{
@@ -280,13 +303,42 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private void showDialog(String titulo, String contenido, String positive){
+        if (positive == null){
+            notificacionDialog = new MaterialDialog.Builder(this)
+                    .title(titulo)
+                    .content(contenido)
+                    .show();
+        }
+    }
+
+    private void dimissDialog(String titulo, String contenido, String positive){
+        notificacionDialog.dismiss();
+        notificacionDialog = new MaterialDialog.Builder(this)
+                .title(titulo)
+                .content(contenido)
+                .positiveText(positive)
+                .show();
+
+    }
     @Override
     public void onResponse(JSONObject response) {
+        Log.e(TAG, "onResponse: "+response );
+        Gson g = new Gson();
+        AsistenciaResponse asistenciaResponse = g.fromJson(response.toString(), AsistenciaResponse.class);
+        if (asistenciaResponse.getError().getNo() == 0){
+            dimissDialog("LANIX",evento+dateTime,POSITIVE_MSG);
+        }else{
+            dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
+            authController.syncDevice();
+        }
+
         Log.w(TAG, "onResponse() called with: response = [" + response + "]");
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
+        dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
     }
 }

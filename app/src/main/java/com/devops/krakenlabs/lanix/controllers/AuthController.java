@@ -148,7 +148,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     @Override //Respuesta de sesion
     public void onResponse(JSONObject response) {
         try{
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
             Gson gson = new Gson();
             user = gson.fromJson(response.toString(), User.class);
             if (sessionNotifier != null){
