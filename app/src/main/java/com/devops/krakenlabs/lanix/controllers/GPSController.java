@@ -33,8 +33,9 @@ public class GPSController extends Service implements LocationListener {
     double longitude;
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 100;
     protected LocationManager locationManager;
+
 
     public GPSController(Context mContext) {
         this.mContext = mContext;
@@ -78,13 +79,19 @@ public class GPSController extends Service implements LocationListener {
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+                        }else{
+                            Log.w(TAG, "getLocation: location manager dont have location" );
+//                            loc = locationManager.getLastKnownLocation()
                         }
+                    }else{
+                        Log.w(TAG, "getLocation: Location manager NULL" );
                     }
+                }else{
+                    Log.e(TAG, "getLocation: NO GPS Enabled get lat/long using GPS Services" );
                 }
             }
         } catch (Exception e) {
