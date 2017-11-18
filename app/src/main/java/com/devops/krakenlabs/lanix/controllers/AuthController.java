@@ -122,7 +122,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                     manager.getDeviceId(),
                     "",
                     manager.getDeviceSoftwareVersion(),
-                    "1978-12-25"
+                    ""
                     );
             Log.e(TAG, "syncDevice: "+deviceRequest.toJson().toString() );
             LanixApplication lanixApplication   = LanixApplication.getInstance();

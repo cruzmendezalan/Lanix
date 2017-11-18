@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -60,6 +61,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private CardView cardRegresoC;
     private CardView cardSalida;
 
+
     private AuthController authController;
     private MaterialDialog notificacionDialog;
 
@@ -71,6 +73,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private static String HORASALIDA        = "4";
     private static String HORASALIDACOMIDA  = "2";
     private static String HORAENTRADACOMIDA = "3";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,7 +212,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void refreshLocation(){
-        Log.e(TAG, "refreshLocation() called");
         if (mapa != null){
             GPSController = new GPSController(HomeActivity.this);
             if (GPSController.canGetLocation()) {
@@ -341,4 +343,5 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
         dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
     }
+
 }

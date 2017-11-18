@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.devops.krakenlabs.lanix.base.LanixApplication;
@@ -56,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
     private static final int REQUEST_READ_PHONE_STATE = 1;
 
-    AuthController authController;
+    private AuthController authController;
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -64,6 +66,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private Button mEmailSignInButton;
 
+    private LinearLayout llSplash;
+
+    private static Double TIME_SPLASH       = 3000.0; //MILISEGUNDOS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
-
+        llSplash           = findViewById(R.id.ll_splash);
         mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -324,6 +329,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         hideKeyboard();
         // TODO: 12/11/17 implementar si falló la sesion
         if (authController.getUser() != null){
+            llSplash.setVisibility(View.VISIBLE);
             Intent home = new Intent(this, HomeActivity.class);
             startActivity(home);
         }else{
@@ -342,6 +348,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideSplash(TIME_SPLASH);
+    }
+
+    private void hideSplash(final double milisecondsDisplayed){
+        try {
+            new CountDownTimer(5000, 1000) {
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    if (llSplash != null){
+                        llSplash.setVisibility(View.GONE);
+                    }else{
+                        hideSplash(milisecondsDisplayed);
+                    }
+                }
+
+            }.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
 
