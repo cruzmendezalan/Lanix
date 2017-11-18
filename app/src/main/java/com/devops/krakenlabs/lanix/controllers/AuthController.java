@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -80,6 +81,10 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                         requestSession.toJson(),
                         this,
                         this);
+                jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
+                        3000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 networkController.getQueue().add(jsObjRequest);
                 return null;
             }
@@ -142,6 +147,9 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
+        if (sessionNotifier != null){
+            sessionNotifier.sessionComplete();
+        }
     }
 
 
