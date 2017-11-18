@@ -253,7 +253,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 }else if(evento.equals(HORASALIDA)){
                     eventoString = "Se a registrado tu salida a ";
                 }
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm");
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 dateTime = df.format(c.getTime());
                 Log.e(TAG, "eventoUsuario: "+dateTime );
                 EventEntradaRequest eventEntradaRequest = new EventEntradaRequest(Double.toString(latitude),
