@@ -64,7 +64,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private MaterialDialog notificacionDialog;
 
     private String dateTime;
-    private String evento;
+    private String eventoString;
     private String POSITIVE_MSG = "LISTO!";
 
     private static String HORAENTRADA       = "1";
@@ -245,16 +245,16 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 showDialog("LANIX", "Enviando información", null);
                 Calendar c = Calendar.getInstance();
                 if (evento.equals(HORAENTRADA)){
-                    evento = "Se a registrado tu hora de entrada a ";
+                    eventoString = "Se a registrado tu hora de entrada a ";
                 }else if(evento.equals(HORAENTRADACOMIDA)){
-                    evento = "Se a registrado tu hora de entrada despues de comida a ";
+                    eventoString = "Se a registrado tu hora de entrada despues de comida a ";
                 }else if(evento.equals(HORASALIDACOMIDA)){
-                    evento = "Se a registrado tu hora de salida a comer a ";
+                    eventoString = "Se a registrado tu hora de salida a comer a ";
                 }else if(evento.equals(HORASALIDA)){
-                    evento = "Se a registrado tu salida a ";
+                    eventoString = "Se a registrado tu salida a ";
                 }
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm");
-                String dateTime = df.format(c.getTime());
+                dateTime = df.format(c.getTime());
                 Log.e(TAG, "eventoUsuario: "+dateTime );
                 EventEntradaRequest eventEntradaRequest = new EventEntradaRequest(Double.toString(latitude),
                         authController.getUser().getSesion().getIdentificador(),
@@ -327,7 +327,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         Gson g = new Gson();
         AsistenciaResponse asistenciaResponse = g.fromJson(response.toString(), AsistenciaResponse.class);
         if (asistenciaResponse.getError().getNo() == 0){
-            dimissDialog("LANIX",evento+dateTime,POSITIVE_MSG);
+            dimissDialog("LANIX",eventoString+dateTime,POSITIVE_MSG);
         }else{
             dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
             authController.syncDevice();
