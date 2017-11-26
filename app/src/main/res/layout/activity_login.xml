@@ -11,6 +11,7 @@
     android:foregroundGravity="center"
     tools:context="com.devops.krakenlabs.lanix.LoginActivity">
     <LinearLayout
+        android:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/ll_splash"
         android:layout_width="match_parent"
@@ -42,6 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@drawable/logo_lanix"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -51,7 +57,6 @@
                     android:id="@+id/user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="EO000015"
                     android:hint="@string/prompt_user"
                     android:inputType="text"
                     android:maxLines="1"
@@ -67,7 +72,6 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Password01"
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
