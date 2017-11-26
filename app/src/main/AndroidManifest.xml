@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/AppTheme"></activity>
 
         <service android:name=".controllers.GPSController" />
     </application>

@@ -22,7 +22,7 @@
     <string name="pin_label_text">PIN</string>
 
     <string name="take_picture">Take picture</string>
-    <string name="msg_registro">Registra tus horarios de entrada y salida, así como tus horarios de omida.  Selecciona el botón correspondiente para realizar el registro.</string>
+    <string name="msg_registro">Registra tus horarios de entrada y salida, así como tus horarios de comida. Selecciona el botón correspondiente para realizar el registro.</string>
     <string name="msg_hra_entrada">HORA DE ENTRADA</string>
     <string name="msg_regreso_comida">REGRESO DE COMIDA</string>
     <string name="hora_de_salida">HORA DE SALIDA</string>

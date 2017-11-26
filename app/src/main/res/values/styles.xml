@@ -12,6 +12,7 @@
         <item name="android:textColorHint">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/cardview_light_background</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@android:color/holo_orange_dark</item>
     </style>
 
     <!--<style name="Autocomplete">-->
