@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -74,6 +75,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private static String HORASALIDACOMIDA  = "2";
     private static String HORAENTRADACOMIDA = "3";
 
+    private TextView promotorName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +104,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         cardSalidaC  = findViewById(R.id.cv_salida_comer);
         cardRegresoC = findViewById(R.id.cv_regreso_comer);
         cardSalida   = findViewById(R.id.cv_salida);
+        promotorName = findViewById(R.id.tv_promotor_name);
+        promotorName.setText(authController.getUser().getPromotor().getNombres()+ " " +authController.getUser().getPromotor().getApellidoPaterno());
         cardEntrada  .setOnClickListener(this);
         cardSalidaC  .setOnClickListener(this);
         cardRegresoC .setOnClickListener(this);
