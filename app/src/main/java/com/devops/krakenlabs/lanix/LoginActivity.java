@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,6 +54,9 @@ import static android.Manifest.permission.READ_PHONE_STATE;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, SessionNotifier {
     public static String TAG = LoginActivity.class.getSimpleName();
+    private static final String SPF_NAME = "vidslogin"; //  <--- Account
+    private static final String USERNAME = "username";  //  <--- To save username
+    private static final String PASSWORD = "password";  //  <--- To save password
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -62,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private CheckBox cbRememberMe;
     private View mProgressView;
     private View mLoginFormView;
     private Button mEmailSignInButton;
@@ -98,10 +104,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mProgressView  = findViewById(R.id.login_progress);
+        cbRememberMe   = findViewById(R.id.rempasswordcheckbox);
         authController = LanixApplication.getInstance().getAuthController();
         authController.setContext(this);
         authController.syncDevice();
+
+        SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME,
+                Context.MODE_PRIVATE);
+        mEmailView.setText(loginPreferences.getString(USERNAME, ""));
+        mPasswordView.setText(loginPreferences.getString(PASSWORD, ""));
+        if (!loginPreferences.getString(USERNAME, "").equals("")){
+            cbRememberMe.setChecked(true);
+        }
     }
 
     private void populateAutoComplete() {
@@ -330,6 +345,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // TODO: 12/11/17 implementar si falló la sesion
         if (authController.getUser() != null){
             llSplash.setVisibility(View.VISIBLE);
+            if (cbRememberMe.isChecked()){
+                saveCredentials(mEmailView.getText().toString(), mPasswordView.getText().toString());
+            }else{
+                clearCredentials();
+            }
             Intent home = new Intent(this, HomeActivity.class);
             startActivity(home);
         }else{
@@ -339,6 +359,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    /**
+     * Save accounts
+     * @param user
+     * @param pw
+     */
+    private void saveCredentials(String user, String pw) {
+        SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
+        loginPreferences.edit().putString(USERNAME, user).putString(PASSWORD, pw).commit();
+    }
+
+    private void clearCredentials(){
+        SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
+        loginPreferences.edit().clear().commit();
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {

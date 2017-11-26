@@ -7,14 +7,22 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">#c5c5c5</item>
+        <item name="android:textColor">@color/colorAccent</item>
+
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="android:textColorHint">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/cardview_light_background</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@android:color/holo_orange_dark</item>
+        <item name="android:textColorSecondary">@color/lanix_gris_claro</item>
+        <item name="android:textColorPrimaryInverse">@color/lanix_gris_claro</item>
     </style>
 
+    <style name="LanixTextView" parent="android:Widget.TextView">
+        <item name="android:textColor">#F00</item>
+        <item name="android:textStyle">bold</item>
+    </style>
     <!--<style name="Autocomplete">-->
         <!--<item name="colorControlNormal">@color/colorPrimary</item>-->
         <!--<item name="colorControlActivated">@color/colorPrimary</item>-->

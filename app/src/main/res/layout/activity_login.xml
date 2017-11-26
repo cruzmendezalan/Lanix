@@ -7,7 +7,7 @@
     android:foregroundGravity="center"
     tools:context="com.devops.krakenlabs.lanix.LoginActivity">
     <LinearLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/ll_splash"
         android:gravity="center"
@@ -84,6 +84,16 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+            <CheckBox
+                android:layout_width="wrap_content" android:text="Recuerdame"
+                android:textColor="@color/colorAccent"
+                android:layout_height="wrap_content" android:id="@+id/rempasswordcheckbox" />
+            <TextView
+                android:layout_gravity="right"
+                android:id="@+id/TextView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¿Olvidaste tu contraseña?" />
 
             <Button
                 android:id="@+id/email_sign_in_button"
