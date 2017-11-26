@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8C8C8C</color>
-    <color name="colorPrimaryDark">#232323</color>
-    <color name="colorAccent">#FF8C01</color>
+    <color name="colorPrimary">#f39016</color>
+    <color name="colorAccent">#ffc14e</color>
+    <color name="colorPrimaryDark">#ba6200</color>
+    <color name="colorPrimaryText">#FFFFFF</color>
 
     <color name="black_overlay">#66000000</color>
-
     <color name="lanix_gris_oscuro">#232323</color>
     <color name="lanix_gris_claro">#8C8C8C</color>
     <color name="lanix_anaranjado">#FF8C01</color>

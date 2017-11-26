@@ -59,6 +59,11 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_user"
                     android:inputType="text"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableTint="@color/colorPrimary"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:foregroundTint="@color/colorPrimary"
                     android:maxLines="1"
                     android:singleLine="true" />
 
