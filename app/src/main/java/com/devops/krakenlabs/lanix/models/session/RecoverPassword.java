@@ -1,9 +1,6 @@
 package com.devops.krakenlabs.lanix.models.session;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
 
 /**

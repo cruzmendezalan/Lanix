@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
+import com.devops.krakenlabs.lanix.models.session.Contrasenia;
 import com.devops.krakenlabs.lanix.models.session.RecoverPassword;
 
 import org.json.JSONObject;
@@ -37,6 +38,7 @@ public class RecoverPwFragment extends DialogFragment implements Response.ErrorL
     private TextView tvCode;
     private TextView tvPw;
     private TextView tvPw2;
+    private Button btnChangePw;
 
     public RecoverPwFragment() {
         // Required empty public constructor
@@ -62,6 +64,7 @@ public class RecoverPwFragment extends DialogFragment implements Response.ErrorL
         tvCode      = rootView.findViewById(R.id.actv_code);
         tvPw        = rootView.findViewById(R.id.actv_pw);
         tvPw2       = rootView.findViewById(R.id.actv_pw2);
+        btnChangePw = rootView.findViewById(R.id.btn_send_new_pw);
         initUI();
 
         return rootView;
@@ -85,6 +88,23 @@ public class RecoverPwFragment extends DialogFragment implements Response.ErrorL
                 sendCode();
             }
         });
+        btnChangePw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendNewPW();
+            }
+        });
+    }
+
+    private void sendNewPW() {
+        Contrasenia contrasenia = new Contrasenia(tvPw.getText().toString(),tvPw2.getText().toString(),"",tvCode.getText().toString());
+        NetworkController networkController = LanixApplication.getInstance().getNetworkController();
+        JsonObjectRequest requestChangePw = new JsonObjectRequest(Request.Method.POST,
+                networkController.getServiceUrl(Contrasenia.TAG),
+                contrasenia.toJson(),
+                this,
+                this);
+        networkController.getQueue().add(requestChangePw);
     }
 
     private void sendCode() {
@@ -141,6 +161,7 @@ public class RecoverPwFragment extends DialogFragment implements Response.ErrorL
     @Override
     public void onResponse(JSONObject response) {
         Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+        this.dismiss();
     }
 
     public void hideSoftKeyboard() {
