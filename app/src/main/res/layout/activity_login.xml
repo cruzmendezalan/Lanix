@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content" android:id="@+id/rempasswordcheckbox" />
             <TextView
                 android:layout_gravity="right"
-                android:id="@+id/TextView03"
+                android:id="@+id/tv_change_pw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="¿Olvidaste tu contraseña?" />

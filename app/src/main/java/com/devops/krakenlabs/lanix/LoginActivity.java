@@ -12,6 +12,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -71,10 +72,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private Button mEmailSignInButton;
-
+    private TextView tvChangePw;
     private LinearLayout llSplash;
 
-    private static Double TIME_SPLASH       = 3000.0; //MILISEGUNDOS
+    private static Double TIME_SPLASH       = 1000.0; //MILISEGUNDOS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +111,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         authController.setContext(this);
         authController.syncDevice();
 
+        tvChangePw = findViewById(R.id.tv_change_pw);
+        tvChangePw.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initChangePassword();
+            }
+        });
         SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME,
                 Context.MODE_PRIVATE);
         mEmailView.setText(loginPreferences.getString(USERNAME, ""));
@@ -117,6 +125,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!loginPreferences.getString(USERNAME, "").equals("")){
             cbRememberMe.setChecked(true);
         }
+    }
+
+    private void initChangePassword() {
+        Log.d(TAG, "initChangePassword() called");
+        RecoverPwFragment recoverPwFragment = RecoverPwFragment.newInstance();
+        recoverPwFragment.show(getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
     }
 
     private void populateAutoComplete() {
@@ -201,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String email    = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
