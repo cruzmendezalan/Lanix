@@ -21,6 +21,8 @@
         <item name="android:textColorPrimary">@android:color/holo_orange_dark</item>
         <item name="android:textColorSecondary">@color/lanix_gris_claro</item>
         <item name="android:textColorPrimaryInverse">@color/lanix_gris_claro</item>
+        <item name="md_content_color">@color/colorPrimary</item>
+        <item name="md_title_color">@color/colorPrimary</item>
     </style>
 
     <style name="LanixTextView" parent="android:Widget.TextView">

@@ -311,6 +311,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void showDialog(String titulo, String contenido, String positive){
+        Log.d(TAG, "showDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
         if (positive == null){
             notificacionDialog = new MaterialDialog.Builder(this)
                     .title(titulo)
@@ -320,6 +321,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void dimissDialog(String titulo, String contenido, String positive){
+        Log.d(TAG, "dimissDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
         notificacionDialog.dismiss();
         notificacionDialog = new MaterialDialog.Builder(this)
                 .title(titulo)
