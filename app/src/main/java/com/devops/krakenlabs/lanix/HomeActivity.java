@@ -3,17 +3,17 @@ package com.devops.krakenlabs.lanix;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
@@ -26,6 +26,8 @@ import com.devops.krakenlabs.lanix.controllers.GPSController;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -44,7 +47,7 @@ import java.util.Calendar;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, Response.Listener<JSONObject>,Response.ErrorListener {
+public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
     public static String TAG = HomeActivity.class.getSimpleName();
     private GoogleMap mapa;
     private ArrayList permissionsToRequest;
@@ -70,17 +73,20 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private String eventoString;
     private String POSITIVE_MSG = "LISTO!";
 
-    private static String HORAENTRADA       = "1";
-    private static String HORASALIDA        = "4";
-    private static String HORASALIDACOMIDA  = "2";
+    private static String HORAENTRADA = "1";
+    private static String HORASALIDA = "4";
+    private static String HORASALIDACOMIDA = "2";
     private static String HORAENTRADACOMIDA = "3";
 
     private TextView promotorName;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location tLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.f_asistencia);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         isPaused = false;
@@ -100,16 +106,56 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         /**
          * init ui
          */
-        cardEntrada  = findViewById(R.id.cv_entrada);
-        cardSalidaC  = findViewById(R.id.cv_salida_comer);
+        cardEntrada = findViewById(R.id.cv_entrada);
+        cardSalidaC = findViewById(R.id.cv_salida_comer);
         cardRegresoC = findViewById(R.id.cv_regreso_comer);
-        cardSalida   = findViewById(R.id.cv_salida);
+        cardSalida = findViewById(R.id.cv_salida);
         promotorName = findViewById(R.id.tv_promotor_name);
-        promotorName.setText(authController.getUser().getPromotor().getNombres()+ " " +authController.getUser().getPromotor().getApellidoPaterno());
-        cardEntrada  .setOnClickListener(this);
-        cardSalidaC  .setOnClickListener(this);
-        cardRegresoC .setOnClickListener(this);
-        cardSalida   .setOnClickListener(this);
+        promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
+        cardEntrada.setOnClickListener(this);
+        cardSalidaC.setOnClickListener(this);
+        cardRegresoC.setOnClickListener(this);
+        cardSalida.setOnClickListener(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            return;
+        }
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        Log.d(TAG, "onSuccess() called with: location = [" + location + "]");
+                        if (location != null) {
+                            // Logic to handle location object
+                            refreshByServices(location);
+                        }
+                    }
+                });
+    }
+
+    private void refreshByServices(Location location) {
+        if (location != null){
+            tLocation = location;
+        }
+        if (mapa != null && tLocation != null){
+            longitude = tLocation.getLongitude();
+            latitude  = tLocation.getLatitude();
+            LatLng latLng = new LatLng(latitude, longitude);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+            mapa.clear();
+            mapa.addMarker(new MarkerOptions().position(latLng).title("Tú ubicación"));
+            mapa.animateCamera(cameraUpdate);
+        }else{
+            Log.e(TAG, "refreshByServices: Map null..." );
+        }
     }
 
 
@@ -214,12 +260,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
         mapa = googleMap;
+        refreshByServices(null);
     }
 
     private void refreshLocation(){
         if (mapa != null){
             GPSController = new GPSController(HomeActivity.this);
-            if (GPSController.canGetLocation()) {
+            if (GPSController.canGetLocation() && GPSController.getLoc() != null) {
                 longitude = GPSController.getLongitude();
                 latitude  = GPSController.getLatitude();
                 LatLng latLng = new LatLng(latitude, longitude);
@@ -229,7 +276,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 mapa.animateCamera(cameraUpdate);
 //                Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude), Toast.LENGTH_SHORT).show();
             } else {
-                GPSController.showSettingsAlert();
+//                GPSController.showSettingsAlert();
             }
         }
 

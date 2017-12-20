@@ -28,7 +28,7 @@ public class GPSController extends Service implements LocationListener {
     boolean checkGPS = false;
     boolean checkNetwork = false;
     boolean canGetLocation = false;
-    Location loc;
+    private Location loc;
     double latitude;
     double longitude;
 
@@ -43,7 +43,6 @@ public class GPSController extends Service implements LocationListener {
     }
 
     private Location getLocation() {
-
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -182,5 +181,9 @@ public class GPSController extends Service implements LocationListener {
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    public Location getLoc() {
+        return loc;
     }
 }
