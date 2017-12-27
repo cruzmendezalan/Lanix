@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lanix_gris_oscuro"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context="com.devops.krakenlabs.lanix.MenuFragment">
+    <LinearLayout
+        android:id="@+id/ll_profile"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:layout_weight="3">
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo_lanix"/>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"
+                android:layout_width="80dp"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_nombre"
+                    android:text="Nombre apellido"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_puesto"
+                    android:text="Puesto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_tel"
+                    android:text="Telefono 1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_cel"
+                    android:text="telefono 2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:layout_weight="7">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:weightSum="2"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            android:layout_weight="2">
+            <TextView
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:background="@color/lanix_gris_claro"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="08:00\nHora de entrada"
+                android:layout_height="match_parent" />
+            <TextView
+                android:layout_marginLeft="1px"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:background="@color/lanix_gris_claro"
+                android:text="17:00\nHora de salida"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_weight="8">
+            <Button
+                android:textColor="@color/white"
+                android:id="@+id/btn_ranking"
+                android:text="Ranking"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+            <Button
+                android:textColor="@color/white"
+                android:id="@+id/ventas"
+                android:text="Agregar Venta"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+            <Button
+                android:textColor="@color/white"
+                android:id="@+id/asistencia"
+                android:text="Asistencia"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+            <Button
+                android:textColor="@color/white"
+                android:id="@+id/consultas"
+                android:text="Consultar ventas"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
