@@ -117,7 +117,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         cardRegresoC = findViewById(R.id.cv_regreso_comer);
         cardSalida = findViewById(R.id.cv_salida);
         promotorName = findViewById(R.id.tv_promotor_name);
-        promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
+        try{
+            promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         cardEntrada.setOnClickListener(this);
         cardSalidaC.setOnClickListener(this);
         cardRegresoC.setOnClickListener(this);
