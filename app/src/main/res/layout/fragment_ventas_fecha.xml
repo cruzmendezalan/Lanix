@@ -1,0 +1,14 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.devops.krakenlabs.lanix.ventas.VentasFecha">
+    <com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        app:picker_cyclic="true"
+        app:picker_visibleItemCount="7"
+        />
+
+</FrameLayout>

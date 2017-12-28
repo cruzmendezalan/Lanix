@@ -146,10 +146,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
         frameLayout = findViewById(R.id.fl_container);
-//        setContentView(frameLayout, new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         frameLayout.setVisibility(View.VISIBLE);
-        Fragment newFragment = new MenuFragment();
+
+//        Fragment newFragment = new MenuFragment();
+        Fragment newFragment = new VentasFragment();
+
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fl_container, newFragment).commit();
     }
