@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.R;
+import com.devops.krakenlabs.lanix.adapters.ModelosAdapter;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
@@ -27,6 +30,7 @@ import org.json.JSONObject;
 public class VentasModelo extends Fragment implements Step, Response.ErrorListener {
     private static final String TAG = VentasModelo.class.getSimpleName();
     private View viewRoot;
+    private RecyclerView rvModelos;
     
     
     public VentasModelo() {
@@ -43,13 +47,20 @@ public class VentasModelo extends Fragment implements Step, Response.ErrorListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         viewRoot =  inflater.inflate(R.layout.fragment_ventas_modelo, container, false);
+        rvModelos = viewRoot.findViewById(R.id.rv_modelo);
         requestModels();
         return viewRoot;
     }
 
     private void initUI(String response) {
+        Log.d(TAG, "initUI() called with: response = [" + response + "]");
         Gson gson =  new Gson();
         Catalog catalog = gson.fromJson(response, Catalog.class);
+        Log.e(TAG, "initUI: "+catalog );
+        ModelosAdapter modelosAdapter = new ModelosAdapter(catalog);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvModelos.setLayoutManager(mLayoutManager);
+        rvModelos.setAdapter(modelosAdapter);
     }
 
     /**
