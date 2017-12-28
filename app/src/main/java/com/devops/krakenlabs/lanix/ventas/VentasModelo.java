@@ -2,14 +2,18 @@ package com.devops.krakenlabs.lanix.ventas;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.devops.krakenlabs.lanix.R;
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 
-public class VentasModelo extends Fragment {
+public class VentasModelo extends Fragment implements Step {
     public VentasModelo() {
         // Required empty public constructor
     }
@@ -37,4 +41,19 @@ public class VentasModelo extends Fragment {
         super.onDetach();
     }
 
+    @Nullable
+    @Override
+    public VerificationError verifyStep() {
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+
+    }
 }
