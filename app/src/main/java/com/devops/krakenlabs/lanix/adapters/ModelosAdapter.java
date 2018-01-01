@@ -35,6 +35,9 @@ public class ModelosAdapter extends RecyclerView.Adapter<ModelosHolder> {
 
     @Override
     public int getItemCount() {
-        return catalog.getModelos().size();
+        if (catalog != null){
+            return catalog.getModelos().size();
+        }
+        return 0;
     }
 }
