@@ -1,87 +1,146 @@
 package com.devops.krakenlabs.lanix.models.session;
 
-/**
- * Created by Alan Giovani Cruz Méndez on 11/11/17 17:44.
- * cruzmendezalan@gmail.com
- */
+import com.google.gson.annotations.SerializedName;
 
-public class Promotor {
-    public static String TAG = Promotor.class.getSimpleName();
-    private String TelefonoParticular;
-    private String HorarioSalida;
-    private String HorarioEntrada;
-    private String ApellidoPaterno;
-    private String Nombres;
-    private String CorreoElectronico;
-    private String ApellidoMaterno;
-    private String TelefonoCelular;
 
-    public String getTelefonoParticular (){
-        return TelefonoParticular;
-    }
+public class Promotor{
 
-    public void setTelefonoParticular (String TelefonoParticular){
-        this.TelefonoParticular = TelefonoParticular;
-    }
+	@SerializedName("ApellidoMaterno")
+	private String apellidoMaterno;
 
-    public String getHorarioSalida (){
-        return HorarioSalida;
-    }
+	@SerializedName("HorarioEntrada")
+	private String horarioEntrada;
 
-    public void setHorarioSalida (String HorarioSalida){
-        this.HorarioSalida = HorarioSalida;
-    }
+	@SerializedName("Nombres")
+	private String nombres;
 
-    public String getHorarioEntrada (){
-        return HorarioEntrada;
-    }
+	@SerializedName("ApellidoPaterno")
+	private String apellidoPaterno;
 
-    public void setHorarioEntrada (String HorarioEntrada){
-        this.HorarioEntrada = HorarioEntrada;
-    }
+	@SerializedName("Modulo")
+	private String modulo;
 
-    public String getApellidoPaterno (){
-        return ApellidoPaterno;
-    }
+	@SerializedName("CorreoElectronico")
+	private String correoElectronico;
 
-    public void setApellidoPaterno (String ApellidoPaterno){
-        this.ApellidoPaterno = ApellidoPaterno;
-    }
+	@SerializedName("Region")
+	private String region;
 
-    public String getNombres (){
-        return Nombres;
-    }
+	@SerializedName("HorarioSalida")
+	private String horarioSalida;
 
-    public void setNombres (String Nombres){
-        this.Nombres = Nombres;
-    }
+	@SerializedName("Carrier")
+	private String carrier;
 
-    public String getCorreoElectronico (){
-        return CorreoElectronico;
-    }
+	@SerializedName("Ciudad")
+	private String ciudad;
 
-    public void setCorreoElectronico (String CorreoElectronico){
-        this.CorreoElectronico = CorreoElectronico;
-    }
+	@SerializedName("TelefonoCelular")
+	private String telefonoCelular;
 
-    public String getApellidoMaterno (){
-        return ApellidoMaterno;
-    }
+	public void setApellidoMaterno(String apellidoMaterno){
+		this.apellidoMaterno = apellidoMaterno;
+	}
 
-    public void setApellidoMaterno (String ApellidoMaterno){
-        this.ApellidoMaterno = ApellidoMaterno;
-    }
+	public String getApellidoMaterno(){
+		return apellidoMaterno;
+	}
 
-    public String getTelefonoCelular (){
-        return TelefonoCelular;
-    }
+	public void setHorarioEntrada(String horarioEntrada){
+		this.horarioEntrada = horarioEntrada;
+	}
 
-    public void setTelefonoCelular (String TelefonoCelular){
-        this.TelefonoCelular = TelefonoCelular;
-    }
+	public String getHorarioEntrada(){
+		return horarioEntrada;
+	}
 
-    @Override
-    public String toString(){
-        return TAG+" [TelefonoParticular = "+TelefonoParticular+", HorarioSalida = "+HorarioSalida+", HorarioEntrada = "+HorarioEntrada+", ApellidoPaterno = "+ApellidoPaterno+", Nombres = "+Nombres+", CorreoElectronico = "+CorreoElectronico+", ApellidoMaterno = "+ApellidoMaterno+", TelefonoCelular = "+TelefonoCelular+"]";
-    }
+	public void setNombres(String nombres){
+		this.nombres = nombres;
+	}
+
+	public String getNombres(){
+		return nombres;
+	}
+
+	public void setApellidoPaterno(String apellidoPaterno){
+		this.apellidoPaterno = apellidoPaterno;
+	}
+
+	public String getApellidoPaterno(){
+		return apellidoPaterno;
+	}
+
+	public void setModulo(String modulo){
+		this.modulo = modulo;
+	}
+
+	public String getModulo(){
+		return modulo;
+	}
+
+	public void setCorreoElectronico(String correoElectronico){
+		this.correoElectronico = correoElectronico;
+	}
+
+	public String getCorreoElectronico(){
+		return correoElectronico;
+	}
+
+	public void setRegion(String region){
+		this.region = region;
+	}
+
+	public String getRegion(){
+		return region;
+	}
+
+	public void setHorarioSalida(String horarioSalida){
+		this.horarioSalida = horarioSalida;
+	}
+
+	public String getHorarioSalida(){
+		return horarioSalida;
+	}
+
+	public void setCarrier(String carrier){
+		this.carrier = carrier;
+	}
+
+	public String getCarrier(){
+		return carrier;
+	}
+
+	public void setCiudad(String ciudad){
+		this.ciudad = ciudad;
+	}
+
+	public String getCiudad(){
+		return ciudad;
+	}
+
+	public void setTelefonoCelular(String telefonoCelular){
+		this.telefonoCelular = telefonoCelular;
+	}
+
+	public String getTelefonoCelular(){
+		return telefonoCelular;
+	}
+
+	@Override
+ 	public String toString(){
+		return 
+			"Promotor{" + 
+			"apellidoMaterno = '" + apellidoMaterno + '\'' + 
+			",horarioEntrada = '" + horarioEntrada + '\'' + 
+			",nombres = '" + nombres + '\'' + 
+			",apellidoPaterno = '" + apellidoPaterno + '\'' + 
+			",modulo = '" + modulo + '\'' + 
+			",correoElectronico = '" + correoElectronico + '\'' + 
+			",region = '" + region + '\'' + 
+			",horarioSalida = '" + horarioSalida + '\'' + 
+			",carrier = '" + carrier + '\'' + 
+			",ciudad = '" + ciudad + '\'' + 
+			",telefonoCelular = '" + telefonoCelular + '\'' + 
+			"}";
+		}
 }
