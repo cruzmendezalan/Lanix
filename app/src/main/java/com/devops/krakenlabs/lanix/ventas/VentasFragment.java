@@ -2,8 +2,6 @@ package com.devops.krakenlabs.lanix.ventas;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,18 +20,16 @@ import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.google.gson.Gson;
-import com.stepstone.stepper.Step;
-import com.stepstone.stepper.VerificationError;
 
 import org.json.JSONObject;
 
-public class VentasModelo extends Fragment implements Step, Response.ErrorListener {
-    private static final String TAG = VentasModelo.class.getSimpleName();
+public class VentasFragment extends Fragment implements Response.ErrorListener {
+    private static final String TAG = VentasFragment.class.getSimpleName();
     private View viewRoot;
     private RecyclerView rvModelos;
     
     
-    public VentasModelo() {
+    public VentasFragment() {
         // Required empty public constructor
     }
 
@@ -46,7 +42,7 @@ public class VentasModelo extends Fragment implements Step, Response.ErrorListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        viewRoot =  inflater.inflate(R.layout.fragment_ventas_modelo, container, false);
+        viewRoot =  inflater.inflate(R.layout.fragment_ventas, container, false);
         rvModelos = viewRoot.findViewById(R.id.rv_modelo);
         requestModels();
         return viewRoot;
@@ -93,21 +89,6 @@ public class VentasModelo extends Fragment implements Step, Response.ErrorListen
         super.onDetach();
     }
 
-    @Nullable
-    @Override
-    public VerificationError verifyStep() {
-        return null;
-    }
-
-    @Override
-    public void onSelected() {
-        Log.d(TAG, "onSelected() called");
-    }
-
-    @Override
-    public void onError(@NonNull VerificationError error) {
-        Log.d(TAG, "onError() called with: error = [" + error + "]");
-    }
 
     private void discoverModels(){
         Log.d(TAG, "discoverModels() called");

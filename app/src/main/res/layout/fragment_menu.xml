@@ -78,7 +78,6 @@
             <TextView
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:background="@color/lanix_gris_claro"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="08:00\nHora de entrada"
@@ -87,7 +86,6 @@
                 android:layout_marginLeft="1px"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:background="@color/lanix_gris_claro"
                 android:text="17:00\nHora de salida"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -108,19 +106,19 @@
                 android:layout_height="60dp" />
             <Button
                 android:textColor="@color/white"
-                android:id="@+id/ventas"
+                android:id="@+id/btn_ventas"
                 android:text="Agregar Venta"
                 android:layout_width="match_parent"
                 android:layout_height="60dp" />
             <Button
                 android:textColor="@color/white"
-                android:id="@+id/asistencia"
+                android:id="@+id/btn_asistencia"
                 android:text="Asistencia"
                 android:layout_width="match_parent"
                 android:layout_height="60dp" />
             <Button
                 android:textColor="@color/white"
-                android:id="@+id/consultas"
+                android:id="@+id/btn_consultas"
                 android:text="Consultar ventas"
                 android:layout_width="match_parent"
                 android:layout_height="60dp" />

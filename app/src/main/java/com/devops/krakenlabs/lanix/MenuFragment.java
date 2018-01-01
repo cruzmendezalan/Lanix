@@ -1,15 +1,25 @@
 package com.devops.krakenlabs.lanix;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
+    import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.devops.krakenlabs.lanix.ventas.VentasFragment;
 
 
-public class MenuFragment extends Fragment {
+public class MenuFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = MenuFragment.class.getSimpleName();
+    private View viewRoot;
+    private Button btnVentas;
+    private Button btnAsistencia;
+    private Button btnConsultas;
+
+
     public MenuFragment() {
         // Required empty public constructor
     }
@@ -28,7 +38,15 @@ public class MenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu, container, false);
+        viewRoot      = inflater.inflate(R.layout.fragment_menu, container, false);
+        btnVentas     = viewRoot.findViewById(R.id.btn_ventas);
+        btnAsistencia = viewRoot.findViewById(R.id.btn_asistencia);
+        btnConsultas  = viewRoot.findViewById(R.id.btn_consultas);
+
+        btnVentas.setOnClickListener(this);
+        btnAsistencia.setOnClickListener(this);
+        btnConsultas.setOnClickListener(this);
+        return viewRoot;
     }
 
     @Override
@@ -41,4 +59,31 @@ public class MenuFragment extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view instanceof Button){
+            switch (view.getId()){
+                case R.id.btn_ventas:{
+                    switchFragment(new VentasFragment());
+                    break;
+                }
+
+                case R.id.btn_asistencia:{
+                    HomeActivity ho = (HomeActivity) getActivity();
+                    ho.hideFragmentContainer();
+                    break;
+                }
+
+                case R.id.btn_consultas:{
+                    break;
+                }
+            }
+        }
+    }
+
+    private void switchFragment(Fragment fragment){
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        FragmentTransaction ft = homeActivity.getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fl_container, fragment).commit();
+    }
 }

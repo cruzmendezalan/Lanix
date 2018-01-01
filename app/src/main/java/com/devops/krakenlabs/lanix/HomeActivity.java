@@ -87,6 +87,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private Location tLocation;
 
     private FrameLayout frameLayout;
+    private LinearLayout llAsistencia;
+
+    private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,12 +155,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         frameLayout = findViewById(R.id.fl_container);
         frameLayout.setVisibility(View.VISIBLE);
 
-//        Fragment newFragment = new MenuFragment();
-        Fragment newFragment = new VentasFragment();
+        llAsistencia = findViewById(R.id.ll_asistencia);
 
-
+        activeFragment = new MenuFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fl_container, newFragment).commit();
+        ft.add(R.id.fl_container, activeFragment).commit();
     }
 
     private void refreshByServices(Location location) {
@@ -412,9 +414,27 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed() called");
+        if (activeFragment != null ){
+            activeFragment = new MenuFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.fl_container, activeFragment).commit();
+            llAsistencia.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.VISIBLE);
+        }
+//        super.onBackPressed();
+    }
+
+    @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
         dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
     }
 
+    public void hideFragmentContainer(){
+        Log.d(TAG, "hideFragmentContainer() called");
+        frameLayout.setVisibility(View.GONE);
+        llAsistencia.setVisibility(View.VISIBLE);
+    }
 }
