@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.ventas.VentasFragment;
 
 
@@ -18,6 +21,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private Button btnVentas;
     private Button btnAsistencia;
     private Button btnConsultas;
+    private TextView tvNombre;
 
 
     public MenuFragment() {
@@ -42,11 +46,24 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnVentas     = viewRoot.findViewById(R.id.btn_ventas);
         btnAsistencia = viewRoot.findViewById(R.id.btn_asistencia);
         btnConsultas  = viewRoot.findViewById(R.id.btn_consultas);
+        tvNombre      = viewRoot.findViewById(R.id.tv_nombre);
 
+        fillUI();
         btnVentas.setOnClickListener(this);
         btnAsistencia.setOnClickListener(this);
         btnConsultas.setOnClickListener(this);
         return viewRoot;
+    }
+
+    /**
+     *
+     */
+    private void fillUI() {
+        try{
+            tvNombre.setText(LanixApplication.getInstance().getAuthController().getUser().getPromotor().getNombres());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

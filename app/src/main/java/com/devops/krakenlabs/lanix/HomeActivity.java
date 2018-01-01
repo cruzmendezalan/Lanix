@@ -419,7 +419,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         if (activeFragment != null ){
             activeFragment = new MenuFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.fl_container, activeFragment).commit();
+            ft.replace(R.id.fl_container, activeFragment).commit();
             llAsistencia.setVisibility(View.GONE);
             frameLayout.setVisibility(View.VISIBLE);
         }
