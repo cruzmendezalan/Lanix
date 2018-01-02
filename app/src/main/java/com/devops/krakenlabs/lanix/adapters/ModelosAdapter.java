@@ -13,7 +13,7 @@ import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
  * cruzmendezalan@gmail.com
  */
 
-public class ModelosAdapter extends RecyclerView.Adapter<ModelosHolder> {
+public class ModelosAdapter extends RecyclerView.Adapter<ModelosHolder> implements TelefonoSelected{
     private static final String TAG = ModelosAdapter.class.getSimpleName();
     private Catalog catalog;
     private View rootView;
@@ -25,12 +25,12 @@ public class ModelosAdapter extends RecyclerView.Adapter<ModelosHolder> {
     @Override
     public ModelosHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.i_modelo,parent,false);
-        return new ModelosHolder(rootView);
+        return new ModelosHolder(rootView, this);
     }
 
     @Override
     public void onBindViewHolder(ModelosHolder model, int position) {
-        model.setUI(catalog.getModelos().get(position).getModelo());
+        model.setUI(catalog.getModelos().get(position).getModelo(), position);
     }
 
     @Override
@@ -39,5 +39,14 @@ public class ModelosAdapter extends RecyclerView.Adapter<ModelosHolder> {
             return catalog.getModelos().size();
         }
         return 0;
+    }
+
+    @Override
+    public void positionSelected(int position, Boolean selected) {
+        catalog.getModelos().get(position).setSelected(selected);
+    }
+
+    public Catalog getCatalog() {
+        return catalog;
     }
 }

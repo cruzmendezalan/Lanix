@@ -1,45 +1,79 @@
 package com.devops.krakenlabs.lanix.models.venta;
 
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-public class VentaRequest{
+import org.json.JSONObject;
 
-	@SerializedName("NombresCliente")
+public class VentaRequest{
+    private static final String TAG = VentaRequest.class.getSimpleName();
+
 	private String nombresCliente;
 
-	@SerializedName("TelefonoParticular")
+
 	private String telefonoParticular;
 
-	@SerializedName("Productos")
+
 	private List<ProductosItem> productos;
 
-	@SerializedName("Fecha")
+
 	private String fecha;
 
-	@SerializedName("ApellidoPaternoCliente")
+
 	private String apellidoPaternoCliente;
 
-	@SerializedName("CorreoElectronico")
+
 	private String correoElectronico;
 
-	@SerializedName("ImagenTicket")
+
 	private String imagenTicket;
 
-	@SerializedName("IdentificadorLocal")
+
 	private String identificadorLocal;
 
-	@SerializedName("NumeroTicket")
+
 	private String numeroTicket;
 
-	@SerializedName("ApellidoMaternoCliente")
+
 	private String apellidoMaternoCliente;
 
-	@SerializedName("IdentificadorSesion")
+
 	private String identificadorSesion;
 
-	@SerializedName("TelefonoCelular")
+
 	private String telefonoCelular;
+
+
+	public VentaRequest(String nombresCliente, String telefonoParticular, List<ProductosItem> productos,
+						String fecha, String apellidoPaternoCliente, String correoElectronico,
+						String imagenTicket, String identificadorLocal, String numeroTicket,
+						String apellidoMaternoCliente, String identificadorSesion, String telefonoCelular) {
+		this.nombresCliente = nombresCliente;
+		this.telefonoParticular = telefonoParticular;
+		this.productos = productos;
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        c.setTime(new Date(fecha));
+		this.fecha = df.format(c.getTime());
+//		this.fecha = this.fecha.replace("/", "\\/");
+        Log.e(TAG, "VentaRequest: "+this.fecha );
+        this.apellidoPaternoCliente = apellidoPaternoCliente;
+		this.correoElectronico = correoElectronico;
+		this.imagenTicket = imagenTicket;
+		this.identificadorLocal = identificadorLocal;
+		this.numeroTicket = numeroTicket;
+		this.apellidoMaternoCliente = apellidoMaternoCliente;
+		this.identificadorSesion = identificadorSesion;
+		this.telefonoCelular = telefonoCelular;
+	}
 
 	public void setNombresCliente(String nombresCliente){
 		this.nombresCliente = nombresCliente;
@@ -155,4 +189,18 @@ public class VentaRequest{
 			",telefonoCelular = '" + telefonoCelular + '\'' + 
 			"}";
 		}
+
+    public JSONObject toJson(){
+        JSONObject jsonObject = null;
+        String jsonString = "";
+        try {
+            Gson gson  = new Gson();
+            jsonString = gson.toJson(this);
+            jsonObject = new JSONObject(jsonString);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Log.e(TAG, "toJson: "+jsonString );
+        return jsonObject;
+    }
 }

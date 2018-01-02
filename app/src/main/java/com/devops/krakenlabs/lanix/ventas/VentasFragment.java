@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -23,9 +24,14 @@ import com.devops.krakenlabs.lanix.adapters.ModelosAdapter;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
+import com.devops.krakenlabs.lanix.models.catalogos.ModelosItem;
+import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
+import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class VentasFragment extends Fragment implements Response.ErrorListener, DatePickerDialog.OnDateSetListener  {
     private static final String TAG = VentasFragment.class.getSimpleName();
@@ -34,6 +40,8 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
     private EditText etFecha;
     private EditText etImei;
     private EditText etLccid;
+    private ModelosAdapter modelosAdapter;
+    private Button btnVenta;
 
     public VentasFragment() {
         // Required empty public constructor
@@ -50,11 +58,22 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         // Inflate the layout for this fragment
         viewRoot =  inflater.inflate(R.layout.fragment_ventas, container, false);
         rvModelos = viewRoot.findViewById(R.id.rv_modelo);
-        etFecha = viewRoot.findViewById(R.id.et_fecha);
+        etFecha  = viewRoot.findViewById(R.id.et_fecha);
+        etImei   = viewRoot.findViewById(R.id.et_imei);
+        etLccid  = viewRoot.findViewById(R.id.et_lccid);
+        btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
         etFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDatePickerDialog();
+            }
+        });
+        btnVenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etFecha.length() > 3 && etImei.length() > 3 && etLccid.length() > 3 ){
+                    enviarVenta();
+                }
             }
         });
         requestModels();
@@ -66,7 +85,7 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         Gson gson =  new Gson();
         Catalog catalog = gson.fromJson(response, Catalog.class);
         Log.e(TAG, "initUI: "+catalog );
-        ModelosAdapter modelosAdapter = new ModelosAdapter(catalog);
+        modelosAdapter = new ModelosAdapter(catalog);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rvModelos.setLayoutManager(mLayoutManager);
         rvModelos.setAdapter(modelosAdapter);
@@ -121,7 +140,38 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        final String selectedDate = day + " / " + (month+1) + " / " + year;
+        final String selectedDate = day + "/" + (month+1) + "/" + year;
         etFecha.setText(selectedDate);
+    }
+
+    private void enviarVenta(){
+        Log.d(TAG, "enviarVenta() called");
+        ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
+        for (ModelosItem mo:
+             modelosAdapter.getCatalog().getModelos()) {
+            if (mo.getSelected()){//El producto fue seleccionado
+                ventaArr.add(new ProductosItem("",mo.getModeloId(),mo.getModeloId(),
+                        mo.getModelo(),"","", 999,""));
+            }
+        }
+        if (ventaArr.size() > 0){
+            VentaRequest ventaRequest = new VentaRequest("cliente", "1231123123",
+                    ventaArr,etFecha.getText().toString(),"sdsasasda","",
+                    "","", "", "sdfadfasfa",
+                    LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "asdasda" );
+            LanixApplication lanixApplication   = LanixApplication.getInstance();
+            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
+                    lanixApplication.getNetworkController().getServiceUrl(VentaRequest.class.getSimpleName()),
+                    ventaRequest.toJson(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                        }
+                    },this);
+            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+        }else{
+            Log.e(TAG, "enviarVenta: NO SE REALIZO VENTA" );
+        }
     }
 }

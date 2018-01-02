@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class Catalog{
-
 	@SerializedName("Productos")
 	private List<ProductosItem> productos;
 

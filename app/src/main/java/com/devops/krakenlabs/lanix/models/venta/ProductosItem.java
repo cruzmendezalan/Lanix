@@ -28,7 +28,18 @@ public class ProductosItem{
 	@SerializedName("Imei")
 	private String imei;
 
-	public void setNumeroAsignado(String numeroAsignado){
+    public ProductosItem(String numeroAsignado, long modeloId, long productoId, String modelo, String color, String iccid, int productoVentaId, String imei) {
+        this.numeroAsignado = numeroAsignado;
+        this.modeloId = modeloId;
+        this.productoId = productoId;
+        this.modelo = modelo;
+        this.color = color;
+        this.iccid = iccid;
+        this.productoVentaId = productoVentaId;
+        this.imei = imei;
+    }
+
+    public void setNumeroAsignado(String numeroAsignado){
 		this.numeroAsignado = numeroAsignado;
 	}
 
