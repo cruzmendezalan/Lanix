@@ -4,6 +4,7 @@ import android.content.Context;
     import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.devops.krakenlabs.lanix.ventas.VentasFragment;
 public class MenuFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = MenuFragment.class.getSimpleName();
     private View viewRoot;
+    private Button btnProfile;
     private Button btnVentas;
     private Button btnAsistencia;
     private Button btnConsultas;
@@ -45,13 +47,16 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         viewRoot      = inflater.inflate(R.layout.fragment_menu, container, false);
         btnVentas     = viewRoot.findViewById(R.id.btn_ventas);
         btnAsistencia = viewRoot.findViewById(R.id.btn_asistencia);
+        btnProfile    = viewRoot.findViewById(R.id.btn_perfil);
         btnConsultas  = viewRoot.findViewById(R.id.btn_consultas);
         tvNombre      = viewRoot.findViewById(R.id.tv_nombre);
+
 
         fillUI();
         btnVentas.setOnClickListener(this);
         btnAsistencia.setOnClickListener(this);
         btnConsultas.setOnClickListener(this);
+        btnProfile.setOnClickListener(this);
         return viewRoot;
     }
 
@@ -94,8 +99,19 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 case R.id.btn_consultas:{
                     break;
                 }
+
+                case R.id.btn_perfil:{
+                    initProfile();
+                    break;
+                }
             }
         }
+    }
+
+    private void initProfile() {
+        Log.d(TAG, "initChangePassword() called");
+        ProfileFragment recoverPwFragment = new ProfileFragment();
+        recoverPwFragment.show(getActivity().getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
     }
 
     private void switchFragment(Fragment fragment){
