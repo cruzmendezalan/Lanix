@@ -3,6 +3,8 @@ package com.devops.krakenlabs.lanix.ventas;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,12 +31,14 @@ import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
 import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
 import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.google.gson.Gson;
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class VentasFragment extends Fragment implements Response.ErrorListener, DatePickerDialog.OnDateSetListener  {
+public class VentasFragment extends Fragment implements Response.ErrorListener, DatePickerDialog.OnDateSetListener, Step {
     private static final String TAG = VentasFragment.class.getSimpleName();
     private View viewRoot;
     private RecyclerView rvModelos;
@@ -99,7 +103,8 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         LanixApplication lanixApplication   = LanixApplication.getInstance();
         CatalogRequest catalogRequest = new CatalogRequest();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
+                (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+
+                        lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
                 catalogRequest.toJson(),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -173,5 +178,22 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         }else{
             Log.e(TAG, "enviarVenta: NO SE REALIZO VENTA" );
         }
+    }
+
+    @Nullable
+    @Override
+    public VerificationError verifyStep() {
+        //return null if the user can go to the next step, create a new VerificationError instance otherwise
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+        //update UI when selected
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+        //handle error inside of the fragment, e.g. show error on EditText
     }
 }

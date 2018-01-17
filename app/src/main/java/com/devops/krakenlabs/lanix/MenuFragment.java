@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
+import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasFragment;
 
 
@@ -86,7 +87,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         if (view instanceof Button){
             switch (view.getId()){
                 case R.id.btn_ventas:{
-                    switchFragment(new VentasFragment());
+                    switchFragment(new VentasContainerFragment());
                     break;
                 }
 
@@ -102,7 +103,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
                 case R.id.btn_perfil:{
                     initProfile();
-                    break;
+//                    break;
                 }
             }
         }
