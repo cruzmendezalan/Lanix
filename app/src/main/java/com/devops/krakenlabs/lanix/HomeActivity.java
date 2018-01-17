@@ -369,7 +369,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             }
             case R.id.cv_salida:{
-                eventoUsuario(HORASALIDACOMIDA);
+                eventoUsuario(HORASALIDA);
                 break;
             }
             default:{

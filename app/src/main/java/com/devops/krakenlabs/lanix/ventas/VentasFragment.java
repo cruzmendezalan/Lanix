@@ -27,6 +27,7 @@ import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.catalogos.ModelosItem;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
 import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
+import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -150,12 +151,11 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         for (ModelosItem mo:
              modelosAdapter.getCatalog().getModelos()) {
             if (mo.getSelected()){//El producto fue seleccionado
-                ventaArr.add(new ProductosItem("",mo.getModeloId(),mo.getModeloId(),
-                        mo.getModelo(),"","", 999,""));
+                ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
             }
         }
         if (ventaArr.size() > 0){
-            VentaRequest ventaRequest = new VentaRequest("cliente", "1231123123",
+            VentasRequestt ventaRequest = new VentasRequestt("cliente", "1231123123",
                     ventaArr,etFecha.getText().toString(),"sdsasasda","",
                     "","", "", "sdfadfasfa",
                     LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "asdasda" );
