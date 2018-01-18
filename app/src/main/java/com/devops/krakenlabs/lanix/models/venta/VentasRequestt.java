@@ -89,6 +89,7 @@ public class VentasRequestt{
 	}
 
 	public void setProductos(List<ProductosItem> productos){
+		Log.e(TAG, "setProductos() called with: productos = [" + productos + "]");
 		this.productos = productos;
 	}
 

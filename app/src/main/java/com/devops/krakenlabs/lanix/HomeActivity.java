@@ -33,6 +33,7 @@ import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
 import com.devops.krakenlabs.lanix.ventas.VentasFirstStepFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasSecondStepFragment;
+import com.devops.krakenlabs.lanix.ventas.VentasThirdStepFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -44,6 +45,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
+import com.stepstone.stepper.Step;
 
 import org.json.JSONObject;
 
@@ -97,6 +99,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private VentasSecondStepFragment ventasSecondStepFragment;
     private VentasFirstStepFragment ventasFirstStepFragment;
     private VentasContainerFragment ventasContainerFragment;
+    private VentasThirdStepFragment ventasThirdStepFragmentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -424,15 +427,18 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed() called");
         if (activeFragment != null ){
-            activeFragment = new MenuFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fl_container, activeFragment).commit();
-            llAsistencia.setVisibility(View.GONE);
-            frameLayout.setVisibility(View.VISIBLE);
+            goHome();
         }
 //        super.onBackPressed();
     }
 
+    public void goHome(){
+        activeFragment = new MenuFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fl_container, activeFragment).commit();
+        llAsistencia.setVisibility(View.GONE);
+        frameLayout.setVisibility(View.VISIBLE);
+    }
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
@@ -467,5 +473,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void setVentasContainerFragment(VentasContainerFragment ventasContainerFragment) {
         this.ventasContainerFragment = ventasContainerFragment;
+    }
+
+    public Step getVentasThirdStepFragmentFragment() {
+        return ventasThirdStepFragmentFragment;
+    }
+
+    public void setVentasThirdStepFragmentFragment(VentasThirdStepFragment ventasThirdStepFragmentFragment) {
+        this.ventasThirdStepFragmentFragment = ventasThirdStepFragmentFragment;
     }
 }

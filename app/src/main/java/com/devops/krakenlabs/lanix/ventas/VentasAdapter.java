@@ -22,6 +22,7 @@ public class VentasAdapter extends AbstractFragmentStepAdapter {
         homeActivity = (HomeActivity) context;
         homeActivity.setVentasFirstStepFragment(new VentasFirstStepFragment());
         homeActivity.setVentasSecondStepFragment(new VentasSecondStepFragment());
+        homeActivity.setVentasThirdStepFragmentFragment(new VentasThirdStepFragment());
     }
 
     @Override
@@ -33,12 +34,15 @@ public class VentasAdapter extends AbstractFragmentStepAdapter {
             case 1:{
                 return homeActivity.getVentasSecondStepFragment();
             }
+            case 2:{
+                return homeActivity.getVentasThirdStepFragmentFragment();
+            }
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
