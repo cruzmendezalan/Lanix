@@ -43,7 +43,7 @@ public class ModelosAdapterOld extends RecyclerView.Adapter<ModelosHolder> imple
 
     @Override
     public void positionSelected(int position, Boolean selected) {
-        catalog.getModelos().get(position).setSelected(selected);
+//        catalog.getModelos().get(position).setSelected(selected);
     }
 
     public Catalog getCatalog() {

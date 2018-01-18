@@ -38,14 +38,21 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
     private ArrayList<String> mStrings;
     private StringFilter mStringFilter = new StringFilter();
 
-    public ModelosAdapter(@NonNull Context context, int resource, Catalog catalog) {
+    public ModelosAdapter(@NonNull Context context, int resource, Catalog catalog, int type) {
         super(context, resource);
         mContext = context;
         mStrings = new ArrayList<>();
         mBackupStrings = new ArrayList<>();
-        for (int i = 0; i < catalog.getModelos().size(); i++) {
-            mStrings.add(catalog.getModelos().get(i).getModelo());
-            mBackupStrings.add(catalog.getModelos().get(i).getModelo());
+        if (type == 0){
+            for (int i = 0; i < catalog.getModelos().size(); i++) {
+                mStrings.add(catalog.getModelos().get(i).getModelo());
+                mBackupStrings.add(catalog.getModelos().get(i).getModelo());
+            }
+        }else if(type == 1){
+            for (int i = 0; i < catalog.getModelos().size(); i++) {
+                mStrings.add(catalog.getCadenasComerciales().get(i).getCadenaComercial());
+                mBackupStrings.add(catalog.getCadenasComerciales().get(i).getCadenaComercial());
+            }
         }
     }
 

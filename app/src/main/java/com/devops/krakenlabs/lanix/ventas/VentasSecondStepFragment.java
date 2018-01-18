@@ -43,10 +43,13 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private EditText etImei;
     private EditText etLccid;
     private ModelosAdapter modelosAdapter;
+    private ModelosAdapter catalogsadapter;
     private Button btnVenta;
     private ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
     private SearchableSpinner spinner;
+    private SearchableSpinner spinnerCatalog;
     private int positionSelected;
+    private int positionCatalogSelected;
     private Catalog catalog;
 
     public VentasSecondStepFragment() {
@@ -68,7 +71,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         etLccid  = viewRoot.findViewById(R.id.et_lccid);
         btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
         spinner = viewRoot.findViewById(R.id.searchableSpinner);
-
+        spinnerCatalog = viewRoot.findViewById(R.id.searchableCatalog);
         btnVenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,13 +101,13 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         Gson gson =  new Gson();
         catalog = gson.fromJson(response, Catalog.class);
         Log.e(TAG, "initUI: "+catalog );
-        modelosAdapter = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog);
+        modelosAdapter = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
+        catalogsadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
         spinner.setAdapter(modelosAdapter);
         spinner.setOnItemSelectedListener(mOnItemSelectedListener);
-//        modelosAdapter = new ModelosAdapterOld(catalog);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-//        rvModelos.setLayoutManager(mLayoutManager);
-//        rvModelos.setAdapter(modelosAdapter);
+
+        spinnerCatalog.setAdapter(catalogsadapter);
+        spinnerCatalog.setOnItemSelectedListener(mOnItemSelectedCatalogs);
     }
 
     /**
@@ -150,13 +153,6 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
 
     private void enviarVenta(){
         Log.d(TAG, "enviarVenta() called");
-
-//        for (ModelosItem mo:
-//             modelosAdapter.getCatalog().getModelos()) {
-//            if (mo.getSelected()){//El producto fue seleccionado
-//                ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
-//            }
-//        }
         if (ventaArr.size() > 0){
             HomeActivity ho = (HomeActivity) getActivity();
             LanixApplication lanixApplication   = LanixApplication.getInstance();
@@ -188,6 +184,11 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
             HomeActivity ho = (HomeActivity) getActivity();
             ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
 //            enviarVenta();
+        }
+        if (etImei.getText().length() > 5 && etLccid.getText().length() > 5){
+            generateAndAddVenta();
+            HomeActivity ho = (HomeActivity) getActivity();
+            ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
             return null;
         }
         return new VerificationError("Venta incompleta");
@@ -206,13 +207,22 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private OnItemSelectedListener mOnItemSelectedListener = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(View view, int position, long id) {
-//            Toast.makeText(getActivity(), "Item on position " + position + " : " + modelosAdapter.getItem(position) + " Selected", Toast.LENGTH_SHORT).show();
             positionSelected = position;
         }
 
         @Override
         public void onNothingSelected() {
-//            Toast.makeText(getActivity(), "Nothing Selected", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private OnItemSelectedListener mOnItemSelectedCatalogs = new OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(View view, int position, long id) {
+            positionCatalogSelected = position;
+        }
+
+        @Override
+        public void onNothingSelected() {
         }
     };
 }
