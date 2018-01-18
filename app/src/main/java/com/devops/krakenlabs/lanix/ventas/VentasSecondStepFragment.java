@@ -38,15 +38,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class VentasFragment extends Fragment implements Response.ErrorListener, DatePickerDialog.OnDateSetListener, Step {
+public class VentasFragment extends Fragment implements Response.ErrorListener, Step {
     private static final String TAG = VentasFragment.class.getSimpleName();
     private View viewRoot;
     private RecyclerView rvModelos;
-    private EditText etFecha;
     private EditText etImei;
     private EditText etLccid;
     private ModelosAdapter modelosAdapter;
     private Button btnVenta;
+    private ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
 
     public VentasFragment() {
         // Required empty public constructor
@@ -63,26 +63,25 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         // Inflate the layout for this fragment
         viewRoot =  inflater.inflate(R.layout.fragment_ventas, container, false);
         rvModelos = viewRoot.findViewById(R.id.rv_modelo);
-        etFecha  = viewRoot.findViewById(R.id.et_fecha);
         etImei   = viewRoot.findViewById(R.id.et_imei);
         etLccid  = viewRoot.findViewById(R.id.et_lccid);
         btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
-        etFecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
-            }
-        });
+
         btnVenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (etFecha.length() > 3 && etImei.length() > 3 && etLccid.length() > 3 ){
-                    enviarVenta();
-                }
+//                if (etFecha.length() > 3 && etImei.length() > 3 && etLccid.length() > 3 ){
+//                    enviarVenta();
+//                }
+                generateAndAddVenta();
             }
         });
         requestModels();
         return viewRoot;
+    }
+
+    private void generateAndAddVenta() {
+        ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
     }
 
     private void initUI(String response) {
@@ -137,33 +136,18 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
     }
 
-    private void showDatePickerDialog() {
-        HomeActivity ho = (HomeActivity) getActivity();
-        DatePickerFragment datePicker = new DatePickerFragment();
-        datePicker.setOnDateSetListener(this);
-        datePicker.show(ho.getFragmentManager(),DatePickerFragment.class.getSimpleName());
-    }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        final String selectedDate = day + "/" + (month+1) + "/" + year;
-        etFecha.setText(selectedDate);
-    }
-
     private void enviarVenta(){
         Log.d(TAG, "enviarVenta() called");
-        ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
-        for (ModelosItem mo:
-             modelosAdapter.getCatalog().getModelos()) {
-            if (mo.getSelected()){//El producto fue seleccionado
-                ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
-            }
-        }
+
+//        for (ModelosItem mo:
+//             modelosAdapter.getCatalog().getModelos()) {
+//            if (mo.getSelected()){//El producto fue seleccionado
+//                ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
+//            }
+//        }
         if (ventaArr.size() > 0){
-            VentasRequestt ventaRequest = new VentasRequestt("cliente", "1231123123",
-                    ventaArr,etFecha.getText().toString(),"sdsasasda","",
-                    "","", "", "sdfadfasfa",
-                    LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "asdasda" );
+
+
             LanixApplication lanixApplication   = LanixApplication.getInstance();
             JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
                     lanixApplication.getNetworkController().getServiceUrl(VentaRequest.class.getSimpleName()),
@@ -196,4 +180,5 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
     public void onError(@NonNull VerificationError error) {
         //handle error inside of the fragment, e.g. show error on EditText
     }
+
 }
