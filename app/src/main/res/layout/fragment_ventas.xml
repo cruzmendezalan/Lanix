@@ -1,38 +1,56 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.devops.krakenlabs.lanix.ventas.VentasFragment">
-        <TextView
-            android:gravity="center"
-            android:textSize="20sp"
-            android:text="Selecciona el modelo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_modelo"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
+        tools:context="com.devops.krakenlabs.lanix.ventas.VentasSecondStepFragment">
+        <!--<TextView-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="20sp"-->
+            <!--android:text="Selecciona el modelo"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/rv_modelo"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="150dp">-->
 
-        </android.support.v7.widget.RecyclerView>
-
-        <android.support.design.widget.TextInputLayout
+        <!--</android.support.v7.widget.RecyclerView>-->
+        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+            android:id="@+id/searchableSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/et_fecha"
-                android:inputType="date"
-                android:hint="Fecha"
-                android:focusable="false"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:gravity="center_horizontal"
+            app:StartSearchTintColor="@color/colorPrimary"
+            app:DoneSearchTintColor="@android:color/white"
+            app:RevealViewBackgroundColor="@android:color/white"
+            app:SearchViewBackgroundColor="@android:color/secondary_text_dark"
+            app:ShowBorders="false"
+            app:RevealEmptyText="Selecciona el modelo"
+            app:SpinnerExpandHeight="300dp"/>
+
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<EditText-->
+                <!--android:id="@+id/et_fecha"-->
+                <!--android:inputType="date"-->
+                <!--android:hint="Fecha"-->
+                <!--android:focusable="false"-->
+                <!--android:clickable="true"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:singleLine="true"/>-->
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -67,7 +85,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:layout_marginTop="16dp"
-            android:text="Guardar venta"
+            android:text="Agregar otro telefono a venta"
             android:textStyle="bold" />
     </LinearLayout>
 </ScrollView>
