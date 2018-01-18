@@ -31,7 +31,7 @@ public class VentasContainerFragment extends Fragment implements StepperLayout.S
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       rootView = inflater.inflate(R.layout.fragment_ventas_container, container, false);
+       rootView      = inflater.inflate(R.layout.fragment_ventas_container, container, false);
        stepperLayout = rootView.findViewById(R.id.stepperLayout);
        ventasAdapter = new VentasAdapter(getFragmentManager(),getActivity());
        stepperLayout.setAdapter(ventasAdapter);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
+import com.devops.krakenlabs.lanix.HomeActivity;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
 
@@ -13,18 +14,24 @@ import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
  */
 
 public class VentasAdapter extends AbstractFragmentStepAdapter {
+
+    private HomeActivity homeActivity;
+
     public VentasAdapter(@NonNull FragmentManager fm, @NonNull Context context) {
         super(fm, context);
+        homeActivity = (HomeActivity) context;
+        homeActivity.setVentasFirstStepFragment(new VentasFirstStepFragment());
+        homeActivity.setVentasSecondStepFragment(new VentasSecondStepFragment());
     }
 
     @Override
     public Step createStep(int position) {
         switch (position){
             case 0:{
-                return new Ventas1Fragment();
+                return homeActivity.getVentasFirstStepFragment();
             }
             case 1:{
-                return new VentasFragment();
+                return homeActivity.getVentasSecondStepFragment();
             }
         }
         return null;

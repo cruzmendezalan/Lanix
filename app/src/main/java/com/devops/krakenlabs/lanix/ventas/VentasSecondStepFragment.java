@@ -1,35 +1,27 @@
 package com.devops.krakenlabs.lanix.ventas;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.devops.krakenlabs.lanix.HomeActivity;
 import com.devops.krakenlabs.lanix.R;
-import com.devops.krakenlabs.lanix.adapters.ModelosAdapter;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
-import com.devops.krakenlabs.lanix.models.catalogos.ModelosItem;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
 import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
-import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.google.gson.Gson;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
@@ -38,17 +30,20 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class VentasFragment extends Fragment implements Response.ErrorListener, Step {
-    private static final String TAG = VentasFragment.class.getSimpleName();
+import gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner;
+
+public class VentasSecondStepFragment extends Fragment implements Response.ErrorListener, Step {
+    private static final String TAG = VentasSecondStepFragment.class.getSimpleName();
     private View viewRoot;
-    private RecyclerView rvModelos;
+//    private RecyclerView rvModelos;
     private EditText etImei;
     private EditText etLccid;
     private ModelosAdapter modelosAdapter;
     private Button btnVenta;
     private ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
+    private SearchableSpinner spinner;
 
-    public VentasFragment() {
+    public VentasSecondStepFragment() {
         // Required empty public constructor
     }
 
@@ -62,10 +57,11 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         viewRoot =  inflater.inflate(R.layout.fragment_ventas, container, false);
-        rvModelos = viewRoot.findViewById(R.id.rv_modelo);
+//        rvModelos = viewRoot.findViewById(R.id.rv_modelo);
         etImei   = viewRoot.findViewById(R.id.et_imei);
         etLccid  = viewRoot.findViewById(R.id.et_lccid);
         btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
+        spinner = viewRoot.findViewById(R.id.searchableSpinner);
 
         btnVenta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,8 +76,9 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         return viewRoot;
     }
 
+    // TODO: 17/01/18
     private void generateAndAddVenta() {
-        ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
+//        ventaArr.add(new ProductosItem("",1212,String.valueOf(mo.getModeloId()), mo.getModelo()));
     }
 
     private void initUI(String response) {
@@ -89,10 +86,12 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         Gson gson =  new Gson();
         Catalog catalog = gson.fromJson(response, Catalog.class);
         Log.e(TAG, "initUI: "+catalog );
-        modelosAdapter = new ModelosAdapter(catalog);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvModelos.setLayoutManager(mLayoutManager);
-        rvModelos.setAdapter(modelosAdapter);
+        modelosAdapter = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog);
+        spinner.setAdapter(modelosAdapter);
+//        modelosAdapter = new ModelosAdapterOld(catalog);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+//        rvModelos.setLayoutManager(mLayoutManager);
+//        rvModelos.setAdapter(modelosAdapter);
     }
 
     /**
@@ -148,17 +147,17 @@ public class VentasFragment extends Fragment implements Response.ErrorListener, 
         if (ventaArr.size() > 0){
 
 
-            LanixApplication lanixApplication   = LanixApplication.getInstance();
-            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
-                    lanixApplication.getNetworkController().getServiceUrl(VentaRequest.class.getSimpleName()),
-                    ventaRequest.toJson(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                        }
-                    },this);
-            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+//            LanixApplication lanixApplication   = LanixApplication.getInstance();
+//            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
+//                    lanixApplication.getNetworkController().getServiceUrl(VentaRequest.class.getSimpleName()),
+//                    ventaRequest.toJson(),
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+//                        }
+//                    },this);
+//            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
         }else{
             Log.e(TAG, "enviarVenta: NO SE REALIZO VENTA" );
         }

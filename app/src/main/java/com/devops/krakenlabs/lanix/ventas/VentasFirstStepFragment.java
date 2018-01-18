@@ -22,11 +22,11 @@ import com.stepstone.stepper.VerificationError;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Ventas1Fragment#newInstance} factory method to
+ * Use the {@link VentasFirstStepFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Ventas1Fragment extends Fragment implements Step,DatePickerDialog.OnDateSetListener {
-    private static final String TAG = Ventas1Fragment.class.getSimpleName();
+public class VentasFirstStepFragment extends Fragment implements Step,DatePickerDialog.OnDateSetListener {
+    private static final String TAG = VentasFirstStepFragment.class.getSimpleName();
     private View rootView;
     private AutoCompleteTextView tvNombre;
     private AutoCompleteTextView tvApPat;
@@ -45,12 +45,12 @@ public class Ventas1Fragment extends Fragment implements Step,DatePickerDialog.O
         tvFecha = rootView.findViewById(R.id.tv_fecha);
     }
 
-    public Ventas1Fragment() {
+    public VentasFirstStepFragment() {
         // Required empty public constructor
     }
 
-    public static Ventas1Fragment newInstance() {
-        Ventas1Fragment fragment = new Ventas1Fragment();
+    public static VentasFirstStepFragment newInstance() {
+        VentasFirstStepFragment fragment = new VentasFirstStepFragment();
         return fragment;
     }
 
