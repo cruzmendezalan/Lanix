@@ -3,7 +3,6 @@ package com.devops.krakenlabs.lanix.models.catalogos;
 import com.google.gson.annotations.SerializedName;
 
 public class ModelosItem{
-	private Boolean isSelected = false;//siempre deseleccionado
 
 	@SerializedName("ModeloId")
 	private int modeloId;
@@ -35,12 +34,4 @@ public class ModelosItem{
 			",modelo = '" + modelo + '\'' + 
 			"}";
 		}
-
-	public Boolean getSelected() {
-		return isSelected;
-	}
-
-	public void setSelected(Boolean selected) {
-		isSelected = selected;
-	}
 }

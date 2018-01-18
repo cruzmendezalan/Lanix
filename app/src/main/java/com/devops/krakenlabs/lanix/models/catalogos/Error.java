@@ -2,7 +2,6 @@ package com.devops.krakenlabs.lanix.models.catalogos;
 
 import com.google.gson.annotations.SerializedName;
 
-
 public class Error{
 
 	@SerializedName("No")

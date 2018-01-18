@@ -3,8 +3,11 @@ package com.devops.krakenlabs.lanix.models.catalogos;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-
 public class Catalog{
+
+	@SerializedName("CadenasComerciales")
+	private List<CadenasComercialesItem> cadenasComerciales;
+
 	@SerializedName("Productos")
 	private List<ProductosItem> productos;
 
@@ -16,6 +19,14 @@ public class Catalog{
 
 	@SerializedName("Error")
 	private Error error;
+
+	public void setCadenasComerciales(List<CadenasComercialesItem> cadenasComerciales){
+		this.cadenasComerciales = cadenasComerciales;
+	}
+
+	public List<CadenasComercialesItem> getCadenasComerciales(){
+		return cadenasComerciales;
+	}
 
 	public void setProductos(List<ProductosItem> productos){
 		this.productos = productos;
@@ -53,7 +64,8 @@ public class Catalog{
  	public String toString(){
 		return 
 			"Catalog{" + 
-			"productos = '" + productos + '\'' + 
+			"cadenasComerciales = '" + cadenasComerciales + '\'' + 
+			",productos = '" + productos + '\'' + 
 			",version = '" + version + '\'' + 
 			",modelos = '" + modelos + '\'' + 
 			",error = '" + error + '\'' + 
