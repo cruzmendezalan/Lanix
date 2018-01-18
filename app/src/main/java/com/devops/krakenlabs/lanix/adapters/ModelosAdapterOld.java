@@ -13,12 +13,12 @@ import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
  * cruzmendezalan@gmail.com
  */
 
-public class ModelosAdapter extends RecyclerView.Adapter<ModelosHolder> implements TelefonoSelected{
-    private static final String TAG = ModelosAdapter.class.getSimpleName();
+public class ModelosAdapterOld extends RecyclerView.Adapter<ModelosHolder> implements TelefonoSelected{
+    private static final String TAG = ModelosAdapterOld.class.getSimpleName();
     private Catalog catalog;
     private View rootView;
 
-    public ModelosAdapter(Catalog catalog) {
+    public ModelosAdapterOld(Catalog catalog) {
         this.catalog = catalog;
     }
 

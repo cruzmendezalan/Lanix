@@ -1,7 +1,7 @@
 package com.devops.krakenlabs.lanix;
 
 import android.content.Context;
-    import android.os.Bundle;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -12,9 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.devops.krakenlabs.lanix.base.LanixApplication;
-import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
-import com.devops.krakenlabs.lanix.ventas.VentasFragment;
 
 
 public class MenuFragment extends Fragment implements View.OnClickListener {
@@ -87,7 +85,9 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         if (view instanceof Button){
             switch (view.getId()){
                 case R.id.btn_ventas:{
-                    switchFragment(new VentasContainerFragment());
+                    HomeActivity ho = (HomeActivity) getActivity();
+                    ho.setVentasContainerFragment(new VentasContainerFragment());
+                    switchFragment(ho.getVentasContainerFragment());
                     break;
                 }
 

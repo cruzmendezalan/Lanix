@@ -50,13 +50,13 @@ public class VentasRequestt{
 	@SerializedName("TelefonoCelular")
 	private String telefonoCelular;
 
-	public VentasRequestt(String nombresCliente, String telefonoParticular, List<ProductosItem> productos,
+	public VentasRequestt(String nombresCliente, String telefonoParticular,
 						String fecha, String apellidoPaternoCliente, String correoElectronico,
 						String imagenTicket, String identificadorLocal, String numeroTicket,
 						String apellidoMaternoCliente, String identificadorSesion, String telefonoCelular) {
 		this.nombresCliente = nombresCliente;
 		this.telefonoParticular = telefonoParticular;
-		this.productos = productos;
+//		this.productos = productos;
 
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");

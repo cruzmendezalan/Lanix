@@ -30,6 +30,9 @@ import com.devops.krakenlabs.lanix.controllers.GPSController;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
+import com.devops.krakenlabs.lanix.ventas.VentasFirstStepFragment;
+import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
+import com.devops.krakenlabs.lanix.ventas.VentasSecondStepFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -90,6 +93,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private LinearLayout llAsistencia;
 
     private Fragment activeFragment;
+
+    private VentasSecondStepFragment ventasSecondStepFragment;
+    private VentasFirstStepFragment ventasFirstStepFragment;
+    private VentasContainerFragment ventasContainerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -436,5 +443,29 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "hideFragmentContainer() called");
         frameLayout.setVisibility(View.GONE);
         llAsistencia.setVisibility(View.VISIBLE);
+    }
+
+    public VentasSecondStepFragment getVentasSecondStepFragment() {
+        return ventasSecondStepFragment;
+    }
+
+    public void setVentasSecondStepFragment(VentasSecondStepFragment ventasSecondStepFragment) {
+        this.ventasSecondStepFragment = ventasSecondStepFragment;
+    }
+
+    public VentasFirstStepFragment getVentasFirstStepFragment() {
+        return ventasFirstStepFragment;
+    }
+
+    public void setVentasFirstStepFragment(VentasFirstStepFragment ventasFirstStepFragment) {
+        this.ventasFirstStepFragment = ventasFirstStepFragment;
+    }
+
+    public VentasContainerFragment getVentasContainerFragment() {
+        return ventasContainerFragment;
+    }
+
+    public void setVentasContainerFragment(VentasContainerFragment ventasContainerFragment) {
+        this.ventasContainerFragment = ventasContainerFragment;
     }
 }
