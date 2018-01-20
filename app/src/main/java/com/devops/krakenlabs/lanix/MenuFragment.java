@@ -47,7 +47,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnVentas     = viewRoot.findViewById(R.id.btn_ventas);
         btnAsistencia = viewRoot.findViewById(R.id.btn_asistencia);
         btnProfile    = viewRoot.findViewById(R.id.btn_perfil);
-        btnConsultas  = viewRoot.findViewById(R.id.btn_consultas);
+        btnConsultas  = viewRoot.findViewById(R.id.btn_pw);
         tvNombre      = viewRoot.findViewById(R.id.tv_nombre);
 
 
@@ -97,7 +97,8 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                     break;
                 }
 
-                case R.id.btn_consultas:{
+                case R.id.btn_pw:{
+                    initChangePassword();
                     break;
                 }
 
@@ -119,5 +120,11 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         FragmentTransaction ft = homeActivity.getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fl_container, fragment).commit();
+    }
+
+    private void initChangePassword() {
+        Log.d(TAG, "initChangePassword() called");
+        RecoverPwFragment recoverPwFragment = RecoverPwFragment.newInstance();
+        recoverPwFragment.show(getActivity().getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
     }
 }

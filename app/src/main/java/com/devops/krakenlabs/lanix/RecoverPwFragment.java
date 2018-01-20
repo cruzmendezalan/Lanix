@@ -2,14 +2,19 @@ package com.devops.krakenlabs.lanix;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -68,6 +73,21 @@ public class RecoverPwFragment extends DialogFragment implements Response.ErrorL
         initUI();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+
+        Display display = window.getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+
+        int width = size.x;
+
+        window.setLayout((int) (width * 0.90), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
     }
 
     private void initUI() {
