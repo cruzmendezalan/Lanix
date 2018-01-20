@@ -13,32 +13,35 @@
         android:layout_height="0dp"
         android:paddingLeft="10dp"
         android:paddingEnd="10dp"
-        android:layout_weight="4">
+        android:layout_weight="5">
         <ImageView
             android:layout_gravity="center_horizontal"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:src="@drawable/logo_lanix"/>
         <LinearLayout
+            android:background="@color/white"
             android:gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--<ImageView-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:background="@color/white"-->
-                <!--android:layout_width="80dp"-->
-                <!--android:layout_height="match_parent" />-->
             <LinearLayout
+                android:background="@color/white"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.AppCompatImageView
+                    android:background="@color/transparen"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/account"/>
                 <TextView
+                    android:background="@color/white"
                     android:id="@+id/tv_nombre"
                     android:text="Nombre apellido"
                     android:textStyle="bold"
@@ -46,26 +49,37 @@
                     android:layout_height="wrap_content"/>
                 <Button
                     android:id="@+id/btn_perfil"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/white"
                     android:text="ver perfil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_puesto"-->
-                    <!--android:text="Puesto"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"/>-->
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_tel"-->
-                    <!--android:text="Telefono 1"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"/>-->
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_cel"-->
-                    <!--android:text="telefono 2"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"/>-->
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:layout_weight="2">
+                <TextView
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="08:00\nHora de entrada"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:background="@color/white"
+                    android:layout_marginLeft="1px"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="17:00\nHora de salida"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -79,58 +93,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:weightSum="2"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="horizontal"
-            android:layout_weight="2">
-            <TextView
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="08:00\nHora de entrada"
-                android:layout_height="match_parent" />
-            <TextView
-                android:layout_marginLeft="1px"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:text="17:00\nHora de salida"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_weight="8">
-            <Button
-                android:textColor="@color/white"
-                android:id="@+id/btn_ranking"
-                android:text="Ranking"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
-            <Button
-                android:textColor="@color/white"
-                android:id="@+id/btn_ventas"
-                android:text="Agregar Venta"
-                android:layout_width="match_parent"
-                android:layout_height="60dp" />
-            <Button
-                android:textColor="@color/white"
-                android:id="@+id/btn_asistencia"
-                android:text="Asistencia"
-                android:layout_width="match_parent"
-                android:layout_height="60dp" />
-            <Button
-                android:textColor="@color/white"
-                android:id="@+id/btn_consultas"
-                android:text="Consultar ventas"
-                android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="wrap_content">
+                <Button
+                    android:textColor="@color/white"
+                    android:id="@+id/btn_asistencia"
+                    android:text="Asistencia"
+                    android:drawableRight="@drawable/calendar_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+                <Button
+                    android:textColor="@color/white"
+                    android:id="@+id/btn_ranking"
+                    android:text="Sincronización"
+                    android:drawableRight="@drawable/reload"
+                    android:layout_margin="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+                <Button
+                    android:textColor="@color/white"
+                    android:id="@+id/btn_ventas"
+                    android:text="Registrar Venta"
+                    android:drawableRight="@drawable/cart_outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+
+                <Button
+                    android:textColor="@color/white"
+                    android:id="@+id/btn_consultas"
+                    android:text="Cambiar contraseña"
+                    android:drawableRight="@drawable/ic_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
