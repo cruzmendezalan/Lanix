@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,10 +70,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private double latitude;
     private double longitude;
 
-    private CardView cardEntrada;
-    private CardView cardSalidaC;
-    private CardView cardRegresoC;
-    private CardView cardSalida;
+    private Button cardEntrada;
+    private Button cardSalidaC;
+    private Button cardRegresoC;
+    private Button cardSalida;
 
 
     private AuthController authController;
