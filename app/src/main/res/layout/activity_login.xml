@@ -7,7 +7,7 @@
     android:foregroundGravity="center"
     tools:context="com.devops.krakenlabs.lanix.LoginActivity">
     <LinearLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/ll_splash"
         android:gravity="center"

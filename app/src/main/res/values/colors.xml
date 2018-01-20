@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#ff9f00</color>
     <color name="colorAccent">#ffc14e</color>
-    <color name="colorPrimaryDark">#ba6200</color>
+    <color name="colorPrimaryDark">#272928</color>
     <color name="colorPrimaryText">#FFFFFF</color>
 
     <color name="lanix">#272928</color>
