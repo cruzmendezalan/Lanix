@@ -81,7 +81,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     private String dateTime;
     private String eventoString;
-    private String POSITIVE_MSG = "LISTO!";
+    private String POSITIVE_MSG = "ENTENDIDO";
 
     private static String HORAENTRADA = "1";
     private static String HORASALIDA = "4";
@@ -395,6 +395,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             notificacionDialog = new MaterialDialog.Builder(this)
                     .title(titulo)
                     .content(contenido)
+                    .icon(getDrawable(R.drawable.logo_lanix))
                     .show();
         }
     }
@@ -406,6 +407,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 .title(titulo)
                 .content(contenido)
                 .positiveText(positive)
+                .icon(getDrawable(R.drawable.rsz_logo_lanix))
                 .show();
 
     }
