@@ -90,26 +90,31 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     @Override
     public VerificationError verifyStep() {
         String t = "Este campo es obligatorio";
-        if (tvNombre .getText().length() < 3){
-            tvNombre.setError(t);
-            return new VerificationError("Nombre incompleto");
-        };
-        if (tvApPat  .getText().length() < 3){
-            tvApPat.setError(t);
-            return new VerificationError("Apellido paterno incompleto");
-        };
-        if (tvApMat  .getText().length() < 3){
-            tvApMat.setError(t);
-            return new VerificationError("Apellido materno incompleto");
-        };
-        if (tvEmail  .getText().length() < 3){
-            tvEmail.setError(t);
-            return new VerificationError("Email incompleto");
-        };
-        if (tvTicket .getText().length() < 3){
+//        if (tvNombre .getText().length() < 3){
+//            tvNombre.setError(t);
+//            return new VerificationError("Nombre incompleto");
+//        };
+//        if (tvApPat  .getText().length() < 3){
+//            tvApPat.setError(t);
+//            return new VerificationError("Apellido paterno incompleto");
+//        };
+//        if (tvApMat  .getText().length() < 3){
+//            tvApMat.setError(t);
+//            return new VerificationError("Apellido materno incompleto");
+//        };
+//        if (tvEmail  .getText().length() < 3){
+//            tvEmail.setError(t);
+//            return new VerificationError("Email incompleto");
+//        };
+//        if (tvTicket .getText().length() < 3){
+//            tvTicket.setError(t);
+//            return new VerificationError("Ticket incompleto");
+//        };
+
+        if (tvFecha.getText().length() < 5){
             tvTicket.setError(t);
-            return new VerificationError("Ticket incompleto");
-        };
+            return new VerificationError("Es necesario agregar una fecha");
+        }
 
         ventaRequest  = new VentasRequestt("cliente", "1231123123",tvFecha.getText().toString(),"sdsasasda","",
                 "","", "", "sdfadfasfa",

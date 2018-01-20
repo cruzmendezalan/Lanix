@@ -17,25 +17,26 @@
 
         <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
             android:id="@+id/searchableSpinner"
+            android:background="@drawable/border"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="24dp"
             android:gravity="center_horizontal"
-            app:StartSearchTintColor="@color/colorPrimary"
-            app:DoneSearchTintColor="@color/colorPrimaryDark"
-            app:RevealViewBackgroundColor="@color/white"
-            app:SearchViewBackgroundColor="@color/white"
             app:BoarderColor="@color/colorPrimary"
-            app:ShowBorders="true"
+            app:DoneSearchTintColor="@color/colorPrimaryDark"
             app:RevealEmptyText="Selecciona el modelo"
-
-            app:SpinnerExpandHeight="300dp"/>
+            app:RevealViewBackgroundColor="@color/colorPrimaryDark"
+            app:SearchViewBackgroundColor="@color/colorPrimaryDark"
+            app:ShowBorders="true"
+            app:SpinnerExpandHeight="200dp"
+            app:StartSearchTintColor="@color/colorPrimary" />
 
         <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+            android:background="@drawable/border"
             android:id="@+id/searchableCatalog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,12 +48,12 @@
             android:gravity="center_horizontal"
             app:StartSearchTintColor="@color/colorPrimary"
             app:DoneSearchTintColor="@color/colorPrimaryDark"
-            app:RevealViewBackgroundColor="@color/white"
-            app:SearchViewBackgroundColor="@color/white"
+            app:RevealViewBackgroundColor="@color/colorPrimaryDark"
+            app:SearchViewBackgroundColor="@color/colorPrimaryDark"
             app:BoarderColor="@color/colorPrimary"
             app:ShowBorders="true"
-            app:RevealEmptyText="Selecciona el catalogo"
-            app:SpinnerExpandHeight="300dp"/>
+            app:RevealEmptyText="Selecciona el catálogo"
+            app:SpinnerExpandHeight="200dp"/>
 
         <!--<android.support.design.widget.TextInputLayout-->
             <!--android:layout_width="match_parent"-->
