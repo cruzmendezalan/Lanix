@@ -1,6 +1,7 @@
 package com.devops.krakenlabs.lanix.ventas;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,8 +9,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,6 +30,8 @@ import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
 import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
@@ -40,7 +46,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private static final String TAG = VentasSecondStepFragment.class.getSimpleName();
     private View viewRoot;
 //    private RecyclerView rvModelos;
-    private EditText etImei;
+    private AutoCompleteTextView etImei;
     private EditText etLccid;
     private ModelosAdapter modelosAdapter;
     private ModelosAdapter catalogsadapter;
@@ -81,8 +87,53 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
                 generateAndAddVenta();
             }
         });
+        etImei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initScanBarCode();
+            }
+        });
+        etImei.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                initScanBarCode();
+            }
+        });
+        etImei.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                initScanBarCode();
+                return false;
+            }
+        });
         requestModels();
         return viewRoot;
+    }
+
+    private void initScanBarCode(){
+        Log.d(TAG, "initScanBarCode() called");
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+        integrator.setPrompt("Escanea el código de barras");
+        integrator.setCameraId(0);  // Use a specific camera of the device
+        integrator.setBeepEnabled(true);
+        integrator.setOrientationLocked(true);
+        integrator.setBarcodeImageEnabled(true);
+        integrator.initiateScan();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     // TODO: 17/01/18
@@ -114,20 +165,24 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
      * Llamada de solicitud de los mdoelos
      */
     private void requestModels() {
-        LanixApplication lanixApplication   = LanixApplication.getInstance();
-        CatalogRequest catalogRequest = new CatalogRequest();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+
-                        lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
-                catalogRequest.toJson(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e(TAG, "onResponse() called with: response = [" + response + "]");
-                        initUI(response.toString());
-                    }
-                },this);
-        lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+        try{
+            LanixApplication lanixApplication   = LanixApplication.getInstance();
+            CatalogRequest catalogRequest = new CatalogRequest();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                    (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+
+                            lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
+                    catalogRequest.toJson(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
+                            initUI(response.toString());
+                        }
+                    },this);
+            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

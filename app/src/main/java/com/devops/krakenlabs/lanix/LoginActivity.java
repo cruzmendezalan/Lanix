@@ -43,6 +43,7 @@ import android.widget.TextView;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
+import com.devops.krakenlabs.lanix.privacidad.AvisoDePrivacidadFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Button mEmailSignInButton;
     private TextView tvChangePw;
     private LinearLayout llSplash;
+    private TextView tvPrivacidad;
 
     private static Double TIME_SPLASH       = 1000.0; //MILISEGUNDOS
     @Override
@@ -125,6 +127,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!loginPreferences.getString(USERNAME, "").equals("")){
             cbRememberMe.setChecked(true);
         }
+        
+        tvPrivacidad = findViewById(R.id.tv_privacidad);
+        tvPrivacidad.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPrivacidad();
+            }
+        });
+    }
+
+    private void openPrivacidad() {
+        AvisoDePrivacidadFragment recoverPwFragment = new AvisoDePrivacidadFragment();
+        recoverPwFragment.show(getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
     }
 
     private void initChangePassword() {

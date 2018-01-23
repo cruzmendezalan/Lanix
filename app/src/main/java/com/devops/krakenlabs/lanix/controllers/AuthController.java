@@ -85,6 +85,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                         3000,
                         DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                Log.e(TAG, "login: "+networkController.getServiceUrl(User.TAG) );
                 networkController.getQueue().add(jsObjRequest);
                 return null;
             }
@@ -117,7 +118,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             DeviceRequest deviceRequest = new DeviceRequest("",
                     "",
                     manager.getDeviceId(),
-                    "0.7.0",
+                    "0.9.4",
                     (user==null?"":user.getSesion().getIdentificador()),
                     manager.getDeviceId(),
                     "",
