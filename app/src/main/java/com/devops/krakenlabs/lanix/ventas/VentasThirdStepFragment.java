@@ -1,5 +1,6 @@
 package com.devops.krakenlabs.lanix.ventas;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -106,6 +107,9 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
     @Override
     public VerificationError verifyStep() {
         Log.d(TAG, "verifyStep() called");
+        sendVenta();
+        Intent home = new Intent(getContext(), HomeActivity.class);
+        startActivity(home);
         return null;
     }
 

@@ -74,8 +74,6 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         super.onResume();
         Log.d(TAG, "onResume() called");
         viewRoot.invalidate();
-        viewRoot.findViewById(R.id.scrollView).setVisibility(View.GONE);
-        viewRoot.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
     }
 
     @Override
