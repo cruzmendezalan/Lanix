@@ -54,22 +54,25 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
     }
 
     private void sendVenta() {
-        HomeActivity ho = (HomeActivity) getActivity();
-        LanixApplication lanixApplication   = LanixApplication.getInstance();
-        JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
-                lanixApplication.getNetworkController().getServiceUrl(VentasRequestt.class.getSimpleName()),
-                ho.getVentasFirstStepFragment().getVentaRequest().toJson(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                        if (response != null){
-                            notificarVenta();
+        try{
+            HomeActivity ho = (HomeActivity) getActivity();
+            LanixApplication lanixApplication   = LanixApplication.getInstance();
+            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
+                    lanixApplication.getNetworkController().getServiceUrl(VentasRequestt.class.getSimpleName()),
+                    ho.getVentasFirstStepFragment().getVentaRequest().toJson(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                            if (response != null){
+                                notificarVenta();
+                            }
                         }
-                    }
-                },this);
-        lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
-
+                    },this);
+            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void notificarVenta() {

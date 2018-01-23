@@ -2,6 +2,7 @@ package com.devops.krakenlabs.lanix;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
@@ -46,6 +48,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.Step;
 
 import org.json.JSONObject;
@@ -436,11 +440,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void goHome(){
-        activeFragment = new MenuFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fl_container, activeFragment).commit();
-        llAsistencia.setVisibility(View.GONE);
-        frameLayout.setVisibility(View.VISIBLE);
+//        activeFragment = new MenuFragment();
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.replace(R.id.fl_container, activeFragment).commit();
+//        llAsistencia.setVisibility(View.GONE);
+//        frameLayout.setVisibility(View.VISIBLE);
+        Intent home = new Intent(this, HomeActivity.class);
+        startActivity(home);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
@@ -484,5 +490,21 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void setVentasThirdStepFragmentFragment(VentasThirdStepFragment ventasThirdStepFragmentFragment) {
         this.ventasThirdStepFragmentFragment = ventasThirdStepFragmentFragment;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+//                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                ventasSecondStepFragment.setTvImei(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

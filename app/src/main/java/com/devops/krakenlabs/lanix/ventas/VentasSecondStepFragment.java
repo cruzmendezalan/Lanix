@@ -122,29 +122,16 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private void initScanBarCode(){
         Log.d(TAG, "initScanBarCode() called");
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setPrompt("Escanea el código de barras");
         integrator.setCameraId(0);  // Use a specific camera of the device
         integrator.setBeepEnabled(true);
         integrator.setOrientationLocked(true);
         integrator.setBarcodeImageEnabled(true);
         integrator.initiateScan();
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
-                Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 
     // TODO: 17/01/18
     private void generateAndAddVenta() {
@@ -306,5 +293,9 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     public void onDestroy() {
         Log.d(TAG, "onDestroy() called");
         super.onDestroy();
+    }
+
+    public void setTvImei(String t){
+        etImei.setText(t);
     }
 }
