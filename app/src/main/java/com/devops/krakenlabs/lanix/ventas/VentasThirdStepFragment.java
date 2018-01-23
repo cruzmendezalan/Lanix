@@ -78,7 +78,9 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
         View snackBarView = sn.getView();
         snackBarView.setBackgroundColor(getResources().getColor(R.color.white));
         sn.show();
-        ho.goHome();
+        Log.e(TAG, "notificarVenta: validar venta" );
+        Intent home = new Intent(getContext(), HomeActivity.class);
+        startActivity(home);
     }
 
     private void initListView() {
@@ -108,8 +110,6 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
     public VerificationError verifyStep() {
         Log.d(TAG, "verifyStep() called");
         sendVenta();
-        Intent home = new Intent(getContext(), HomeActivity.class);
-        startActivity(home);
         return null;
     }
 

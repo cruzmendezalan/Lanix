@@ -34,6 +34,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     private AutoCompleteTextView tvEmail;
     private AutoCompleteTextView tvTicket;
     private AutoCompleteTextView tvFecha;
+    private AutoCompleteTextView tvTienda;
     private VentasRequestt ventaRequest;
 
     private void assignViews() {
@@ -43,6 +44,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         tvEmail  = rootView.findViewById(R.id.tv_email);
         tvTicket = rootView.findViewById(R.id.tv_ticket);
         tvFecha = rootView.findViewById(R.id.tv_fecha);
+        tvTienda = rootView.findViewById(R.id.tv_tienda);
     }
 
     public VentasFirstStepFragment() {
@@ -119,6 +121,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         ventaRequest  = new VentasRequestt("cliente", "1231123123",tvFecha.getText().toString(),"sdsasasda","",
                 "","", "", "sdfadfasfa",
                 LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "asdasda" );
+        ventaRequest.setTienda(tvTienda.getText().toString());
         //return null if the user can go to the next step, create a new VerificationError instance otherwise
         return null;
     }

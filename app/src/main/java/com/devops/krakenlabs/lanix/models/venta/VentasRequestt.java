@@ -50,6 +50,12 @@ public class VentasRequestt{
 	@SerializedName("TelefonoCelular")
 	private String telefonoCelular;
 
+	@SerializedName("Tienda")
+	private String tienda;
+
+	@SerializedName("CadenaComercialId")
+	private String cadenaComercialId;
+
 	public VentasRequestt(String nombresCliente, String telefonoParticular,
 						String fecha, String apellidoPaternoCliente, String correoElectronico,
 						String imagenTicket, String identificadorLocal, String numeroTicket,
@@ -181,6 +187,22 @@ public class VentasRequestt{
 		}
 		Log.e(TAG, "toJson: "+jsonString );
 		return jsonObject;
+	}
+
+	public String getTienda() {
+		return tienda;
+	}
+
+	public void setTienda(String tienda) {
+		this.tienda = tienda;
+	}
+
+	public String getCadenaComercialId() {
+		return cadenaComercialId;
+	}
+
+	public void setCadenaComercialId(String cadenaComercialId) {
+		this.cadenaComercialId = cadenaComercialId;
 	}
 
 	@Override

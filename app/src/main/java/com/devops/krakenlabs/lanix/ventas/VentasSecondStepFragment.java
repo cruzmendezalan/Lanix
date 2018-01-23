@@ -245,9 +245,10 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     @Override
     public VerificationError verifyStep() {
         try{
+            HomeActivity ho = (HomeActivity) getActivity();
             //return null if the user can go to the next step, create a new VerificationError instance otherwise
+            ho.getVentasFirstStepFragment().getVentaRequest().setCadenaComercialId(""+catalog.getCadenasComerciales().get(positionCatalogSelected).getCadenaComercialId());
             if (ventaArr.size() > 0){
-                HomeActivity ho = (HomeActivity) getActivity();
                 ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
             }
             if (ventaArr.size() > 0){
@@ -255,7 +256,6 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
             }else{
                 if (etImei.getText().length() > 3 || etLccid.getText().length() > 5){
                     generateAndAddVenta();
-                    HomeActivity ho = (HomeActivity) getActivity();
                     ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
                     return null;
                 }
