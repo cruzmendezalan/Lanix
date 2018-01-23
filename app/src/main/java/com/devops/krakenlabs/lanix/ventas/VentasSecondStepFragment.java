@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -57,6 +58,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private int positionSelected;
     private int positionCatalogSelected;
     private Catalog catalog;
+    private ScrollView scrollView;
 
     public VentasSecondStepFragment() {
         // Required empty public constructor
@@ -65,6 +67,15 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+        viewRoot.invalidate();
+        viewRoot.findViewById(R.id.scrollView).setVisibility(View.GONE);
+        viewRoot.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -124,6 +135,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null) {
             if(result.getContents() == null) {
@@ -234,28 +246,39 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        //return null if the user can go to the next step, create a new VerificationError instance otherwise
-        if (ventaArr.size() > 0){
-            HomeActivity ho = (HomeActivity) getActivity();
-            ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
-//            enviarVenta();
+        try{
+            //return null if the user can go to the next step, create a new VerificationError instance otherwise
+            if (ventaArr.size() > 0){
+                HomeActivity ho = (HomeActivity) getActivity();
+                ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
+            }
+            if (ventaArr.size() > 0){
+                return null;
+            }else{
+                if (etImei.getText().length() > 3 || etLccid.getText().length() > 5){
+                    generateAndAddVenta();
+                    HomeActivity ho = (HomeActivity) getActivity();
+                    ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
+                    return null;
+                }
+            }
+            return new VerificationError("Venta incompleta");
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        if (etImei.getText().length() > 5 && etLccid.getText().length() > 5){
-            generateAndAddVenta();
-            HomeActivity ho = (HomeActivity) getActivity();
-            ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
-            return null;
-        }
-        return new VerificationError("Venta incompleta");
+        return null;
     }
 
     @Override
     public void onSelected() {
+        Log.d(TAG, "onSelected() called");
+        onResume();
         //update UI when selected
     }
 
     @Override
     public void onError(@NonNull VerificationError error) {
+        Log.d(TAG, "onError() called with: error = [" + error.getErrorMessage() + "]");
         //handle error inside of the fragment, e.g. show error on EditText
     }
 
@@ -280,4 +303,10 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         public void onNothingSelected() {
         }
     };
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy() called");
+        super.onDestroy();
+    }
 }
