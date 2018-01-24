@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
 //    private RecyclerView rvModelos;
     private AutoCompleteTextView etImei;
     private EditText etLccid;
+    private ImageView ivCamera;
     private ModelosAdapter modelosAdapter;
     private ModelosAdapter catalogsadapter;
     private Button btnVenta;
@@ -87,32 +89,17 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
         spinner = viewRoot.findViewById(R.id.searchableSpinner);
         spinnerCatalog = viewRoot.findViewById(R.id.searchableCatalog);
+        ivCamera = viewRoot.findViewById(R.id.tv_camera);
+        ivCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initScanBarCode();
+            }
+        });
         btnVenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (etFecha.length() > 3 && etImei.length() > 3 && etLccid.length() > 3 ){
-//                    enviarVenta();
-//                }
                 generateAndAddVenta();
-            }
-        });
-        etImei.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initScanBarCode();
-            }
-        });
-        etImei.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                initScanBarCode();
-            }
-        });
-        etImei.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                initScanBarCode();
-                return false;
             }
         });
         requestModels();

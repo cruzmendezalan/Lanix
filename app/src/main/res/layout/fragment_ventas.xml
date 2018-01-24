@@ -68,21 +68,32 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:singleLine="true"/>-->
         <!--</android.support.design.widget.TextInputLayout>-->
-
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:gravity="center"
             android:layout_height="wrap_content">
-            <AutoCompleteTextView
-                android:id="@+id/et_imei"
-                android:inputType="numberDecimal"
-                android:hint="IMEI"
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <AutoCompleteTextView
+                    android:id="@+id/et_imei"
+                    android:inputType="numberDecimal"
+                    android:hint="IMEI"
+                    android:imeOptions="actionNext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/tv_camera"
                 android:clickable="true"
-                android:imeOptions="actionNext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"/>
-        </android.support.design.widget.TextInputLayout>
-
+                android:src="@drawable/ic_camera_black_48dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
