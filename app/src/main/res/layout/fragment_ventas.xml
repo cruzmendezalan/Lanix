@@ -52,6 +52,7 @@
             app:SearchViewBackgroundColor="@color/colorPrimaryDark"
             app:BoarderColor="@color/colorPrimary"
             app:ShowBorders="true"
+            app:AnimDuration="200"
             app:RevealEmptyText="Selecciona el catálogo"
             app:SpinnerExpandHeight="200dp"/>
 
