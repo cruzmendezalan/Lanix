@@ -20,6 +20,8 @@ import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
+import java.util.UUID;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link VentasFirstStepFragment#newInstance} factory method to
@@ -118,8 +120,8 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
             return new VerificationError("Es necesario agregar una fecha");
         }
 
-        ventaRequest  = new VentasRequestt("cliente", "1231123123",tvFecha.getText().toString(),"sdsasasda","",
-                "","", "", "sdfadfasfa",
+        ventaRequest  = new VentasRequestt("cliente", "1231123123",tvFecha.getText().toString(),"","",
+                "", UUID.randomUUID().toString(), "", "",
                 LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "asdasda" );
         ventaRequest.setTienda(tvTienda.getText().toString());
         //return null if the user can go to the next step, create a new VerificationError instance otherwise
