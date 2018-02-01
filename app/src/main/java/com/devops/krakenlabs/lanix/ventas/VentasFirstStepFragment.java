@@ -120,9 +120,9 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
             return new VerificationError("Es necesario agregar una fecha");
         }
 
-        ventaRequest  = new VentasRequestt("cliente", "1231123123",tvFecha.getText().toString(),"","",
+        ventaRequest  = new VentasRequestt("", "1231123123",tvFecha.getText().toString(),"","",
                 "", UUID.randomUUID().toString(), "", "",
-                LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "asdasda" );
+                LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "" );
         ventaRequest.setTienda(tvTienda.getText().toString());
         //return null if the user can go to the next step, create a new VerificationError instance otherwise
         return null;

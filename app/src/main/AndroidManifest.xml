@@ -22,6 +22,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="6c95e7778188c8854ae3ffe66bc00647602d8db1"
+            />
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBMu3-hJIrUKV6RmzAcL8ap9qxkYICOlSs" />
         <activity

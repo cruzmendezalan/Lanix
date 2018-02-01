@@ -40,6 +40,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
@@ -47,6 +48,8 @@ import com.devops.krakenlabs.lanix.privacidad.AvisoDePrivacidadFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_PHONE_STATE;
@@ -135,6 +138,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 openPrivacidad();
             }
         });
+        Fabric.with(this, new Crashlytics());
     }
 
     private void openPrivacidad() {
