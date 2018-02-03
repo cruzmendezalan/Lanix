@@ -82,7 +82,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                         this,
                         this);
                 jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
-                        3000,
+                        0,
                         DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 Log.e(TAG, "login: "+networkController.getServiceUrl(User.TAG) );
@@ -139,6 +139,8 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                         }
                     },
                     this);
+            requestSyncDevice.setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+            requestSyncDevice.setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
             networkController.getQueue().add(requestSyncDevice);
         }catch (Exception e){
             e.printStackTrace();

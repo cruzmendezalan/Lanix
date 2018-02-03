@@ -3,6 +3,7 @@ package com.devops.krakenlabs.lanix.controllers;
 import android.content.Context;
 
 import com.android.volley.Cache;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;

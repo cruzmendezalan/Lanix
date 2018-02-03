@@ -315,7 +315,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 mapa.clear();
                 mapa.addMarker(new MarkerOptions().position(latLng).title("Tú ubicación"));
                 mapa.animateCamera(cameraUpdate);
-//                Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));
             } else {
 //                GPSController.showSettingsAlert();
             }

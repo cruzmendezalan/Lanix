@@ -49,9 +49,13 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
                 mBackupStrings.add(catalog.getModelos().get(i).getModelo());
             }
         }else if(type == 1){
-            for (int i = 0; i < catalog.getModelos().size(); i++) {
-                mStrings.add(catalog.getCadenasComerciales().get(i).getCadenaComercial());
-                mBackupStrings.add(catalog.getCadenasComerciales().get(i).getCadenaComercial());
+            for (int i = 0; i < catalog.getCadenasComerciales().size(); i++) {
+                try{
+                    mStrings.add(catalog.getCadenasComerciales().get(i).getCadenaComercial());
+                    mBackupStrings.add(catalog.getCadenasComerciales().get(i).getCadenaComercial());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
     }

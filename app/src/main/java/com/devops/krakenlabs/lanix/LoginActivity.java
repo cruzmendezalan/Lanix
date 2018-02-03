@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private LinearLayout llSplash;
     private TextView tvPrivacidad;
 
-    private static Double TIME_SPLASH       = 1000.0; //MILISEGUNDOS
+    private static Double TIME_SPLASH       = 10.0; //MILISEGUNDOS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +128,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Context.MODE_PRIVATE);
         mEmailView.setText(loginPreferences.getString(USERNAME, ""));
         mPasswordView.setText(loginPreferences.getString(PASSWORD, ""));
+//        if (!(loginPreferences.getString(USERNAME, "").equals(""))){
+//            Log.i(TAG, "onCreate: ");
+//            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+//            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+//        }
         if (!loginPreferences.getString(USERNAME, "").equals("")){
             cbRememberMe.setChecked(true);
         }
@@ -139,6 +145,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
         Fabric.with(this, new Crashlytics());
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            Log.e(TAG, "onCreate: "+version + "  "+ pInfo );
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void hideSoftKeyboard() {
+        Log.d(TAG, "hideSoftKeyboard() called");
+        try{
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void openPrivacidad() {
@@ -425,13 +448,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void hideSplash(final double milisecondsDisplayed){
         try {
-            new CountDownTimer(5000, 1000) {
+            new CountDownTimer(500, 100) {
                 public void onTick(long millisUntilFinished) {
                 }
 
                 public void onFinish() {
                     if (llSplash != null){
                         llSplash.setVisibility(View.GONE);
+                        hideSoftKeyboard();
                     }else{
                         hideSplash(milisecondsDisplayed);
                     }
