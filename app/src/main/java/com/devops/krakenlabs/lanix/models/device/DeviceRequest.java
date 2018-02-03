@@ -118,11 +118,21 @@ public class DeviceRequest {
         }catch (Exception e){
             e.printStackTrace();
         }
-        Log.e(TAG, "toJson: "+jsonString );
         return jsonObject;
     }
+
     @Override
-    public String toString(){
-        return TAG+" [IdentificadorSesion = "+IdentificadorSesion+", Modelo = "+Modelo+", IMEI = "+IMEI+", VersionApp = "+VersionApp+", IdentificadorDispositivo = "+IdentificadorDispositivo+", NumeroDeSerie = "+NumeroDeSerie+", Nombre = "+Nombre+", VersionSO = "+VersionSO+", VersionCatalogos = "+VersionCatalogos+"]";
+    public String toString() {
+        return "DeviceRequest{" +
+                " \n IdentificadorSesion='" + IdentificadorSesion + '\'' +
+                ",\n Modelo='" + Modelo + '\'' +
+                ",\n IMEI='" + IMEI + '\'' +
+                ",\n VersionApp='" + VersionApp + '\'' +
+                ",\n IdentificadorDispositivo='" + IdentificadorDispositivo + '\'' +
+                ",\n NumeroDeSerie='" + NumeroDeSerie + '\'' +
+                ",\n Nombre='" + Nombre + '\'' +
+                ",\n VersionSO='" + VersionSO + '\'' +
+                ",\n VersionCatalogos='" + VersionCatalogos + '\'' +
+                '}';
     }
 }

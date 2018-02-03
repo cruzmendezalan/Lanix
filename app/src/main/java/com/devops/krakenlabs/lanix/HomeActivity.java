@@ -499,17 +499,21 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
+        try{
+            Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if(result != null) {
+                if(result.getContents() == null) {
 //                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
+                } else {
 //                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-                ventasSecondStepFragment.setTvImei(result.getContents());
+                    ventasSecondStepFragment.setTvImei(result.getContents());
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

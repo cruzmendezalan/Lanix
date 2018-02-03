@@ -58,8 +58,8 @@ import static android.Manifest.permission.READ_PHONE_STATE;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, SessionNotifier {
-    public static String TAG = LoginActivity.class.getSimpleName();
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, SessionNotifier, ControllerNotifier {
+    public  static       String TAG = LoginActivity.class.getSimpleName();
     private static final String SPF_NAME = "vidslogin"; //  <--- Account
     private static final String USERNAME = "username";  //  <--- To save username
     private static final String PASSWORD = "password";  //  <--- To save password
@@ -86,6 +86,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        authController = AuthController.getInstance(this);
+        authController.setControllerNotifier(this);
+        authController.syncDevice();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.user);
         populateAutoComplete();
@@ -114,8 +117,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView  = findViewById(R.id.login_progress);
         cbRememberMe   = findViewById(R.id.rempasswordcheckbox);
         authController = LanixApplication.getInstance().getAuthController();
-        authController.setContext(this);
-        authController.syncDevice();
 
         tvChangePw = findViewById(R.id.tv_change_pw);
         tvChangePw.setOnClickListener(new OnClickListener() {
@@ -126,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
         SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME,
                 Context.MODE_PRIVATE);
-        mEmailView.setText(loginPreferences.getString(USERNAME, ""));
+        mEmailView.append(loginPreferences.getString(USERNAME, ""));
         mPasswordView.setText(loginPreferences.getString(PASSWORD, ""));
 //        if (!(loginPreferences.getString(USERNAME, "").equals(""))){
 //            Log.i(TAG, "onCreate: ");
@@ -145,13 +146,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
         Fabric.with(this, new Crashlytics());
-        try {
-            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            Log.e(TAG, "onCreate: "+version + "  "+ pInfo );
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public void hideSoftKeyboard() {
@@ -430,6 +424,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         loginPreferences.edit().clear().commit();
     }
 
+    @Override
+    public void tokenDeviceComplete() {
+        Log.d(TAG, "tokenDeviceComplete() called");
+        Log.e(TAG, "tokenDeviceComplete: "+authController.getDevice() );
+    }
+
+    @Override
+    public void catalogsUpdateComplete() {
+        Log.d(TAG, "catalogsUpdateComplete() called");
+    }
+
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -465,6 +470,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public String requestVersion(){
+        String t = "";
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            return pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return t;
     }
 }
 

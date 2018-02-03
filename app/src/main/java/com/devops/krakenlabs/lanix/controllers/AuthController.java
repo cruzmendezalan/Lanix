@@ -1,10 +1,12 @@
 package com.devops.krakenlabs.lanix.controllers;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
@@ -15,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.devops.krakenlabs.lanix.ControllerNotifier;
 import com.devops.krakenlabs.lanix.LoginActivity;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
@@ -40,6 +43,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     private Context context;
     private User user;
     private Device device;
+    private ControllerNotifier controllerNotifier;
 
     private static int MY_PERMISSIONS_REQUEST_ACCESS_TELEPHONY_SERVICE;
 
@@ -98,34 +102,34 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
 
     public void syncDevice() {
+        Log.d(TAG, "syncDevice() called");
         try {
-            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                Log.e(TAG, "syncDevice: NO HAY PERMISOS" );
-                if (context instanceof LoginActivity){
-                    LoginActivity la = (LoginActivity) context;
-                    la.mayRequestDevice();
-                }else{
-                    Log.e(TAG, "syncDevice: NO ES INSTANCIA DE LOGIN" );
-                }
-                return;
-            }
-            String deviceid = manager.getDeviceId();
+//            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                Log.e(TAG, "syncDevice: NO HAY PERMISOS" );
+//                if (context instanceof LoginActivity){
+//                    LoginActivity la = (LoginActivity) context;
+//                    la.mayRequestDevice();
+//                }else{
+//                    Log.e(TAG, "syncDevice: NO ES INSTANCIA DE LOGIN" );
+//                }
+//            }
+//            String deviceid = manager.getDeviceId();
 
             //Device Id is IMEI number
 
-            Log.d("msg", "Device id " + deviceid);
-            DeviceRequest deviceRequest = new DeviceRequest("",
-                    "",
-                    manager.getDeviceId(),
-                    "0.9.4",
+            Log.d("msg", "Device id " + getDeviceIMEI());
+            @SuppressLint("MissingPermission") DeviceRequest deviceRequest = new DeviceRequest("",
+                    Build.MODEL,
+                    getDeviceIMEI().getDeviceId(),
+                    ""+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName,
                     (user==null?"":user.getSesion().getIdentificador()),
-                    manager.getDeviceId(),
-                    "",
-                    manager.getDeviceSoftwareVersion(),
+                    getDeviceIMEI().getSimSerialNumber(),
+                    getDeviceIMEI().getDeviceSoftwareVersion(),
+                    ""+Build.VERSION.SDK_INT,
                     ""
                     );
-            Log.e(TAG, "syncDevice: "+deviceRequest.toJson().toString() );
+            Log.e(TAG, "syncDevice: "+deviceRequest.toString() );
             LanixApplication lanixApplication   = LanixApplication.getInstance();
             NetworkController networkController = lanixApplication.getNetworkController();
             JsonObjectRequest requestSyncDevice = new JsonObjectRequest(Request.Method.POST,
@@ -136,6 +140,9 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                         public void onResponse(JSONObject response) {
                             Gson gson = new Gson();
                             device    = gson.fromJson(response.toString(),Device.class);
+                            if (controllerNotifier != null){
+                                controllerNotifier.tokenDeviceComplete();
+                            }
                         }
                     },
                     this);
@@ -179,5 +186,43 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public ControllerNotifier getControllerNotifier() {
+        return controllerNotifier;
+    }
+
+    public void setControllerNotifier(ControllerNotifier controllerNotifier) {
+        this.controllerNotifier = controllerNotifier;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    /**
+     * Returns the unique identifier for the device
+     *
+     * @return unique identifier for the device
+     */
+    @SuppressLint("MissingPermission")
+    public TelephonyManager getDeviceIMEI() {
+        try{
+            String deviceUniqueIdentifier = null;
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (null != tm) {
+                deviceUniqueIdentifier = tm.getDeviceId();
+            }
+            if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length()) {
+                deviceUniqueIdentifier = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            }
+//            Log.d(TAG, "getDeviceIMEI() called "+tm.getDeviceSoftwareVersion());
+//            Log.d(TAG, "getDeviceIMEI() called "+tm.getSimSerialNumber());
+//            Log.d(TAG, "getDeviceIMEI() called "+tm.getDeviceId());
+            return tm;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

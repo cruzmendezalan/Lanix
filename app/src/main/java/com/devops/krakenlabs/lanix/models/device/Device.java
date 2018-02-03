@@ -1,69 +1,85 @@
 package com.devops.krakenlabs.lanix.models.device;
 
-/**
- * Created by Alan Giovani Cruz Méndez on 11/11/17 12:25.
- * cruzmendezalan@gmail.com
- */
+import com.google.gson.annotations.SerializedName;
 
-public class Device {
-    public static String TAG = Device.class.getSimpleName();
-    private String TokenDispositivo;
-    private String VersionApp;
-    private String SesionValida;
-    private String ActualizarCatalogos;
-    private String RutaDeDescargaApp;
-    private Error Error;
+public class Device{
+	public static final String TAG = Device.class.getSimpleName();
+	@SerializedName("SesionValida")
+	private boolean sesionValida;
 
-    public String getTokenDispositivo (){
-        return TokenDispositivo;
-    }
+	@SerializedName("RutaDeDescargaApp")
+	private String rutaDeDescargaApp;
 
-    public void setTokenDispositivo (String TokenDispositivo){
-        this.TokenDispositivo = TokenDispositivo;
-    }
+	@SerializedName("TokenDispositivo")
+	private String tokenDispositivo;
 
-    public String getVersionApp (){
-        return VersionApp;
-    }
+	@SerializedName("VersionApp")
+	private String versionApp;
 
-    public void setVersionApp (String VersionApp){
-        this.VersionApp = VersionApp;
-    }
+	@SerializedName("Error")
+	private Error error;
 
-    public String getSesionValida (){
-        return SesionValida;
-    }
+	@SerializedName("ActualizarCatalogos")
+	private boolean actualizarCatalogos;
 
-    public void setSesionValida (String SesionValida){
-        this.SesionValida = SesionValida;
-    }
+	public void setSesionValida(boolean sesionValida){
+		this.sesionValida = sesionValida;
+	}
 
-    public String getActualizarCatalogos (){
-        return ActualizarCatalogos;
-    }
+	public boolean isSesionValida(){
+		return sesionValida;
+	}
 
-    public void setActualizarCatalogos (String ActualizarCatalogos){
-        this.ActualizarCatalogos = ActualizarCatalogos;
-    }
+	public void setRutaDeDescargaApp(String rutaDeDescargaApp){
+		this.rutaDeDescargaApp = rutaDeDescargaApp;
+	}
 
-    public String getRutaDeDescargaApp (){
-        return RutaDeDescargaApp;
-    }
+	public String getRutaDeDescargaApp(){
+		return rutaDeDescargaApp;
+	}
 
-    public void setRutaDeDescargaApp (String RutaDeDescargaApp){
-        this.RutaDeDescargaApp = RutaDeDescargaApp;
-    }
+	public void setTokenDispositivo(String tokenDispositivo){
+		this.tokenDispositivo = tokenDispositivo;
+	}
 
-    public Error getError (){
-        return Error;
-    }
+	public String getTokenDispositivo(){
+		return tokenDispositivo;
+	}
 
-    public void setError (Error Error){
-        this.Error = Error;
-    }
+	public void setVersionApp(String versionApp){
+		this.versionApp = versionApp;
+	}
 
-    @Override
-    public String toString(){
-        return TAG+" [TokenDispositivo = "+TokenDispositivo+", VersionApp = "+VersionApp+", SesionValida = "+SesionValida+", ActualizarCatalogos = "+ActualizarCatalogos+", RutaDeDescargaApp = "+RutaDeDescargaApp+", Error = "+Error+"]";
-    }
+	public String getVersionApp(){
+		return versionApp;
+	}
+
+	public void setError(Error error){
+		this.error = error;
+	}
+
+	public Error getError(){
+		return error;
+	}
+
+	public void setActualizarCatalogos(boolean actualizarCatalogos){
+		this.actualizarCatalogos = actualizarCatalogos;
+	}
+
+	public boolean isActualizarCatalogos(){
+		return actualizarCatalogos;
+	}
+
+	@Override
+ 	public String toString(){
+		return 
+			"Device{" + 
+			" \nsesionValida = '" + sesionValida + '\'' +
+			",\nrutaDeDescargaApp = '" + rutaDeDescargaApp + '\'' +
+			",\ntokenDispositivo = '" + tokenDispositivo + '\'' +
+			",\nversionApp = '" + versionApp + '\'' +
+			",\nerror = '" + error + '\'' +
+			",\nactualizarCatalogos = '" + actualizarCatalogos + '\'' +
+			"}";
+		}
 }
