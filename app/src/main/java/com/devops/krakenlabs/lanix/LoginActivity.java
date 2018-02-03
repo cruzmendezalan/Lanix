@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -41,6 +42,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
@@ -428,6 +431,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void tokenDeviceComplete() {
         Log.d(TAG, "tokenDeviceComplete() called");
         Log.e(TAG, "tokenDeviceComplete: "+authController.getDevice() );
+        if (!authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
+            MaterialDialog x = new MaterialDialog.Builder(this)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            openBrowser();
+                        }
+                    }).dismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            Log.e(TAG, "onDismiss: " );
+                            finish();
+                        }
+                    })
+                    .title("Actualización disponible")
+                    .content("Existe una nueva version disponible, descargala aquí")
+                    .positiveText("Aceptar")
+                    .show();
+        }
+    }
+
+    private void openBrowser() {
+        try{
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authController.getDevice().getRutaDeDescargaApp()));
+            startActivity(browserIntent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
