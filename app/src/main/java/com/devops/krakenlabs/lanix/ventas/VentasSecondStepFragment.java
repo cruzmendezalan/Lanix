@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -46,6 +47,8 @@ import java.util.ArrayList;
 import gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner;
 import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class VentasSecondStepFragment extends Fragment implements Response.ErrorListener, Step {
     private static final String TAG = VentasSecondStepFragment.class.getSimpleName();
     private View viewRoot;
@@ -78,8 +81,17 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         super.onResume();
         Log.d(TAG, "onResume() called");
         viewRoot.invalidate();
+        hideSoftKeyboard();
     }
-
+    public void hideSoftKeyboard() {
+        Log.d(TAG, "hideSoftKeyboard() called");
+        try{
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
