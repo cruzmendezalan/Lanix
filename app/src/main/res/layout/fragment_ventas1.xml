@@ -11,8 +11,8 @@
         <ImageView
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:src="@drawable/logo_lanix"/>
 
         <android.support.design.widget.TextInputLayout
@@ -40,7 +40,7 @@
                 android:id="@+id/tv_ap_pat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Apellido paterno"
+                android:hint="Apellidos"
                 android:inputType="textCapCharacters"
                 android:textAllCaps="true"
                 android:imeOptions="actionNext"
@@ -64,7 +64,6 @@
                 android:imeOptions="actionNext"
                 android:maxLines="1"
                 android:singleLine="true" />
-
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -86,7 +85,20 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
+            <AutoCompleteTextView
+                android:id="@+id/tv_ticket"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="* Ticket"
+                android:inputType="numberDecimal"
+                android:textAllCaps="true"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <AutoCompleteTextView
                 android:id="@+id/tv_tienda"
                 android:inputType="textAutoComplete"
@@ -97,12 +109,10 @@
                 android:imeOptions="actionNext"
                 android:maxLines="1"
                 android:singleLine="true" />
-
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <AutoCompleteTextView
                 android:id="@+id/tv_fecha"
                 android:inputType="date"
@@ -115,25 +125,6 @@
                 android:imeOptions="actionNext"
                 android:maxLines="1"
                 android:singleLine="true" />
-
         </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <AutoCompleteTextView
-                android:id="@+id/tv_ticket"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ticket"
-                android:inputType="textCapCharacters"
-                android:textAllCaps="true"
-                android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
     </LinearLayout>
 </ScrollView>

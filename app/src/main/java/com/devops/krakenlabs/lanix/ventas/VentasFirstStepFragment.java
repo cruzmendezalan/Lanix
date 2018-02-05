@@ -110,18 +110,18 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
 //            tvEmail.setError(t);
 //            return new VerificationError("Email incompleto");
 //        };
-//        if (tvTicket .getText().length() < 3){
-//            tvTicket.setError(t);
-//            return new VerificationError("Ticket incompleto");
-//        };
+        if (tvTicket .getText().length() < 1){
+            tvTicket.setError(t);
+            return new VerificationError("Ticket incompleto");
+        };
 
         if (tvFecha.getText().length() < 5){
             tvTicket.setError(t);
             return new VerificationError("Es necesario agregar una fecha");
         }
 
-        ventaRequest  = new VentasRequestt("", "1231123123",tvFecha.getText().toString(),"","",
-                "", UUID.randomUUID().toString(), "", "",
+        ventaRequest  = new VentasRequestt(tvNombre.getText().toString(), "",tvFecha.getText().toString(),tvApPat.getText().toString(),tvEmail.getText().toString(),
+                "", UUID.randomUUID().toString(), tvTicket.getText().toString(), "",
                 LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "" );
         ventaRequest.setTienda(tvTienda.getText().toString());
         //return null if the user can go to the next step, create a new VerificationError instance otherwise

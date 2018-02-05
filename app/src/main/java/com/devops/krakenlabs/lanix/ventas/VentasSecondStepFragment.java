@@ -32,6 +32,7 @@ import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
 import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -109,6 +110,8 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
 
     private void initScanBarCode(){
         Log.d(TAG, "initScanBarCode() called");
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(getActivity()).build();
+
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setPrompt("Escanea el código de barras");
