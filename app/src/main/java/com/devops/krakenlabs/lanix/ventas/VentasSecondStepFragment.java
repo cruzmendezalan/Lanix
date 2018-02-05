@@ -241,14 +241,13 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
             if (ventaArr.size() > 0){
                 ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
             }
+            if (etImei.getText().length() > 3 ){
+                generateAndAddVenta();
+                ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
+                return null;
+            }
             if (ventaArr.size() > 0){
                 return null;
-            }else{
-                if (etImei.getText().length() > 3 || etLccid.getText().length() > 5){
-                    generateAndAddVenta();
-                    ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
-                    return null;
-                }
             }
             return new VerificationError("Venta incompleta");
         }catch (Exception e){
