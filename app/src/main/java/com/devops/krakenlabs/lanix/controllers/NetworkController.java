@@ -102,6 +102,7 @@ public class NetworkController {
     }
 
     public String getServiceUrl(String service) {
+        Log.d(TAG, "getServiceUrl() called with: service = [" + service + "]");
         String url = properties.getProperty("ProductionUrl"); //Lógica para url de desarrollo y producción aqui
         return url + properties.getProperty(service);
     }
@@ -112,7 +113,7 @@ public class NetworkController {
 //        HttpsTrustManager.allowAllSSL();
         String t = "";
         if(objectToSend instanceof CatalogRequest){
-            t = LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
+            t = "/"+LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
         }
 
 
@@ -147,7 +148,7 @@ public class NetworkController {
 
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(method,
-                getServiceUrl(User.TAG)+t,
+                getServiceUrl(objectToSend.getClass().getSimpleName())+t,
                 objectToSend.toJson(),
                 responseListener,
                 errorListener);
