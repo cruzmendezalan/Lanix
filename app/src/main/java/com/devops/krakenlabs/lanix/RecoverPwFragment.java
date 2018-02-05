@@ -26,8 +26,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
-import com.devops.krakenlabs.lanix.models.session.Contrasenia;
-import com.devops.krakenlabs.lanix.models.session.RecoverPassword;
+import com.devops.krakenlabs.lanix.models.session.ContraseniaRequest;
+import com.devops.krakenlabs.lanix.models.session.RecoverPasswordRequest;
 
 import org.json.JSONObject;
 
@@ -117,32 +117,41 @@ public class RecoverPwFragment extends DialogFragment implements Response.ErrorL
     }
 
     private void sendNewPW() {
-        Contrasenia contrasenia = new Contrasenia(tvPw.getText().toString(),tvPw2.getText().toString(),"",tvCode.getText().toString());
-        NetworkController networkController = LanixApplication.getInstance().getNetworkController();
-        JsonObjectRequest requestChangePw = new JsonObjectRequest(Request.Method.POST,
-                networkController.getServiceUrl(Contrasenia.TAG),
-                contrasenia.toJson(),
-                this,
-                this);
-        networkController.getQueue().add(requestChangePw);
+        ContraseniaRequest contraseniaRequest = new ContraseniaRequest(tvPw.getText().toString(),tvPw2.getText().toString(),"",tvCode.getText().toString());
+//        JsonObjectRequest requestChangePw = new JsonObjectRequest(Request.Method.POST,
+//                networkController.getServiceUrl(ContraseniaRequest.TAG),
+//                contraseniaRequest.toJson(),
+//                this,
+//                this);
+
+        LanixApplication.getInstance().getNetworkController().requestData(contraseniaRequest, Request.Method.POST,this,this);
+//        networkController.getQueue().add(requestChangePw);
     }
 
     private void sendCode() {
         hideSoftKeyboard();
         if (checkEmail(tvEmail.getText().toString())){
-            NetworkController networkController = LanixApplication.getInstance().getNetworkController();
-            JsonObjectRequest requestChangePw = new JsonObjectRequest(Request.Method.POST,
-                    networkController.getServiceUrl(RecoverPassword.TAG),
-                    new RecoverPassword(tvEmail.getText().toString()).toJson(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                            showNotification();
-                        }
-                    },
-                    this);
-            networkController.getQueue().add(requestChangePw);
+//            NetworkController networkController = LanixApplication.getInstance().getNetworkController();
+//            JsonObjectRequest requestChangePw = new JsonObjectRequest(Request.Method.POST,
+//                    networkController.getServiceUrl(RecoverPasswordRequest.TAG),
+//                    new RecoverPasswordRequest(tvEmail.getText().toString()).toJson(),
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+//                            showNotification();
+//                        }
+//                    },
+//                    this);
+//
+//            networkController.getQueue().add(requestChangePw);
+            LanixApplication.getInstance().getNetworkController().requestData(new RecoverPasswordRequest(tvEmail.getText().toString()),Request.Method.POST,new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                    showNotification();
+                }
+            },this);
         }else{
             tvEmail.setError("Oops! Al parecer has introducido un correo erroneo");
             tvEmail.requestFocus();

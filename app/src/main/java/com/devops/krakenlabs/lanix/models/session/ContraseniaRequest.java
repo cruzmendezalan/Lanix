@@ -1,5 +1,6 @@
 package com.devops.krakenlabs.lanix.models.session;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -9,14 +10,14 @@ import org.json.JSONObject;
  * cruzmendezalan@gmail.com
  */
 
-public class Contrasenia {
-    public static String TAG = com.devops.krakenlabs.lanix.models.session.Contrasenia.class.getSimpleName();
+public class ContraseniaRequest implements LanixRequest{
+    public static String TAG = ContraseniaRequest.class.getSimpleName();
     private String ConfirmacionNuevaContrasenia;
     private String NuevaContrasenia;
     private String Contrasenia;
     private String OTP;
 
-    public Contrasenia(String confirmacionNuevaContrasenia, String nuevaContrasenia, String contrasenia, String OTP) {
+    public ContraseniaRequest(String confirmacionNuevaContrasenia, String nuevaContrasenia, String contrasenia, String OTP) {
         ConfirmacionNuevaContrasenia = confirmacionNuevaContrasenia;
         NuevaContrasenia            = nuevaContrasenia;
         Contrasenia                 = contrasenia;
@@ -78,10 +79,10 @@ public class Contrasenia {
 
     @Override
     public String toString() {
-        return "Contrasenia{" +
+        return "ContraseniaRequest{" +
                 "ConfirmacionNuevaContrasenia='" + ConfirmacionNuevaContrasenia + '\'' +
                 ", NuevaContrasenia='" + NuevaContrasenia + '\'' +
-                ", Contrasenia='" + Contrasenia + '\'' +
+                ", ContraseniaRequest='" + Contrasenia + '\'' +
                 ", OTP='" + OTP + '\'' +
                 '}';
     }

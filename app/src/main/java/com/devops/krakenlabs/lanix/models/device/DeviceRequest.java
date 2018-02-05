@@ -2,6 +2,7 @@ package com.devops.krakenlabs.lanix.models.device;
 
 import android.util.Log;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -12,7 +13,7 @@ import org.json.JSONObject;
  * cruzmendezalan@gmail.com
  */
 
-public class DeviceRequest {
+public class DeviceRequest implements LanixRequest{
     public static String TAG = DeviceRequest.class.getSimpleName();
     private String IdentificadorSesion;
     private String Modelo;
@@ -107,7 +108,7 @@ public class DeviceRequest {
     public void setVersionCatalogos (String VersionCatalogos){
         this.VersionCatalogos = VersionCatalogos;
     }
-
+    @Override
     public JSONObject toJson(){
         JSONObject jsonObject = null;
         String jsonString = "";

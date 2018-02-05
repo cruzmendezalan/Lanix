@@ -2,6 +2,7 @@ package com.devops.krakenlabs.lanix.models.session;
 
 import android.util.Log;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -11,13 +12,13 @@ import org.json.JSONObject;
  * cruzmendezalan@gmail.com
  */
 
-public class RequestSession {
-    public static String TAG = RequestSession.class.getSimpleName();
+public class SessionRequest implements LanixRequest {
+    public static String TAG = SessionRequest.class.getSimpleName();
     private String Usuario;
     private String TokenDispositivo;
     private String Contrasenia;
 
-    public RequestSession(String usuario, String tokenDispositivo, String contrasenia) {
+    public SessionRequest(String usuario, String tokenDispositivo, String contrasenia) {
         Usuario = usuario;
         TokenDispositivo = tokenDispositivo;
         Contrasenia = contrasenia;
@@ -46,6 +47,8 @@ public class RequestSession {
     public void setContrasenia (String Contrasenia){
         this.Contrasenia = Contrasenia;
     }
+
+    @Override
     public JSONObject toJson(){
         JSONObject jsonObject = null;
         String jsonString = "";
@@ -62,6 +65,6 @@ public class RequestSession {
 
     @Override
     public String toString(){
-        return TAG+" [Usuario = "+Usuario+", TokenDispositivo = "+TokenDispositivo+", Contrasenia = "+Contrasenia+"]";
+        return TAG+" [Usuario = "+Usuario+", TokenDispositivo = "+TokenDispositivo+", ContraseniaRequest = "+Contrasenia+"]";
     }
 }

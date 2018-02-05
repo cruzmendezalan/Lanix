@@ -2,6 +2,7 @@ package com.devops.krakenlabs.lanix.models.catalogos;
 
 import android.util.Log;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -11,9 +12,10 @@ import org.json.JSONObject;
  * cruzmendezalan@gmail.com
  */
 
-public class CatalogRequest {
+public class CatalogRequest implements LanixRequest{
     private static final String TAG = CatalogRequest.class.getSimpleName();
 
+    @Override
     public JSONObject toJson(){
         JSONObject jsonObject = null;
         String jsonString = "";

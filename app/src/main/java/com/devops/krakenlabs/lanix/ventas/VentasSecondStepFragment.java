@@ -27,6 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.HomeActivity;
 import com.devops.krakenlabs.lanix.R;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
@@ -150,20 +151,28 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
      */
     private void requestModels() {
         try{
-            LanixApplication lanixApplication   = LanixApplication.getInstance();
+
+//            LanixApplication lanixApplication   = LanixApplication.getInstance();
             CatalogRequest catalogRequest = new CatalogRequest();
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                    (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+
-                            lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
-                    catalogRequest.toJson(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
-                            initUI(response.toString());
-                        }
-                    },this);
-            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+//                    (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+
+//                            lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
+//                    catalogRequest.toJson(),
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
+//                            initUI(response.toString());
+//                        }
+//                    },this);
+//            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+            LanixApplication.getInstance().getNetworkController().requestData(catalogRequest, Request.Method.GET,new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.e(TAG, "onResponse() called with: response = [" + response + "]");
+                    initUI(response.toString());
+                }
+            },this);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -191,24 +200,24 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     }
 
     private void enviarVenta(){
-        Log.d(TAG, "enviarVenta() called");
-        if (ventaArr.size() > 0){
-            HomeActivity ho = (HomeActivity) getActivity();
-            LanixApplication lanixApplication   = LanixApplication.getInstance();
-            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
-                    lanixApplication.getNetworkController().getServiceUrl(VentasRequestt.class.getSimpleName()),
-                    ho.getVentasFirstStepFragment().getVentaRequest().toJson(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                            goHome();
-                        }
-                    },this);
-            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
-        }else{
-            Log.e(TAG, "enviarVenta: NO SE REALIZO VENTA" );
-        }
+//        Log.d(TAG, "enviarVenta() called");
+//        if (ventaArr.size() > 0){
+//            HomeActivity ho = (HomeActivity) getActivity();
+//            LanixApplication lanixApplication   = LanixApplication.getInstance();
+//            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
+//                    lanixApplication.getNetworkController().getServiceUrl(VentasRequestt.class.getSimpleName()),
+//                    ho.getVentasFirstStepFragment().getVentaRequest().toJson(),
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+//                            goHome();
+//                        }
+//                    },this);
+//            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
+//        }else{
+//            Log.e(TAG, "enviarVenta: NO SE REALIZO VENTA" );
+//        }
     }
 
     private void goHome() {

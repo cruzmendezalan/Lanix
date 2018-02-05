@@ -1,14 +1,23 @@
 package com.devops.krakenlabs.lanix.controllers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Network;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
+import com.devops.krakenlabs.lanix.models.session.User;
+
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -78,12 +87,32 @@ public class NetworkController {
         return properties;
     }
 
-    public RequestQueue getQueue() {
+    private RequestQueue getQueue() {
         return queue;
     }
 
     public String getServiceUrl(String service) {
         String url = properties.getProperty("ProductionUrl"); //Lógica para url de desarrollo y producción aqui
         return url + properties.getProperty(service);
+    }
+
+    public void requestData(LanixRequest objectToSend, int method,
+                            Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener ){
+        Log.d(TAG, "requestData() called with: objectToSend = [" + objectToSend + "],\n  method = [" + method + "],\n responseListener = [" + responseListener + "],\n errorListener = [" + errorListener + "]");
+        String t = "";
+        if(objectToSend instanceof CatalogRequest){
+            t = LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
+        }
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(method,
+                getServiceUrl(User.TAG)+t,
+                objectToSend.toJson(),
+                responseListener,
+                errorListener);
+        jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Log.e(TAG, "login: "+networkController.getServiceUrl(User.TAG) );
+        networkController.getQueue().add(jsObjRequest);
     }
 }

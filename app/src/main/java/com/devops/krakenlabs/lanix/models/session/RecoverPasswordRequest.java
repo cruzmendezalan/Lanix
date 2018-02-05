@@ -1,5 +1,6 @@
 package com.devops.krakenlabs.lanix.models.session;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 
@@ -8,21 +9,22 @@ import org.json.JSONObject;
  * cruzmendezalan@gmail.com
  */
 
-public class RecoverPassword {
-    public static String TAG = RecoverPassword.class.getSimpleName();
+public class RecoverPasswordRequest implements LanixRequest{
+    public static String TAG = RecoverPasswordRequest.class.getSimpleName();
     private String CorreoElectronico;
 
-    public RecoverPassword(String email) {
+    public RecoverPasswordRequest(String email) {
         this.CorreoElectronico = email;
     }
 
     @Override
     public String toString() {
-        return "RecoverPassword{" +
+        return "RecoverPasswordRequest{" +
                 "CorreoElectronico='" + CorreoElectronico + '\'' +
                 '}';
     }
 
+    @Override
     public JSONObject toJson(){
         JSONObject jsonObject = null;
         String jsonString = "";

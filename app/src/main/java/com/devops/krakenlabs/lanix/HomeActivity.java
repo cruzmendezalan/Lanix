@@ -358,13 +358,14 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                         Double.toString(longitude),
                         dateTime );
                 Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toJson().toString() );
-                NetworkController networkController = LanixApplication.getInstance().getNetworkController();
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-                        networkController.getServiceUrl(eventEntradaRequest.TAG),
-                        eventEntradaRequest.toJson(),
-                        this,
-                        this);
-                networkController.getQueue().add(jsObjRequest);
+//                NetworkController networkController = LanixApplication.getInstance().getNetworkController();
+//                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
+//                        networkController.getServiceUrl(eventEntradaRequest.TAG),
+//                        eventEntradaRequest.toJson(),
+//                        this,
+//                        this);
+//                networkController.getQueue().add(jsObjRequest);
+                LanixApplication.getInstance().getNetworkController().requestData(eventEntradaRequest,Request.Method.POST,this,this);
             }else{
                 Log.e(TAG, "eventoUsuario: AHORITA NO JOVEN");
             }

@@ -7,12 +7,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONObject;
 
-public class VentasRequestt{
+public class VentasRequestt implements LanixRequest {
 	private static final String TAG = VentasRequestt.class.getSimpleName();
 	@SerializedName("NombresCliente")
 	private String nombresCliente;

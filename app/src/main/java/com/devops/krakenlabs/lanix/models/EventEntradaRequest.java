@@ -1,5 +1,6 @@
 package com.devops.krakenlabs.lanix.models;
 
+import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -9,7 +10,7 @@ import org.json.JSONObject;
  * cruzmendezalan@gmail.com
  */
 
-public class EventEntradaRequest {
+public class EventEntradaRequest implements LanixRequest{
     public static final String TAG = EventEntradaRequest.class.getSimpleName();
     private String Latitud;
     private String IdentificadorSesion;
@@ -79,6 +80,8 @@ public class EventEntradaRequest {
     public String toString(){
         return TAG+" [Latitud = "+Latitud+", IdentificadorSesion = "+IdentificadorSesion+", TipoAsistenciaId = "+TipoAsistenciaId+", IdentificadorLocal = "+IdentificadorLocal+", Longitud = "+Longitud+", FechaHora = "+FechaHora+"]";
     }
+
+    @Override
     public JSONObject toJson(){
         JSONObject json = null;
         try{

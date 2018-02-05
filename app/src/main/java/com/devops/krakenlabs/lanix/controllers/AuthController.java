@@ -1,29 +1,21 @@
 package com.devops.krakenlabs.lanix.controllers;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.ControllerNotifier;
-import com.devops.krakenlabs.lanix.LoginActivity;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.models.device.Device;
 import com.devops.krakenlabs.lanix.models.device.DeviceRequest;
-import com.devops.krakenlabs.lanix.models.session.RequestSession;
+import com.devops.krakenlabs.lanix.models.session.SessionRequest;
 import com.devops.krakenlabs.lanix.models.session.User;
 import com.google.gson.Gson;
 
@@ -78,19 +70,9 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                  * una vez que el usuario y la contraseña pasan por validaciones locales
                  * construimos el objeto que sera enviado al servicio
                  */
-                RequestSession requestSession = new RequestSession(username, device.getTokenDispositivo(), pasword);
+                SessionRequest sessionRequest = new SessionRequest(username, device.getTokenDispositivo(), pasword);
                 NetworkController networkController = lanixApplication.getNetworkController();
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-                        networkController.getServiceUrl(User.TAG),
-                        requestSession.toJson(),
-                        this,
-                        this);
-                jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
-                        0,
-                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                Log.e(TAG, "login: "+networkController.getServiceUrl(User.TAG) );
-                networkController.getQueue().add(jsObjRequest);
+                networkController.requestData(sessionRequest,Request.Method.POST,this,this);
                 return null;
             }
             return rulesViolated;
@@ -130,25 +112,16 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                     ""
                     );
             Log.e(TAG, "syncDevice: "+deviceRequest.toString() );
-            LanixApplication lanixApplication   = LanixApplication.getInstance();
-            NetworkController networkController = lanixApplication.getNetworkController();
-            JsonObjectRequest requestSyncDevice = new JsonObjectRequest(Request.Method.POST,
-                    networkController.getServiceUrl(Device.TAG),
-                    deviceRequest.toJson(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Gson gson = new Gson();
-                            device    = gson.fromJson(response.toString(),Device.class);
-                            if (controllerNotifier != null){
-                                controllerNotifier.tokenDeviceComplete();
-                            }
-                        }
-                    },
-                    this);
-            requestSyncDevice.setRetryPolicy(new DefaultRetryPolicy(5*DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
-            requestSyncDevice.setRetryPolicy(new DefaultRetryPolicy(0, 0, 0));
-            networkController.getQueue().add(requestSyncDevice);
+            LanixApplication.getInstance().getNetworkController().requestData(deviceRequest, Request.Method.POST,new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Gson gson = new Gson();
+                    device    = gson.fromJson(response.toString(),Device.class);
+                    if (controllerNotifier != null){
+                        controllerNotifier.tokenDeviceComplete();
+                    }
+                }
+            },this);
         }catch (Exception e){
             e.printStackTrace();
         }
