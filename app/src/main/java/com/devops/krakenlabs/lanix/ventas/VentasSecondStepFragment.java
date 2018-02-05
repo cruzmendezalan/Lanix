@@ -130,7 +130,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
 
     // TODO: 17/01/18
     private void generateAndAddVenta() {
-        ventaArr.add(new ProductosItem(catalog.getModelos().get(positionSelected-1).getModeloId(), etImei.getText().toString(),catalog.getModelos().get(positionSelected-1).getModelo()));
+        ventaArr.add(new ProductosItem(catalog.getProductos().get(positionSelected-1).getModeloId(), etImei.getText().toString(),catalog.getProductos().get(positionSelected-1).getModelo()));
         etImei   .setText("");
         etLccid  .setText("");
         Snackbar sn = Snackbar.make(viewRoot, "Se a agregado el smartphone a la lista de venta", Snackbar.LENGTH_LONG);
