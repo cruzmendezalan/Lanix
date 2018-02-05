@@ -103,11 +103,11 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             //Device Id is IMEI number
 
             Log.d("msg", "Device id " + getDeviceIMEI());
-            @SuppressLint("MissingPermission") DeviceRequest deviceRequest = new DeviceRequest("",
+            @SuppressLint("MissingPermission") DeviceRequest deviceRequest = new DeviceRequest((user==null?"":user.getSesion().getIdentificador()),
                     Build.MODEL,
                     getDeviceIMEI().getDeviceId(),
                     ""+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName,
-                    (user==null?"":user.getSesion().getIdentificador()),
+                    "",
                     getDeviceIMEI().getSimSerialNumber(),
                     getDeviceIMEI().getDeviceSoftwareVersion(),
                     ""+Build.VERSION.SDK_INT,

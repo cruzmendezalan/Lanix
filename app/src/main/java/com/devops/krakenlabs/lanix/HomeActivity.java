@@ -315,7 +315,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 mapa.clear();
                 mapa.addMarker(new MarkerOptions().position(latLng).title("Tú ubicación"));
                 mapa.animateCamera(cameraUpdate);
-                Log.e(TAG, "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));
+//                Log.e(TAG, "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));
             } else {
 //                GPSController.showSettingsAlert();
             }
@@ -352,12 +352,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 dateTime = df.format(c.getTime());
                 Log.e(TAG, "eventoUsuario: "+dateTime );
                 EventEntradaRequest eventEntradaRequest = new EventEntradaRequest(Double.toString(latitude),
+                        Double.toString(longitude),
                         authController.getUser().getSesion().getIdentificador(),
                         evento,
-                        "",
-                        Double.toString(longitude),
                         dateTime );
-                Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toJson().toString() );
+                Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toString() );
 //                NetworkController networkController = LanixApplication.getInstance().getNetworkController();
 //                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
 //                        networkController.getServiceUrl(eventEntradaRequest.TAG),

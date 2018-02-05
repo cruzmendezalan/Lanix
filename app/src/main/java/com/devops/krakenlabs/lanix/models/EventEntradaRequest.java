@@ -19,11 +19,10 @@ public class EventEntradaRequest implements LanixRequest{
     private String Longitud;
     private String FechaHora;
 
-    public EventEntradaRequest(String latitud, String identificadorSesion, String tipoAsistenciaId, String identificadorLocal, String longitud, String fechaHora) {
+    public EventEntradaRequest(String latitud, String longitud, String identificadorSesion, String tipoAsistenciaId, String fechaHora) {
         Latitud = latitud;
         IdentificadorSesion = identificadorSesion;
         TipoAsistenciaId = tipoAsistenciaId;
-        IdentificadorLocal = identificadorLocal;
         Longitud = longitud;
         FechaHora = fechaHora;
     }
@@ -77,8 +76,15 @@ public class EventEntradaRequest implements LanixRequest{
     }
 
     @Override
-    public String toString(){
-        return TAG+" [Latitud = "+Latitud+", IdentificadorSesion = "+IdentificadorSesion+", TipoAsistenciaId = "+TipoAsistenciaId+", IdentificadorLocal = "+IdentificadorLocal+", Longitud = "+Longitud+", FechaHora = "+FechaHora+"]";
+    public String toString() {
+        return "EventEntradaRequest{" +
+                " \n Latitud='" + Latitud + '\'' +
+                ",\n IdentificadorSesion='" + IdentificadorSesion + '\'' +
+                ",\n TipoAsistenciaId='" + TipoAsistenciaId + '\'' +
+                ",\n IdentificadorLocal='" + IdentificadorLocal + '\'' +
+                ",\n Longitud='" + Longitud + '\'' +
+                ",\n FechaHora='" + FechaHora + '\'' +
+                '}';
     }
 
     @Override
