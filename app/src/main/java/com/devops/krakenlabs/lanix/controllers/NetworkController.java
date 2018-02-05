@@ -6,7 +6,6 @@ import android.util.Log;
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Network;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.BasicNetwork;
@@ -22,8 +21,19 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
+import java.util.ResourceBundle;
 /**
  * Created by Alan Giovani Cruz Méndez on 11/11/17 13:31.
  * cruzmendezalan@gmail.com
@@ -99,10 +109,43 @@ public class NetworkController {
     public void requestData(LanixRequest objectToSend, int method,
                             Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener ){
         Log.d(TAG, "requestData() called with: objectToSend = [" + objectToSend + "],\n  method = [" + method + "],\n responseListener = [" + responseListener + "],\n errorListener = [" + errorListener + "]");
+//        HttpsTrustManager.allowAllSSL();
         String t = "";
         if(objectToSend instanceof CatalogRequest){
             t = LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
         }
+
+
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        } };
+        SSLContext sc = null;
+        try {
+            sc = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        // Create all-trusting host name verifier
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+
+
+
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(method,
                 getServiceUrl(User.TAG)+t,
                 objectToSend.toJson(),
@@ -112,7 +155,7 @@ public class NetworkController {
                 0,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        Log.e(TAG, "login: "+networkController.getServiceUrl(User.TAG) );
         networkController.getQueue().add(jsObjRequest);
     }
+
 }

@@ -7,9 +7,11 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.ControllerNotifier;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
@@ -112,9 +114,12 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                     ""
                     );
             Log.e(TAG, "syncDevice: "+deviceRequest.toString() );
+            LanixApplication lanixApplication   = LanixApplication.getInstance();
+            NetworkController networkController = lanixApplication.getNetworkController();
             LanixApplication.getInstance().getNetworkController().requestData(deviceRequest, Request.Method.POST,new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    Log.d(TAG, "onResponse() called with: response = [" + response + "]");
                     Gson gson = new Gson();
                     device    = gson.fromJson(response.toString(),Device.class);
                     if (controllerNotifier != null){

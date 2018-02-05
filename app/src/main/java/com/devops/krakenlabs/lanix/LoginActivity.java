@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 openPrivacidad();
             }
         });
-        Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
     }
 
     public void hideSoftKeyboard() {
@@ -424,7 +424,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void tokenDeviceComplete() {
         Log.d(TAG, "tokenDeviceComplete() called");
         Log.e(TAG, "tokenDeviceComplete: "+authController.getDevice() );
-        if (!authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
+        if (authController.getDevice().getError() == null && !authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
             MaterialDialog x = new MaterialDialog.Builder(this)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
