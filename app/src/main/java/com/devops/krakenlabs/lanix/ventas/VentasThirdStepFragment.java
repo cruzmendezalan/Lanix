@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -37,6 +38,7 @@ import com.stepstone.stepper.VerificationError;
 
 import org.json.JSONObject;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -182,7 +184,7 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
             HomeActivity ho = (HomeActivity) getActivity();
             String[] values = new String[ho.getVentasFirstStepFragment().getVentaRequest().getProductos().size()];
             for (int i = 0; i < ho.getVentasFirstStepFragment().getVentaRequest().getProductos().size(); i++) {
-                values[i] = ho.getVentasFirstStepFragment().getVentaRequest().getProductos().get(i).getImei();
+                values[i] = ho.getVentasFirstStepFragment().getVentaRequest().getProductos().get(i).getModeloName();
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
             lvProductos.setAdapter(adapter);
@@ -195,9 +197,18 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
     public void onResume() {
         Log.e(TAG, "onResume() called");
         super.onResume();
+        hideSoftKeyboard();
 //        initListView();
     }
-
+    public void hideSoftKeyboard() {
+        Log.d(TAG, "hideSoftKeyboard() called");
+        try{
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @Nullable
     @Override
     public VerificationError verifyStep() {

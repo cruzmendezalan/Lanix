@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 
@@ -21,6 +22,8 @@ import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
 import java.util.UUID;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -146,12 +149,21 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         tvFecha.setText(selectedDate);
     }
     private void showDatePickerDialog() {
+        hideSoftKeyboard();
         HomeActivity ho = (HomeActivity) getActivity();
         DatePickerFragment datePicker = new DatePickerFragment();
         datePicker.setOnDateSetListener(this);
         datePicker.show(ho.getFragmentManager(),DatePickerFragment.class.getSimpleName());
     }
-
+    private void hideSoftKeyboard() {
+        Log.d(TAG, "hideSoftKeyboard() called");
+        try{
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public VentasRequestt getVentaRequest() {
         return ventaRequest;
     }

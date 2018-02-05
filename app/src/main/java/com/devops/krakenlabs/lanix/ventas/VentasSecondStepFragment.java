@@ -1,7 +1,6 @@
 package com.devops.krakenlabs.lanix.ventas;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,34 +8,27 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.HomeActivity;
 import com.devops.krakenlabs.lanix.R;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
-import com.devops.krakenlabs.lanix.controllers.LanixRequest;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
-import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
@@ -138,7 +130,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
 
     // TODO: 17/01/18
     private void generateAndAddVenta() {
-        ventaArr.add(new ProductosItem("",1212,String.valueOf(catalog.getModelos().get(positionSelected-1).getModeloId()), catalog.getModelos().get(positionSelected-1).getModelo()));
+        ventaArr.add(new ProductosItem(catalog.getModelos().get(positionSelected-1).getModeloId(), etImei.getText().toString(),catalog.getModelos().get(positionSelected-1).getModelo()));
         etImei   .setText("");
         etLccid  .setText("");
         Snackbar sn = Snackbar.make(viewRoot, "Se a agregado el smartphone a la lista de venta", Snackbar.LENGTH_LONG);

@@ -17,11 +17,13 @@ public class ProductosItem{
 	@SerializedName("Imei")
 	private String imei;
 
-	public ProductosItem(String numeroAsignado, int productoId, String iccid, String imei) {
-		this.numeroAsignado = numeroAsignado;
-		this.productoId = productoId;
-		this.iccid = iccid;
+	private String modeloName;
+	public ProductosItem(int productoId, String imei, String modeloName) {
+		this.numeroAsignado = "";
+		this.productoId 	= productoId;
+//		this.iccid = iccid;
 		this.imei = imei;
+		this.modeloName = modeloName;
 	}
 
 	public void setNumeroAsignado(String numeroAsignado){
@@ -56,14 +58,22 @@ public class ProductosItem{
 		return imei;
 	}
 
+	public String getModeloName() {
+		return modeloName;
+	}
+
+	public void setModeloName(String modeloName) {
+		this.modeloName = modeloName;
+	}
+
 	@Override
- 	public String toString(){
-		return 
-			"ProductosItem{" + 
-			"numeroAsignado = '" + numeroAsignado + '\'' + 
-			",productoId = '" + productoId + '\'' + 
-			",iccid = '" + iccid + '\'' + 
-			",imei = '" + imei + '\'' + 
-			"}";
-		}
+	public String toString() {
+		return "ProductosItem{" +
+				" \n numeroAsignado='" + numeroAsignado + '\'' +
+				",\n productoId=" + productoId +
+				",\n iccid='" + iccid + '\'' +
+				",\n imei='" + imei + '\'' +
+				",\n modeloName='" + modeloName + '\'' +
+				'}';
+	}
 }
