@@ -5,6 +5,7 @@ import android.app.Application;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.controllers.MiddlewareController;
 import com.devops.krakenlabs.lanix.controllers.NetworkController;
+import com.devops.krakenlabs.lanix.controllers.PersistenceController;
 
 /**
  * Created by Alan Giovani Cruz Méndez on 11/11/17 13:24.
@@ -16,6 +17,7 @@ public class LanixApplication extends Application {
     private static LanixApplication lanixApplication;
 
     //Controladores de aplicación
+    private PersistenceController persistenceController;
     private AuthController authController;
     private MiddlewareController middlewareController;
     private NetworkController networkController;
@@ -33,6 +35,8 @@ public class LanixApplication extends Application {
     public void onCreate() {
         super.onCreate();
         lanixApplication     = this;
+        persistenceController = PersistenceController.getInstance();
+        persistenceController.setContext(this);
         middlewareController = MiddlewareController.getInstance(); //reglas de negocio, validaciones
         networkController    = NetworkController.getInstance(this); //Consumo de red
         authController       = AuthController.getInstance(this);//Usuario

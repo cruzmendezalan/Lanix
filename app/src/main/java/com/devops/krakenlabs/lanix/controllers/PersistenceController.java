@@ -1,6 +1,7 @@
 package com.devops.krakenlabs.lanix.controllers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 /**
@@ -14,6 +15,7 @@ public class PersistenceController {
     private String vCatalog;
     private String cSession;
     private Context context;
+    private SharedPreferences sharedPref;
 
     public static PersistenceController getInstance() {
         if (persistenceController == null){
@@ -41,4 +43,9 @@ public class PersistenceController {
     public void setcSession(String cSession) {
         this.cSession = cSession;
     }
+
+    private final String SESSION   = "SESSION"  ;
+    private final String CATALOGOS = "CATALOGOS";
+    private final String CATALOG_V = "CATALOG_V";
+    private final String LANIX_KEY = "LANIX_KEY";
 }
