@@ -14,6 +14,7 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
+import com.devops.krakenlabs.lanix.models.session.SessionRequest;
 import com.devops.krakenlabs.lanix.models.session.User;
 
 import org.json.JSONObject;
@@ -112,8 +113,14 @@ public class NetworkController {
         Log.d(TAG, "requestData() called with: objectToSend = [" + objectToSend + "],\n  method = [" + method + "],\n responseListener = [" + responseListener + "],\n errorListener = [" + errorListener + "]");
 //        HttpsTrustManager.allowAllSSL();
         String t = "";
-        if(objectToSend instanceof CatalogRequest){
-            t = "/"+LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
+        if(objectToSend instanceof CatalogRequest || objectToSend instanceof SessionRequest){
+            try{
+                if (LanixApplication.getInstance().getAuthController().getUser() != null){
+                    t = "/"+LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
 
