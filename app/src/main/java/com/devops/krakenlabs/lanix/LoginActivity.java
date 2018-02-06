@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
         if (requestCode == REQUEST_READ_PHONE_STATE) {
-            authController.syncDevice();
+//            authController.syncDevice();
         }
     }
 
@@ -433,9 +433,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void tokenDeviceComplete() {
-        Log.d(TAG, "tokenDeviceComplete() called");
-        Log.e(TAG, "tokenDeviceComplete: "+authController.getDevice() );
-        if (authController.getDevice().getError() == null && !authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
+        Log.d(TAG, "tokenDeviceComplete() called " +authController.getDevice());
+        Log.e(TAG, "tokenDeviceComplete: "+authController.getDevice().getVersionApp() +" === "+requestVersion() );
+        if (authController.getDevice().getError().getNo() == 0 && !authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
             MaterialDialog x = new MaterialDialog.Builder(this)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
