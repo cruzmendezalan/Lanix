@@ -1,9 +1,13 @@
 package com.devops.krakenlabs.lanix.controllers;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -38,6 +42,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     private User user;
     private Device device;
     private ControllerNotifier controllerNotifier;
+    private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12221;
 
     private static int MY_PERMISSIONS_REQUEST_ACCESS_TELEPHONY_SERVICE;
 
@@ -74,7 +79,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                  */
                 SessionRequest sessionRequest = new SessionRequest(username, device.getTokenDispositivo(), pasword);
                 NetworkController networkController = lanixApplication.getNetworkController();
-                networkController.requestData(sessionRequest,Request.Method.POST,this,this);
+                networkController.requestData(sessionRequest, Request.Method.POST, this, this);
                 return null;
             }
             return rulesViolated;
@@ -103,31 +108,33 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             //Device Id is IMEI number
 
             Log.d("msg", "Device id " + getDeviceIMEI());
-            @SuppressLint("MissingPermission") DeviceRequest deviceRequest = new DeviceRequest((user==null?"":user.getSesion().getIdentificador()),
+            TelephonyManager tm = getDeviceIMEI();
+
+            DeviceRequest deviceRequest = new DeviceRequest((user == null ? "" : user.getSesion().getIdentificador()),
                     Build.MODEL,
-                    getDeviceIMEI().getDeviceId(),
-                    ""+context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName,
+                    tm.getDeviceId(),
+                    "" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName,
                     "",
-                    getDeviceIMEI().getSimSerialNumber(),
-                    getDeviceIMEI().getDeviceSoftwareVersion(),
-                    ""+Build.VERSION.SDK_INT,
+                    tm.getSimSerialNumber(),
+                    tm.getDeviceSoftwareVersion(),
+                    "" + Build.VERSION.SDK_INT,
                     ""
-                    );
+            );
 //            Log.e(TAG, "syncDevice: "+deviceRequest.toString() );
-            LanixApplication lanixApplication   = LanixApplication.getInstance();
+            LanixApplication lanixApplication = LanixApplication.getInstance();
             NetworkController networkController = lanixApplication.getNetworkController();
-            LanixApplication.getInstance().getNetworkController().requestData(deviceRequest, Request.Method.POST,new Response.Listener<JSONObject>() {
+            LanixApplication.getInstance().getNetworkController().requestData(deviceRequest, Request.Method.POST, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d(TAG, "onResponse() called with: response = [" + response + "]");
                     Gson gson = new Gson();
-                    device    = gson.fromJson(response.toString(),Device.class);
-                    if (controllerNotifier != null){
+                    device = gson.fromJson(response.toString(), Device.class);
+                    if (controllerNotifier != null) {
                         controllerNotifier.tokenDeviceComplete();
                     }
                 }
-            },this);
-        }catch (Exception e){
+            }, this);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -135,7 +142,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
-        if (sessionNotifier != null){
+        if (sessionNotifier != null) {
             sessionNotifier.sessionComplete();
         }
     }
@@ -143,17 +150,17 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     @Override //Respuesta de sesion
     public void onResponse(JSONObject response) {
-        try{
+        try {
             Log.e(TAG, "onResponse() called with: response = [" + response + "]");
             Gson gson = new Gson();
             user = gson.fromJson(response.toString(), User.class);
-            if (user.getError().getNo() != 0){
+            if (user.getError().getNo() != 0) {
                 user = null;
             }
-            if (sessionNotifier != null){
+            if (sessionNotifier != null) {
                 sessionNotifier.sessionComplete();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -183,14 +190,10 @@ public class AuthController implements Response.ErrorListener, Response.Listener
      *
      * @return unique identifier for the device
      */
-    @SuppressLint("MissingPermission")
     public TelephonyManager getDeviceIMEI() {
-        try{
+        try {
             String deviceUniqueIdentifier = null;
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            if (null != tm) {
-                deviceUniqueIdentifier = tm.getDeviceId();
-            }
             if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length()) {
                 deviceUniqueIdentifier = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             }

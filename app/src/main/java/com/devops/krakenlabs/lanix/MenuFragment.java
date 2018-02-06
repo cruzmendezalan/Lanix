@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.misventas.MisVentasFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
 
 
@@ -22,6 +23,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private Button btnVentas;
     private Button btnAsistencia;
     private Button btnConsultas;
+    private Button btnMisVentas;
     private TextView tvNombre;
 
 
@@ -49,6 +51,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnProfile    = viewRoot.findViewById(R.id.btn_perfil);
         btnConsultas  = viewRoot.findViewById(R.id.btn_pw);
         tvNombre      = viewRoot.findViewById(R.id.tv_nombre);
+        btnMisVentas  = viewRoot.findViewById(R.id.btn_mis_ventas);
 
 
         fillUI();
@@ -56,6 +59,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnAsistencia.setOnClickListener(this);
         btnConsultas.setOnClickListener(this);
         btnProfile.setOnClickListener(this);
+        btnMisVentas.setOnClickListener(this);
         return viewRoot;
     }
 
@@ -88,6 +92,12 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                     HomeActivity ho = (HomeActivity) getActivity();
                     ho.setVentasContainerFragment(new VentasContainerFragment());
                     switchFragment(ho.getVentasContainerFragment());
+                    break;
+                }
+
+                case R.id.btn_mis_ventas:{
+//                    HomeActivity ho = (HomeActivity) getActivity();
+                    switchFragment(new MisVentasFragment());
                     break;
                 }
 
