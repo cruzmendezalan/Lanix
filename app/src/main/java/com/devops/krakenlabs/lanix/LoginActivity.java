@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
@@ -45,6 +46,8 @@ import com.devops.krakenlabs.lanix.privacidad.AvisoDePrivacidadFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_PHONE_STATE;
@@ -74,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private TextView tvChangePw;
     private LinearLayout llSplash;
     private TextView tvPrivacidad;
+    private TextView tvVersion;
 
     private static Double TIME_SPLASH       = 10.0; //MILISEGUNDOS
     @Override
@@ -112,6 +116,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         cbRememberMe   = findViewById(R.id.rempasswordcheckbox);
         authController = LanixApplication.getInstance().getAuthController();
 
+        tvVersion = findViewById(R.id.tv_version);
+
         tvChangePw = findViewById(R.id.tv_change_pw);
         tvChangePw.setOnClickListener(new OnClickListener() {
             @Override
@@ -141,7 +147,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
         mayRequestPermissions();
         mayRequestDevice();
-//        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
+        tvVersion.setText("V "+requestVersion());
     }
 
     public void hideSoftKeyboard() {
