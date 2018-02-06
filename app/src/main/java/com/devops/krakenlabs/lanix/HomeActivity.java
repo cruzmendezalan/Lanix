@@ -70,6 +70,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int ALL_PERMISSIONS_RESULT = 101;
     private GPSController GPSController;
     private boolean isPaused;
+
     private double latitude;
     private double longitude;
 
@@ -333,6 +334,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
     private void updateMap(double lat, double lon){
         try{
+            latitude  = lat;
+            longitude = lon;
             LatLng latLng = new LatLng(lat, lon);
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
             mapa.clear();
@@ -359,13 +362,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 showDialog("LANIX", "Enviando información", null);
                 Calendar c = Calendar.getInstance();
                 if (evento.equals(HORAENTRADA)){
-                    eventoString = "Se a registrado tu hora de entrada a ";
+                    eventoString = "Se ha registrado tu hora de entrada a ";
                 }else if(evento.equals(HORAENTRADACOMIDA)){
-                    eventoString = "Se a registrado tu hora de entrada despues de comida a ";
+                    eventoString = "Se ha registrado tu hora de entrada después de comida a ";
                 }else if(evento.equals(HORASALIDACOMIDA)){
-                    eventoString = "Se a registrado tu hora de salida a comer a ";
+                    eventoString = "Se ha registrado tu hora de salida a comer a ";
                 }else if(evento.equals(HORASALIDA)){
-                    eventoString = "Se a registrado tu salida a ";
+                    eventoString = "Se ha registrado tu salida a ";
                 }
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 dateTime = df.format(c.getTime());
