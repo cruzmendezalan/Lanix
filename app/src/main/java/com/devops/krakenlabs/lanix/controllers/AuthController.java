@@ -68,25 +68,32 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     public ArrayList<String> login(String username, String pasword) {
         Log.d(TAG, "login() called with: username = [" + username + "], pasword = [" + pasword + "]");
+        ArrayList<String> rulesViolated = null;
         try {
             LanixApplication lanixApplication = LanixApplication.getInstance();
-            ArrayList<String> rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(username, pasword);
+            Log.e(TAG, "login: 0" );
+            rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(username, pasword);
             if (rulesViolated == null && device != null) {//
+                Log.w(TAG, "login: 1" );
                 //hacer login
                 /**
                  * una vez que el usuario y la contraseña pasan por validaciones locales
                  * construimos el objeto que sera enviado al servicio
                  */
                 SessionRequest sessionRequest = new SessionRequest(username, device.getTokenDispositivo(), pasword);
+                Log.w(TAG, "login: 2" );
                 NetworkController networkController = lanixApplication.getNetworkController();
+                Log.w(TAG, "login: 3" );
                 networkController.requestData(sessionRequest, Request.Method.POST, this, this);
                 return null;
+            }else{
+                Log.w(TAG, "login: DEVICE NULL" );
             }
-            return rulesViolated;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        onErrorResponse(null);
+        return rulesViolated;
     }
 
 

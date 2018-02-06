@@ -78,6 +78,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private Button cardRegresoC;
     private Button cardSalida;
 
+    private Button btnGps;
+    private boolean ubicationFromGooglePlay;
+    private Location locationFromServices;
 
     private AuthController authController;
     private MaterialDialog notificacionDialog;
@@ -135,6 +138,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         cardRegresoC = findViewById(R.id.cv_regreso_comer);
         cardSalida = findViewById(R.id.cv_salida);
         promotorName = findViewById(R.id.tv_promotor_name);
+        btnGps      = findViewById(R.id.btn_gps);
+        btnGps.setOnClickListener(this);
         try{
             promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
         }catch (Exception e){
@@ -163,7 +168,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.d(TAG, "onSuccess() called with: location = [" + location + "]");
                         if (location != null) {
                             // Logic to handle location object
-                            refreshByServices(location);
+                            locationFromServices = location;
+//                            refreshByServices(location);
                         }
                     }
                 });
@@ -179,6 +185,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void refreshByServices(Location location) {
+        Log.d(TAG, "refreshByServices() called with: location = [" + location + "]");
         if (location != null){
             tLocation = location;
         }
@@ -290,17 +297,38 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         isPaused = false;
-        refreshLocation();
+//        refreshLocationByGPS();
+        updateMap();
+    }
+
+    private void updateMap(){
+        Log.d(TAG, "updateMap() called "+ubicationFromGooglePlay);
+        if (!isPaused){
+            if (ubicationFromGooglePlay){
+                refreshByServices(locationFromServices);
+            }else{
+                refreshLocationByGPS();
+            }
+        }
+        new CountDownTimer(1000, 500) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                updateMap();
+            }
+
+        }.start();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
         mapa = googleMap;
-        refreshByServices(null);
     }
 
-    private void refreshLocation(){
+    private void refreshLocationByGPS(){
+        Log.d(TAG, "refreshLocationByGPS() called");
         if (mapa != null){
             GPSController = new GPSController(HomeActivity.this);
             if (GPSController.canGetLocation() && GPSController.getLoc() != null) {
@@ -317,17 +345,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        if (!isPaused){
-            new CountDownTimer(5000, 1000) {
-                public void onTick(long millisUntilFinished) {
-                }
-
-                public void onFinish() {
-                    refreshLocation();
-                }
-
-            }.start();
-        }
     }
 
     private void eventoUsuario(String evento){
@@ -372,6 +389,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClick(View view) {
         int id = view.getId();
         switch (id){
+            case R.id.btn_gps:{
+                ubicationFromGooglePlay = !ubicationFromGooglePlay;
+                break;
+            }
+
             case R.id.cv_entrada:{
                 eventoUsuario(HORAENTRADA);
                 break;

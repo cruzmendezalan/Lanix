@@ -11,7 +11,7 @@
         android:layout_height="match_parent"></FrameLayout>
     <LinearLayout
         android:background="@color/white"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical"
         android:id="@+id/ll_asistencia"
         android:layout_width="match_parent"
@@ -66,7 +66,7 @@
 
             <Button
                 android:id="@+id/cv_regreso_comer"
-                android:foreground="?android:attr/selectableItemBackground"
+                 android:foreground="?android:attr/selectableItemBackground"
                 android:textColor="@color/white"
                 android:text="@string/msg_regreso_comida"
                 android:drawableRight="@drawable/chevron_right"
@@ -82,13 +82,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".HomeActivity" />
+                android:layout_height="match_parent">
+                <Button
+                    android:id="@+id/btn_gps"
+                    android:layout_margin="5dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="right"
+                    android:background="@drawable/ic_gps"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".HomeActivity" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

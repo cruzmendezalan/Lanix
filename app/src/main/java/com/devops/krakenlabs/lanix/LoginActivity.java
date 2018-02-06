@@ -20,6 +20,7 @@ import android.os.CountDownTimer;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -37,7 +38,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
@@ -46,15 +46,13 @@ import com.devops.krakenlabs.lanix.privacidad.AvisoDePrivacidadFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
-
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, SessionNotifier, ControllerNotifier {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, SessionNotifier, ControllerNotifier, ActivityCompat.OnRequestPermissionsResultCallback {
     public  static       String TAG = LoginActivity.class.getSimpleName();
     private static final String SPF_NAME = "vidslogin"; //  <--- Account
     private static final String USERNAME = "username";  //  <--- To save username
@@ -141,6 +139,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 openPrivacidad();
             }
         });
+        mayRequestPermissions();
+        mayRequestDevice();
 //        Fabric.with(this, new Crashlytics());
     }
 
@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void openPrivacidad() {
+        Log.d(TAG, "openPrivacidad() called");
         AvisoDePrivacidadFragment recoverPwFragment = new AvisoDePrivacidadFragment();
         recoverPwFragment.show(getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
     }
@@ -166,14 +167,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
+        if (!mayRequestPermissions()) {
             return;
         }
 
         getLoaderManager().initLoader(0, null, this);
     }
 
-    private boolean mayRequestContacts() {
+    private boolean mayRequestPermissions() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -281,6 +282,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void hideKeyboard(){
+        Log.d(TAG, "hideKeyboard() called");
         try{
             mEmailView.clearFocus();
             mPasswordView.clearFocus();
@@ -375,6 +377,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        Log.d(TAG, "addEmailsToAutoComplete() called with: emailAddressCollection = [" + emailAddressCollection + "]");
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
@@ -411,6 +414,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @param pw
      */
     private void saveCredentials(String user, String pw) {
+        Log.d(TAG, "saveCredentials() called with: user = [" + user + "], pw = [" + pw + "]");
         SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
         loginPreferences.edit().putString(USERNAME, user).putString(PASSWORD, pw).commit();
     }
@@ -506,5 +510,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         return t;
     }
+
 }
 

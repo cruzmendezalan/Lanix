@@ -82,6 +82,7 @@ public class GPSController extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+                            Log.e(TAG, "getLocation: "+loc );
                         }else{
                             Log.w(TAG, "getLocation: location manager dont have location" );
 //                            loc = locationManager.getLastKnownLocation()
@@ -165,22 +166,22 @@ public class GPSController extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-
+        Log.d(TAG, "onLocationChanged() called with: location = [" + location + "]");
     }
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-
+        Log.d(TAG, "onStatusChanged() called with: s = [" + s + "], i = [" + i + "], bundle = [" + bundle + "]");
     }
 
     @Override
     public void onProviderEnabled(String s) {
-
+        Log.d(TAG, "onProviderEnabled() called with: s = [" + s + "]");
     }
 
     @Override
     public void onProviderDisabled(String s) {
-
+        Log.d(TAG, "onProviderDisabled() called with: s = [" + s + "]");
     }
 
     public Location getLoc() {
