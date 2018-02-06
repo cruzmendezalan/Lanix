@@ -63,9 +63,9 @@ public class MisVentasFragment extends Fragment {
         if (misVentasHistoriaResponse != null){
             String[] values = new String[misVentasHistoriaResponse.getVentas().size()];
             for (int i = 0; i < misVentasHistoriaResponse.getVentas().size(); i++) {
-                values[i] = misVentasHistoriaResponse.getVentas().get(i).getFechaVenta() + "  "+ misVentasHistoriaResponse.getVentas().get(i).getVentaId();
+                values[i] = misVentasHistoriaResponse.getVentas().get(i).getFechaVenta() + " FOLIO:  "+ misVentasHistoriaResponse.getVentas().get(i).getVentaId() + "\n"+misVentasHistoriaResponse.getVentas().get(i).getProducto();
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, values);
             lvMisVentas.setAdapter(adapter);
         }
     }

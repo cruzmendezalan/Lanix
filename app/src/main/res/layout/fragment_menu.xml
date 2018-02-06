@@ -127,7 +127,7 @@
                     android:textColor="@color/white"
                     android:id="@+id/btn_mis_ventas"
                     android:text="Mis ventas"
-                    android:drawableRight="@drawable/cart_outline"
+                    android:drawableRight="@drawable/ic_mis_ventas"
                     android:layout_width="match_parent"
                     android:layout_height="50dp" />
 

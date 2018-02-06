@@ -15,6 +15,10 @@ public class VentasItem{
 	@SerializedName("ProductoId")
 	private long productoId;
 
+	@SerializedName("Producto")
+	private String producto;
+
+
 	@SerializedName("Modelo")
 	private String modelo;
 
@@ -70,6 +74,14 @@ public class VentasItem{
 
 	public String getFechaVenta(){
 		return fechaVenta;
+	}
+
+	public String getProducto() {
+		return producto;
+	}
+
+	public void setProducto(String producto) {
+		this.producto = producto;
 	}
 
 	@Override
