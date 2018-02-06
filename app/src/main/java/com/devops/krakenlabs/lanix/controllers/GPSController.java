@@ -71,7 +71,7 @@ public class GPSController extends Service implements LocationListener {
                         //                                          int[] grantResults)
                         // to handle the case where the user grants the permission. See the documentation
                         // for ActivityCompat#requestPermissions for more details.
-                        Log.e(TAG, "getLocation: NO PERMISOS" );
+//                        Log.e(TAG, "getLocation: NO PERMISOS" );
                     }
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
@@ -82,16 +82,16 @@ public class GPSController extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
-                            Log.e(TAG, "getLocation: "+loc );
+//                            Log.e(TAG, "getLocation: "+loc );
                         }else{
-                            Log.w(TAG, "getLocation: location manager dont have location" );
+//                            Log.w(TAG, "getLocation: location manager dont have location" );
 //                            loc = locationManager.getLastKnownLocation()
                         }
                     }else{
-                        Log.w(TAG, "getLocation: Location manager NULL" );
+//                        Log.w(TAG, "getLocation: Location manager NULL" );
                     }
                 }else{
-                    Log.e(TAG, "getLocation: NO GPS Enabled get lat/long using GPS Services" );
+//                    Log.e(TAG, "getLocation: NO GPS Enabled get lat/long using GPS Services" );
                 }
             }
         } catch (Exception e) {
@@ -166,22 +166,22 @@ public class GPSController extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged() called with: location = [" + location + "]");
+////        Log.d(TAG, "onLocationChanged() called with: location = [" + location + "]");
     }
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-        Log.d(TAG, "onStatusChanged() called with: s = [" + s + "], i = [" + i + "], bundle = [" + bundle + "]");
+////        Log.d(TAG, "onStatusChanged() called with: s = [" + s + "], i = [" + i + "], bundle = [" + bundle + "]");
     }
 
     @Override
     public void onProviderEnabled(String s) {
-        Log.d(TAG, "onProviderEnabled() called with: s = [" + s + "]");
+////        Log.d(TAG, "onProviderEnabled() called with: s = [" + s + "]");
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        Log.d(TAG, "onProviderDisabled() called with: s = [" + s + "]");
+////        Log.d(TAG, "onProviderDisabled() called with: s = [" + s + "]");
     }
 
     public Location getLoc() {

@@ -165,7 +165,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
-                        Log.d(TAG, "onSuccess() called with: location = [" + location + "]");
+//                        Log.d(TAG, "onSuccess() called with: location = [" + location + "]");
                         if (location != null) {
                             // Logic to handle location object
                             locationFromServices = location;
@@ -185,21 +185,26 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void refreshByServices(Location location) {
-        Log.d(TAG, "refreshByServices() called with: location = [" + location + "]");
-        if (location != null){
-            tLocation = location;
+        try{
+            if (location != null){
+                updateMap(location.getLatitude(), location.getLongitude());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        if (mapa != null && tLocation != null){
-            longitude = tLocation.getLongitude();
-            latitude  = tLocation.getLatitude();
-            LatLng latLng = new LatLng(latitude, longitude);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-            mapa.clear();
-            mapa.addMarker(new MarkerOptions().position(latLng).title("Tú ubicación"));
-            mapa.animateCamera(cameraUpdate);
-        }else{
-            Log.e(TAG, "refreshByServices: Map null..." );
-        }
+////        Log.d(TAG, "refreshByServices() called with: location = [" + location + "]");
+//        if (location != null){
+//            tLocation = location;
+//        }
+//        if (mapa != null && tLocation != null){
+//            longitude = tLocation.getLongitude();
+//            latitude  = tLocation.getLatitude();
+//            LatLng latLng = new LatLng(latitude, longitude);
+//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+//            mapa.clear();
+//            mapa.addMarker(new MarkerOptions().position(latLng).title("Tú ubicación"));
+//            mapa.animateCamera(cameraUpdate);
+//        }
     }
 
 
@@ -302,7 +307,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMap(){
-        Log.d(TAG, "updateMap() called "+ubicationFromGooglePlay);
+        Log.d(TAG, "updateMap() called ubicationFromGooglePlay => "+ubicationFromGooglePlay);
         if (!isPaused){
             if (ubicationFromGooglePlay){
                 refreshByServices(locationFromServices);
@@ -310,7 +315,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 refreshLocationByGPS();
             }
         }
-        new CountDownTimer(1000, 500) {
+        new CountDownTimer(2000, 500) {
             public void onTick(long millisUntilFinished) {
             }
 
@@ -323,25 +328,26 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
+//        Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
         mapa = googleMap;
     }
-
+    private void updateMap(double lat, double lon){
+        try{
+            LatLng latLng = new LatLng(lat, lon);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+            mapa.clear();
+            mapa.addMarker(new MarkerOptions().position(latLng).title("Tu ubicación"));
+            mapa.animateCamera(cameraUpdate);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private void refreshLocationByGPS(){
-        Log.d(TAG, "refreshLocationByGPS() called");
+//        Log.d(TAG, "refreshLocationByGPS() called");
         if (mapa != null){
             GPSController = new GPSController(HomeActivity.this);
             if (GPSController.canGetLocation() && GPSController.getLoc() != null) {
-                longitude = GPSController.getLongitude();
-                latitude  = GPSController.getLatitude();
-                LatLng latLng = new LatLng(latitude, longitude);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-                mapa.clear();
-                mapa.addMarker(new MarkerOptions().position(latLng).title("Tu ubicación"));
-                mapa.animateCamera(cameraUpdate);
-//                Log.e(TAG, "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude));
-            } else {
-//                GPSController.showSettingsAlert();
+                updateMap(GPSController.getLatitude(),GPSController.getLongitude());
             }
         }
 
@@ -363,13 +369,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 dateTime = df.format(c.getTime());
-                Log.e(TAG, "eventoUsuario: "+dateTime );
+//                Log.e(TAG, "eventoUsuario: "+dateTime );
                 EventEntradaRequest eventEntradaRequest = new EventEntradaRequest(Double.toString(latitude),
                         Double.toString(longitude),
                         authController.getUser().getSesion().getIdentificador(),
                         evento,
                         dateTime );
-                Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toString() );
+//                Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toString() );
 //                NetworkController networkController = LanixApplication.getInstance().getNetworkController();
 //                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
 //                        networkController.getServiceUrl(eventEntradaRequest.TAG),
@@ -379,7 +385,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 //                networkController.getQueue().add(jsObjRequest);
                 LanixApplication.getInstance().getNetworkController().requestData(eventEntradaRequest,Request.Method.POST,this,this);
             }else{
-                Log.e(TAG, "eventoUsuario: AHORITA NO JOVEN");
+//                Log.e(TAG, "eventoUsuario: AHORITA NO JOVEN");
             }
 
         }catch (Exception e){e.printStackTrace();}
@@ -411,13 +417,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             }
             default:{
-                Log.e(TAG, "onClick: COCAS" );
+//                Log.e(TAG, "onClick: COCAS" );
             }
         }
     }
 
     private void showDialog(String titulo, String contenido, String positive){
-        Log.d(TAG, "showDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
+//        Log.d(TAG, "showDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
         if (positive == null){
             notificacionDialog = new MaterialDialog.Builder(this)
                     .title(titulo)
@@ -428,7 +434,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void dimissDialog(String titulo, String contenido, String positive){
-        Log.d(TAG, "dimissDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
+//        Log.d(TAG, "dimissDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
         notificacionDialog.dismiss();
         notificacionDialog = new MaterialDialog.Builder(this)
                 .title(titulo)
@@ -440,7 +446,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
     @Override
     public void onResponse(JSONObject response) {
-        Log.e(TAG, "onResponse: "+response );
+//        Log.e(TAG, "onResponse: "+response );
         Gson g = new Gson();
         AsistenciaResponse asistenciaResponse = g.fromJson(response.toString(), AsistenciaResponse.class);
         if (asistenciaResponse.getError().getNo() == 0){
@@ -450,12 +456,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             authController.syncDevice();
         }
 
-        Log.w(TAG, "onResponse() called with: response = [" + response + "]");
+//        Log.w(TAG, "onResponse() called with: response = [" + response + "]");
     }
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed() called");
+//        Log.d(TAG, "onBackPressed() called");
         if (activeFragment != null ){
             goHome();
         }
@@ -473,12 +479,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
+//        Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
         dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
     }
 
     public void hideFragmentContainer(){
-        Log.d(TAG, "hideFragmentContainer() called");
+//        Log.d(TAG, "hideFragmentContainer() called");
         frameLayout.setVisibility(View.GONE);
         llAsistencia.setVisibility(View.VISIBLE);
     }
@@ -518,7 +524,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try{
-            Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
+//            Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if(result != null) {
                 if(result.getContents() == null) {
