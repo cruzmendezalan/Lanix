@@ -75,6 +75,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         viewRoot.invalidate();
         hideSoftKeyboard();
     }
+
     public void hideSoftKeyboard() {
         Log.d(TAG, "hideSoftKeyboard() called");
         try{
@@ -93,7 +94,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         etImei   = viewRoot.findViewById(R.id.et_imei);
         etLccid  = viewRoot.findViewById(R.id.et_lccid);
         btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
-        spinner = viewRoot.findViewById(R.id.searchableSpinner);
+        spinner  = viewRoot.findViewById(R.id.searchableSpinner);
         spinnerCatalog = viewRoot.findViewById(R.id.searchableCatalog);
         ivCamera = viewRoot.findViewById(R.id.tv_camera);
         ivCamera.setOnClickListener(new View.OnClickListener() {
@@ -113,44 +114,55 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     }
 
     private void initScanBarCode(){
-        Log.d(TAG, "initScanBarCode() called");
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(getActivity()).build();
+        try{
+            Log.d(TAG, "initScanBarCode() called");
+            BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(getActivity()).build();
 
-        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setPrompt("Escanea el código de barras");
-        integrator.setCameraId(0);  // Use a specific camera of the device
-        integrator.setBeepEnabled(true);
-        integrator.setOrientationLocked(true);
-        integrator.setBarcodeImageEnabled(true);
-        integrator.initiateScan();
-
+            IntentIntegrator integrator = new IntentIntegrator(getActivity());
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            integrator.setPrompt("Escanea el código de barras");
+            integrator.setCameraId(0);  // Use a specific camera of the device
+            integrator.setBeepEnabled(true);
+            integrator.setOrientationLocked(true);
+            integrator.setBarcodeImageEnabled(true);
+            integrator.initiateScan();
+        }catch (Exception  e){
+            e.printStackTrace();
+        }
     }
 
 
     // TODO: 17/01/18
     private void generateAndAddVenta() {
-        ventaArr.add(new ProductosItem(catalog.getProductos().get(positionSelected-1).getModeloId(), etImei.getText().toString(),catalog.getProductos().get(positionSelected-1).getModelo()));
-        etImei   .setText("");
-        etLccid  .setText("");
-        Snackbar sn = Snackbar.make(viewRoot, "Se a agregado el smartphone a la lista de venta", Snackbar.LENGTH_LONG);
-        View snackBarView = sn.getView();
-        snackBarView.setBackgroundColor(getResources().getColor(R.color.white));
-        sn.show();
+        try{
+            ventaArr.add(new ProductosItem(catalog.getProductos().get(positionSelected-1).getModeloId(), etImei.getText().toString(),catalog.getProductos().get(positionSelected-1).getModelo()));
+            etImei   .setText("");
+            etLccid  .setText("");
+            Snackbar sn = Snackbar.make(viewRoot, "Se a agregado el smartphone a la lista de venta", Snackbar.LENGTH_LONG);
+            View snackBarView = sn.getView();
+            snackBarView.setBackgroundColor(getResources().getColor(R.color.white));
+            sn.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void initUI(String response) {
-        Log.d(TAG, "initUI() called with: response = [" + response + "]");
-        Gson gson =  new Gson();
-        catalog = gson.fromJson(response, Catalog.class);
-        Log.e(TAG, "initUI: "+catalog );
-        modelosAdapter = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
-        catalogsadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
-        spinner.setAdapter(modelosAdapter);
-        spinner.setOnItemSelectedListener(mOnItemSelectedListener);
+        try{
+            Log.d(TAG, "initUI() called with: response = [" + response + "]");
+            Gson gson =  new Gson();
+            catalog = gson.fromJson(response, Catalog.class);
+            Log.e(TAG, "initUI: "+catalog );
+            modelosAdapter = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
+            catalogsadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
+            spinner.setAdapter(modelosAdapter);
+            spinner.setOnItemSelectedListener(mOnItemSelectedListener);
 
-        spinnerCatalog.setAdapter(catalogsadapter);
-        spinnerCatalog.setOnItemSelectedListener(mOnItemSelectedCatalogs);
+            spinnerCatalog.setAdapter(catalogsadapter);
+            spinnerCatalog.setOnItemSelectedListener(mOnItemSelectedCatalogs);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -158,21 +170,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
      */
     private void requestModels() {
         try{
-
-//            LanixApplication lanixApplication   = LanixApplication.getInstance();
             CatalogRequest catalogRequest = new CatalogRequest();
-//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-//                    (lanixApplication.getNetworkController().getServiceUrl(Catalog.class.getSimpleName())+
-//                            lanixApplication.getAuthController().getUser().getSesion().getIdentificador()),
-//                    catalogRequest.toJson(),
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            Log.e(TAG, "onResponse() called with: response = [" + response + "]");
-//                            initUI(response.toString());
-//                        }
-//                    },this);
-//            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
             LanixApplication.getInstance().getNetworkController().requestData(catalogRequest, Request.Method.GET,new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -206,26 +204,6 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
     }
 
-    private void enviarVenta(){
-//        Log.d(TAG, "enviarVenta() called");
-//        if (ventaArr.size() > 0){
-//            HomeActivity ho = (HomeActivity) getActivity();
-//            LanixApplication lanixApplication   = LanixApplication.getInstance();
-//            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
-//                    lanixApplication.getNetworkController().getServiceUrl(VentasRequestt.class.getSimpleName()),
-//                    ho.getVentasFirstStepFragment().getVentaRequest().toJson(),
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-//                            goHome();
-//                        }
-//                    },this);
-//            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
-//        }else{
-//            Log.e(TAG, "enviarVenta: NO SE REALIZO VENTA" );
-//        }
-    }
 
     private void goHome() {
         HomeActivity ho = (HomeActivity) getActivity();
