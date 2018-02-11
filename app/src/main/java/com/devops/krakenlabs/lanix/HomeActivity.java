@@ -243,36 +243,37 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-
-            case ALL_PERMISSIONS_RESULT:
-                for (Object perms : permissionsToRequest) {
-                    if (!hasPermission(String.valueOf(perms))) {
-                        permissionsRejected.add(perms);
-                    }
-                }
-
-                if (permissionsRejected.size() > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(String.valueOf(permissionsRejected.get(0)))) {
-                            showMessageOKCancel("Estos permisos son necesarios para la aplicación. Por favor permite el acceso.",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions((String[]) permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-                                            }
-                                        }
-                                    });
-                            return;
+        try{
+            switch (requestCode) {
+                case ALL_PERMISSIONS_RESULT:
+                    for (Object perms : permissionsToRequest) {
+                        if (!hasPermission(String.valueOf(perms))) {
+                            permissionsRejected.add(perms);
                         }
                     }
-                }
 
-                break;
+                    if (permissionsRejected.size() > 0) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (shouldShowRequestPermissionRationale(String.valueOf(permissionsRejected.get(0)))) {
+                                showMessageOKCancel("Estos permisos son necesarios para la aplicación. Por favor permite el acceso.",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                    requestPermissions((String[]) permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
+                                                }
+                                            }
+                                        });
+                                return;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
@@ -308,23 +309,27 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMap(){
-        Log.d(TAG, "updateMap() called ubicationFromGooglePlay => "+ubicationFromGooglePlay);
-        if (!isPaused){
-            if (ubicationFromGooglePlay){
-                refreshByServices(locationFromServices);
-            }else{
-                refreshLocationByGPS();
+        try{
+            Log.d(TAG, "updateMap() called ubicationFromGooglePlay => "+ubicationFromGooglePlay);
+            if (!isPaused){
+                if (ubicationFromGooglePlay){
+                    refreshByServices(locationFromServices);
+                }else{
+                    refreshLocationByGPS();
+                }
             }
+            new CountDownTimer(2000, 500) {
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    updateMap();
+                }
+
+            }.start();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        new CountDownTimer(2000, 500) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                updateMap();
-            }
-
-        }.start();
     }
 
     @Override
@@ -346,14 +351,17 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
     private void refreshLocationByGPS(){
-//        Log.d(TAG, "refreshLocationByGPS() called");
-        if (mapa != null){
-            GPSController = new GPSController(HomeActivity.this);
-            if (GPSController.canGetLocation() && GPSController.getLoc() != null) {
-                updateMap(GPSController.getLatitude(),GPSController.getLongitude());
+        try{
+            //        Log.d(TAG, "refreshLocationByGPS() called");
+            if (mapa != null){
+                GPSController = new GPSController(HomeActivity.this);
+                if (GPSController.canGetLocation() && GPSController.getLoc() != null) {
+                    updateMap(GPSController.getLatitude(),GPSController.getLongitude());
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     private void eventoUsuario(String evento){
@@ -427,25 +435,32 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void showDialog(String titulo, String contenido, String positive){
 //        Log.d(TAG, "showDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
-        if (positive == null){
-            notificacionDialog = new MaterialDialog.Builder(this)
-                    .title(titulo)
-                    .content(contenido)
-                    .icon(getDrawable(R.drawable.logo_lanix))
-                    .show();
+        try{
+            if (positive == null){
+                notificacionDialog = new MaterialDialog.Builder(this)
+                        .title(titulo)
+                        .content(contenido)
+                        .icon(getDrawable(R.drawable.logo_lanix))
+                        .show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     private void dimissDialog(String titulo, String contenido, String positive){
+        try{
+            notificacionDialog.dismiss();
+            notificacionDialog = new MaterialDialog.Builder(this)
+                    .title(titulo)
+                    .content(contenido)
+                    .positiveText(positive)
+                    .icon(getDrawable(R.drawable.rsz_logo_lanix))
+                    .show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 //        Log.d(TAG, "dimissDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
-        notificacionDialog.dismiss();
-        notificacionDialog = new MaterialDialog.Builder(this)
-                .title(titulo)
-                .content(contenido)
-                .positiveText(positive)
-                .icon(getDrawable(R.drawable.rsz_logo_lanix))
-                .show();
-
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -488,8 +503,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void hideFragmentContainer(){
 //        Log.d(TAG, "hideFragmentContainer() called");
-        frameLayout.setVisibility(View.GONE);
-        llAsistencia.setVisibility(View.VISIBLE);
+        try{
+            frameLayout.setVisibility(View.GONE);
+            llAsistencia.setVisibility(View.VISIBLE);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public VentasSecondStepFragment getVentasSecondStepFragment() {
