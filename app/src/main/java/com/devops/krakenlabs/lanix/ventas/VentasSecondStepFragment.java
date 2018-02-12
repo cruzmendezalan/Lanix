@@ -259,7 +259,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         public void onItemSelected(View view, int position, long id) {
             Log.d(TAG, "mOnProdcutoSelected() called with: view = [" + view + "], position = [" + position + "], id = [" + id + "]");
 //            positionCadComercialSelected = position;
-            modelosAdapter.updateModelos(catalog.getModelos().get(position).getModeloId());
+            modelosAdapter.updateModelos(catalog.getModelos().get(position-1).getModeloId());
             modelosAdapter.notifyDataSetChanged();
             spinnerModelo.invalidate();
         }
