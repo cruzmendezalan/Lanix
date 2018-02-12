@@ -53,7 +53,7 @@
             app:BoarderColor="@color/colorPrimary"
             app:ShowBorders="true"
             app:AnimDuration="200"
-            app:RevealEmptyText="Selecciona el catálogo"
+            app:RevealEmptyText="Selecciona el Catálogo"
             app:SpinnerExpandHeight="200dp"/>
 
         <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
