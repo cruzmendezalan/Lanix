@@ -38,6 +38,7 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
     private Context mContext;
     private ArrayList<String> mBackupStrings;
     private ArrayList<String> mStrings;
+    private ArrayList<Integer> mProductoId;
     private StringFilter mStringFilter = new StringFilter();
     private int lType;
 
@@ -47,6 +48,7 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
         mContext = context;
         mStrings = new ArrayList<>();
         mBackupStrings = new ArrayList<>();
+        mProductoId = new ArrayList<>();
         this.catalog = catalog;
         if (type == 0){
             try{
@@ -72,12 +74,14 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
         int k = 0;
         mStrings = new ArrayList<>();
         mBackupStrings = new ArrayList<>();
+        mProductoId = new ArrayList<>();
         try{
             for (int i = 0; i < catalog.getProductos().size(); i++) {
                 if (catalog.getProductos().get(i).getModeloId() == modeloIDID){
                     k++;
                     mStrings.add(catalog.getProductos().get(i).getModelo() + " " + catalog.getProductos().get(i).getColor());
                     mBackupStrings.add(catalog.getProductos().get(i).getModelo() + " " + catalog.getProductos().get(i).getColor());
+                    mProductoId.add(catalog.getProductos().get(i).getProductoId());
                 }
             }
         }catch (Exception e){
@@ -179,6 +183,9 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
             return -1;
     }
 
+    public ArrayList<Integer> getmProductoId() {
+        return mProductoId;
+    }
 
     public class StringFilter extends Filter {
         @Override

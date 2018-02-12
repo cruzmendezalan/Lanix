@@ -55,7 +55,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
     private SearchableSpinner spinnerProductos;
     private SearchableSpinner spinnerCadenaComercial;
-    private int positionSelected;
+    private int positionCadComercialSelected;
     private int positionCatalogSelected;
     private Catalog catalog;
     private ScrollView scrollView;
@@ -138,7 +138,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     // TODO: 17/01/18
     private void generateAndAddVenta() {
         try{
-            ventaArr.add(new ProductosItem(catalog.getProductos().get(positionSelected-1).getModeloId(), etImei.getText().toString(),catalog.getProductos().get(positionSelected-1).getModelo()));
+            ventaArr.add(new ProductosItem(positionCatalogSelected, etImei.getText().toString(),""));
             etImei   .setText("");
             etLccid  .setText("");
             Snackbar sn = Snackbar.make(viewRoot, "Se a agregado el smartphone a la lista de venta", Snackbar.LENGTH_LONG);
@@ -166,6 +166,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
             spinnerCadenaComercial.setOnItemSelectedListener(mOnCadenaComercialSelected);
 
             spinnerModelo.setAdapter(modelosAdapter);
+            spinnerModelo.setOnItemSelectedListener(mOnModeloSelected);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -221,7 +222,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         try{
             HomeActivity ho = (HomeActivity) getActivity();
             //return null if the user can go to the next step, create a new VerificationError instance otherwise
-            ho.getVentasFirstStepFragment().getVentaRequest().setCadenaComercialId(""+catalog.getCadenasComerciales().get(positionCatalogSelected).getCadenaComercialId());
+            ho.getVentasFirstStepFragment().getVentaRequest().setCadenaComercialId(""+catalog.getCadenasComerciales().get(positionCadComercialSelected).getCadenaComercialId());
             if (ventaArr.size() > 0){
                 ho.getVentasFirstStepFragment().getVentaRequest().setProductos(ventaArr);
             }
@@ -256,12 +257,11 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private OnItemSelectedListener mOnProdcutoSelected = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(View view, int position, long id) {
-            positionSelected = position;
+            Log.d(TAG, "mOnProdcutoSelected() called with: view = [" + view + "], position = [" + position + "], id = [" + id + "]");
+//            positionCadComercialSelected = position;
             modelosAdapter.updateModelos(catalog.getModelos().get(position).getModeloId());
-//            spinnerModelo.setAdapter(modelosAdapter);
             modelosAdapter.notifyDataSetChanged();
             spinnerModelo.invalidate();
-
         }
 
         @Override
@@ -272,7 +272,20 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private OnItemSelectedListener mOnCadenaComercialSelected = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(View view, int position, long id) {
-            positionCatalogSelected = position;
+            Log.d(TAG, "mOnCadenaComercialSelected() called with: view = [" + view + "], position = [" + position + "], id = [" + id + "]");
+            positionCadComercialSelected = position-1;
+        }
+
+        @Override
+        public void onNothingSelected() {
+        }
+    };
+
+    private OnItemSelectedListener mOnModeloSelected = new OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(View view, int position, long id) {
+            Log.d(TAG, "mOnModeloSelected() called with: view = [" + view + "], position = [" + position + "], id = [" + id + "]");
+            positionCatalogSelected = modelosAdapter.getmProductoId().get(position-1);
         }
 
         @Override
