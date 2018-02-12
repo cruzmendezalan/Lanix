@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,22 +33,28 @@ import gr.escsoft.michaelprimez.searchablespinner.tools.UITools;
  */
 
 public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, ISpinnerSelectedView {
+    private static final String TAG = ModelosAdapter.class.getSimpleName();
     private Catalog catalog;
     private Context mContext;
     private ArrayList<String> mBackupStrings;
     private ArrayList<String> mStrings;
     private StringFilter mStringFilter = new StringFilter();
+    private int lType;
 
     public ModelosAdapter(@NonNull Context context, int resource, Catalog catalog, int type) {
         super(context, resource);
+        lType = type;
         mContext = context;
         mStrings = new ArrayList<>();
         mBackupStrings = new ArrayList<>();
+        this.catalog = catalog;
         if (type == 0){
-            for (int i = 0; i < catalog.getProductos().size(); i++) {
-                mStrings.add(catalog.getProductos().get(i).getModelo() + " " + catalog.getProductos().get(i).getColor());
-                mBackupStrings.add(catalog.getProductos().get(i).getModelo() + " " + catalog.getProductos().get(i).getColor());
-            }
+            try{
+                for (int i = 0; i < catalog.getModelos().size(); i++) {
+                    mStrings.add(catalog.getModelos().get(i).getModelo()  );
+                    mBackupStrings.add(catalog.getModelos().get(i).getModelo());
+                }
+            }catch (Exception e){e.printStackTrace();}
         }else if(type == 1){
             for (int i = 0; i < catalog.getCadenasComerciales().size(); i++) {
                 try{
@@ -60,6 +67,27 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
         }
     }
 
+    public int updateModelos(int modeloIDID){
+        Log.d(TAG, "updateModelos() called with: modeloIDID = [" + modeloIDID + "]");
+        int k = 0;
+        mStrings = new ArrayList<>();
+        mBackupStrings = new ArrayList<>();
+        try{
+            for (int i = 0; i < catalog.getProductos().size(); i++) {
+                if (catalog.getProductos().get(i).getModeloId() == modeloIDID){
+                    k++;
+                    mStrings.add(catalog.getProductos().get(i).getModelo() + " " + catalog.getProductos().get(i).getColor());
+                    mBackupStrings.add(catalog.getProductos().get(i).getModelo() + " " + catalog.getProductos().get(i).getColor());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Log.e(TAG, "FINAL SIZE: "+mStrings.size() );
+        notifyDataSetChanged();
+        return k;
+    }
+
     @Override
     public int getCount() {
         return mStrings == null ? 0 : mStrings.size() + 1;
@@ -68,14 +96,18 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = null;
-        if (position == 0) {
-            view = getNoSelectionView();
-        } else {
-            view = View.inflate(mContext, R.layout.view_list_item, null);
-            ImageView letters = (ImageView) view.findViewById(R.id.ImgVw_Letters);
-            TextView dispalyName = (TextView) view.findViewById(R.id.TxtVw_DisplayName);
-            letters.setImageDrawable(getTextDrawable(mStrings.get(position-1)));
-            dispalyName.setText(mStrings.get(position-1));
+        try{
+            if (position == 0) {
+                view = getNoSelectionView();
+            } else {
+                view = View.inflate(mContext, R.layout.view_list_item, null);
+                ImageView letters = (ImageView) view.findViewById(R.id.ImgVw_Letters);
+                TextView dispalyName = (TextView) view.findViewById(R.id.TxtVw_DisplayName);
+                letters.setImageDrawable(getTextDrawable(mStrings.get(position-1)));
+                dispalyName.setText(mStrings.get(position-1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return view;
     }
@@ -148,13 +180,7 @@ public class ModelosAdapter extends ArrayAdapter<String> implements Filterable, 
     }
 
 
-
-
-
-
-
     public class StringFilter extends Filter {
-
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             final FilterResults filterResults = new FilterResults();

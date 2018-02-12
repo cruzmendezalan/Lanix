@@ -48,16 +48,18 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private AutoCompleteTextView etImei;
     private EditText etLccid;
     private ImageView ivCamera;
+    private ModelosAdapter productosAdapter;
+    private ModelosAdapter cadenaComercialadapter;
     private ModelosAdapter modelosAdapter;
-    private ModelosAdapter catalogsadapter;
     private Button btnVenta;
     private ArrayList<ProductosItem > ventaArr =  new ArrayList<>();
-    private SearchableSpinner spinner;
-    private SearchableSpinner spinnerCatalog;
+    private SearchableSpinner spinnerProductos;
+    private SearchableSpinner spinnerCadenaComercial;
     private int positionSelected;
     private int positionCatalogSelected;
     private Catalog catalog;
     private ScrollView scrollView;
+    private SearchableSpinner spinnerModelo;
 
     public VentasSecondStepFragment() {
         // Required empty public constructor
@@ -94,8 +96,9 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         etImei   = viewRoot.findViewById(R.id.et_imei);
         etLccid  = viewRoot.findViewById(R.id.et_lccid);
         btnVenta = viewRoot.findViewById(R.id.btn_guardar_venta);
-        spinner  = viewRoot.findViewById(R.id.searchableSpinner);
-        spinnerCatalog = viewRoot.findViewById(R.id.searchableCatalog);
+        spinnerProductos = viewRoot.findViewById(R.id.searchableProducto);
+        spinnerCadenaComercial = viewRoot.findViewById(R.id.searchableCadenaComercial);
+        spinnerModelo = viewRoot.findViewById(R.id.searchableModelo);
         ivCamera = viewRoot.findViewById(R.id.tv_camera);
         ivCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,13 +156,16 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
             Gson gson =  new Gson();
             catalog = gson.fromJson(response, Catalog.class);
             Log.e(TAG, "initUI: "+catalog );
-            modelosAdapter = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
-            catalogsadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
-            spinner.setAdapter(modelosAdapter);
-            spinner.setOnItemSelectedListener(mOnItemSelectedListener);
+            productosAdapter       = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
+            cadenaComercialadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
+            modelosAdapter         = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,2);
+            spinnerProductos.setAdapter(productosAdapter);
+            spinnerProductos.setOnItemSelectedListener(mOnProdcutoSelected);
 
-            spinnerCatalog.setAdapter(catalogsadapter);
-            spinnerCatalog.setOnItemSelectedListener(mOnItemSelectedCatalogs);
+            spinnerCadenaComercial.setAdapter(cadenaComercialadapter);
+            spinnerCadenaComercial.setOnItemSelectedListener(mOnCadenaComercialSelected);
+
+            spinnerModelo.setAdapter(modelosAdapter);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -247,10 +253,15 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         //handle error inside of the fragment, e.g. show error on EditText
     }
 
-    private OnItemSelectedListener mOnItemSelectedListener = new OnItemSelectedListener() {
+    private OnItemSelectedListener mOnProdcutoSelected = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(View view, int position, long id) {
             positionSelected = position;
+            modelosAdapter.updateModelos(catalog.getModelos().get(position).getModeloId());
+//            spinnerModelo.setAdapter(modelosAdapter);
+            modelosAdapter.notifyDataSetChanged();
+            spinnerModelo.invalidate();
+
         }
 
         @Override
@@ -258,7 +269,7 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         }
     };
 
-    private OnItemSelectedListener mOnItemSelectedCatalogs = new OnItemSelectedListener() {
+    private OnItemSelectedListener mOnCadenaComercialSelected = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(View view, int position, long id) {
             positionCatalogSelected = position;

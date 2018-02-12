@@ -16,7 +16,7 @@
             android:src="@drawable/logo_lanix"/>
 
         <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
-            android:id="@+id/searchableSpinner"
+            android:id="@+id/searchableProducto"
             android:background="@drawable/border"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:gravity="center_horizontal"
             app:BoarderColor="@color/colorPrimary"
             app:DoneSearchTintColor="@color/colorPrimaryDark"
-            app:RevealEmptyText="Selecciona el modelo"
+            app:RevealEmptyText="Selecciona el Producto"
             app:RevealViewBackgroundColor="@color/colorPrimaryDark"
             app:SearchViewBackgroundColor="@color/colorPrimaryDark"
             app:ShowBorders="true"
@@ -37,7 +37,7 @@
 
         <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
             android:background="@drawable/border"
-            android:id="@+id/searchableCatalog"
+            android:id="@+id/searchableCadenaComercial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -56,19 +56,26 @@
             app:RevealEmptyText="Selecciona el catálogo"
             app:SpinnerExpandHeight="200dp"/>
 
-        <!--<android.support.design.widget.TextInputLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-            <!--<EditText-->
-                <!--android:id="@+id/et_fecha"-->
-                <!--android:inputType="date"-->
-                <!--android:hint="Fecha"-->
-                <!--android:focusable="false"-->
-                <!--android:clickable="true"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:singleLine="true"/>-->
-        <!--</android.support.design.widget.TextInputLayout>-->
+        <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+            android:background="@drawable/border"
+            android:id="@+id/searchableModelo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:gravity="center_horizontal"
+            app:StartSearchTintColor="@color/colorPrimary"
+            app:DoneSearchTintColor="@color/colorPrimaryDark"
+            app:RevealViewBackgroundColor="@color/colorPrimaryDark"
+            app:SearchViewBackgroundColor="@color/colorPrimaryDark"
+            app:BoarderColor="@color/colorPrimary"
+            app:ShowBorders="true"
+            app:AnimDuration="200"
+            app:RevealEmptyText="Selecciona el Modelo"
+            app:SpinnerExpandHeight="100dp"/>
         <LinearLayout
             android:layout_margin="20dp"
             android:orientation="horizontal"

@@ -310,7 +310,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateMap(){
         try{
-            Log.d(TAG, "updateMap() called ubicationFromGooglePlay => "+ubicationFromGooglePlay);
+//            Log.d(TAG, "updateMap() called ubicationFromGooglePlay => "+ubicationFromGooglePlay);
             if (!isPaused){
                 if (ubicationFromGooglePlay){
                     refreshByServices(locationFromServices);
@@ -386,19 +386,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                         authController.getUser().getSesion().getIdentificador(),
                         evento,
                         dateTime );
-//                Log.e(TAG, "eventoUsuario: "+eventEntradaRequest.toString() );
-//                NetworkController networkController = LanixApplication.getInstance().getNetworkController();
-//                JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-//                        networkController.getServiceUrl(eventEntradaRequest.TAG),
-//                        eventEntradaRequest.toJson(),
-//                        this,
-//                        this);
-//                networkController.getQueue().add(jsObjRequest);
                 LanixApplication.getInstance().getNetworkController().requestData(eventEntradaRequest,Request.Method.POST,this,this);
-            }else{
-//                Log.e(TAG, "eventoUsuario: AHORITA NO JOVEN");
             }
-
         }catch (Exception e){e.printStackTrace();}
     }
 
