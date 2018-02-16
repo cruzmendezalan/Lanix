@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         authController = AuthController.getInstance(this);
+        authController.setmContext(this);
         authController.setControllerNotifier(this);
         authController.syncDevice();
         // Set up the login form.

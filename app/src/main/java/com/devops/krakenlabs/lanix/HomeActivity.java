@@ -114,6 +114,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.f_asistencia);
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -130,7 +131,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 requestPermissions((String[]) permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
         authController = LanixApplication.getInstance().getAuthController();
-
+        authController.setmContext(this);
         /**
          * init ui
          */

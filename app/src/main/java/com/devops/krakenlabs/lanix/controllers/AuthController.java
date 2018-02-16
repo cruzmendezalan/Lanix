@@ -47,6 +47,8 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12221;
     private String KEY_CATALOG = "CATALOG_KEY";
 
+    private Context mContext;
+
     private static int MY_PERMISSIONS_REQUEST_ACCESS_TELEPHONY_SERVICE;
 
     //Singleton
@@ -162,8 +164,8 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     public void onResponse(JSONObject response) {
         try {
             Log.e(TAG, "onResponse() called with: response = [" + response + "]");
-            Gson gson = new Gson();
-            user = gson.fromJson(response.toString(), User.class);
+            storeProfile(response.toString());
+            user = getProfile();
             if (user.getError().getNo() != 0) {
                 user = null;
             }
@@ -177,7 +179,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     }
 
     public User getUser() {
-        return user;
+        return getProfile();
     }
 
     public void setContext(Context context) {
@@ -230,14 +232,36 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     }
 
     private void storeCatalogs(String response) {
-        SharedPreferences sharedPref = ((Activity)controllerNotifier).getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(KEY_CATALOG, response);
         editor.commit();
     }
 
     public String getCatalog(){
-        SharedPreferences sharedPref = ((Activity)controllerNotifier).getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
         return sharedPref.getString(KEY_CATALOG,"");
+    }
+
+    private void storeProfile(String response){
+        SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(User.TAG, response);
+        editor.commit();
+    }
+
+    private User getProfile(){
+        SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
+        String t = sharedPref.getString(User.TAG,"");
+        if (!"".equals(t)){
+            Gson gson = new Gson();
+            user = gson.fromJson(t, User.class);
+        }
+        return user;
+    }
+
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
     }
 }
