@@ -1,8 +1,10 @@
 package com.devops.krakenlabs.lanix;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -108,6 +110,10 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private VentasFirstStepFragment ventasFirstStepFragment;
     private VentasContainerFragment ventasContainerFragment;
     private VentasThirdStepFragment ventasThirdStepFragmentFragment;
+
+    private static final String SPF_NAME = "vidslogin"; //  <--- Account
+    private static final String USERNAME = "username";  //  <--- To save username
+    private static final String PASSWORD = "password";  //  <--- To save password
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,6 +312,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
         isPaused = false;
 //        refreshLocationByGPS();
+        SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME,
+                Context.MODE_PRIVATE);
+//        AuthController.getInstance(this).setRefesh(true);
+//        AuthController.getInstance(this).login(loginPreferences.getString(USERNAME, ""),loginPreferences.getString(PASSWORD, ""));
+
         updateMap();
     }
 

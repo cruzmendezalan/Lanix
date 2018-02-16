@@ -48,6 +48,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     private String KEY_CATALOG = "CATALOG_KEY";
 
     private Context mContext;
+    private boolean isRefesh;
 
     private static int MY_PERMISSIONS_REQUEST_ACCESS_TELEPHONY_SERVICE;
 
@@ -61,6 +62,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     public AuthController(Context context) {
         this.context = context;
+        isRefesh = false;
     }
 
     public SessionNotifier getSessionNotifier() {
@@ -169,10 +171,11 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             if (user.getError().getNo() != 0) {
                 user = null;
             }
-            if (sessionNotifier != null) {
+            Log.e(TAG, "onResponse: "+isRefesh );
+            if (sessionNotifier != null && !isRefesh) {
                 sessionNotifier.sessionComplete();
-                requestCatalogs();
             }
+            requestCatalogs();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -263,5 +266,9 @@ public class AuthController implements Response.ErrorListener, Response.Listener
 
     public void setmContext(Context mContext) {
         this.mContext = mContext;
+    }
+
+    public void setRefesh(boolean refesh) {
+        isRefesh = refesh;
     }
 }
