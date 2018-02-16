@@ -435,25 +435,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void tokenDeviceComplete() {
         Log.d(TAG, "tokenDeviceComplete() called " +authController.getDevice());
         Log.e(TAG, "tokenDeviceComplete: "+authController.getDevice().getVersionApp() +" === "+requestVersion() );
-        if (authController.getDevice().getError().getNo() == 0 && !authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
-            MaterialDialog x = new MaterialDialog.Builder(this)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            openBrowser();
-                        }
-                    }).dismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-                            Log.e(TAG, "onDismiss: " );
-                            finish();
-                        }
-                    })
-                    .title("Actualización disponible")
-                    .content("Existe una nueva version disponible, descargala aquí")
-                    .positiveText("Aceptar")
-                    .show();
-        }
+//        if (authController.getDevice().getError().getNo() == 0 && !authController.getDevice().getVersionApp().equals(requestVersion())){//Version más nueva de la aplicacion
+//            MaterialDialog x = new MaterialDialog.Builder(this)
+//                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                        @Override
+//                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                            openBrowser();
+//                        }
+//                    }).dismissListener(new DialogInterface.OnDismissListener() {
+//                        @Override
+//                        public void onDismiss(DialogInterface dialogInterface) {
+//                            Log.e(TAG, "onDismiss: " );
+//                            finish();
+//                        }
+//                    })
+//                    .title("Actualización disponible")
+//                    .content("Existe una nueva version disponible, descargala aquí")
+//                    .positiveText("Aceptar")
+//                    .show();
+//        }
     }
 
     private void openBrowser() {
