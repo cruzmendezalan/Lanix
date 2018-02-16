@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.devops.krakenlabs.lanix.ControllerNotifier;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
+import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.device.Device;
 import com.devops.krakenlabs.lanix.models.device.DeviceRequest;
 import com.devops.krakenlabs.lanix.models.session.SessionRequest;
@@ -43,6 +45,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     private Device device;
     private ControllerNotifier controllerNotifier;
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12221;
+    private String KEY_CATALOG = "CATALOG_KEY";
 
     private static int MY_PERMISSIONS_REQUEST_ACCESS_TELEPHONY_SERVICE;
 
@@ -67,23 +70,23 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     }
 
     public ArrayList<String> login(String username, String pasword) {
-        Log.d(TAG, "login() called with: username = [" + username + "], pasword = [" + pasword + "]");
+//        Log.d(TAG, "login() called with: username = [" + username + "], pasword = [" + pasword + "]");
         ArrayList<String> rulesViolated = null;
         try {
             LanixApplication lanixApplication = LanixApplication.getInstance();
-            Log.e(TAG, "login: 0" );
+//            Log.e(TAG, "login: 0" );
             rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(username, pasword);
             if (rulesViolated == null && device != null) {//
-                Log.w(TAG, "login: 1" );
+//                Log.w(TAG, "login: 1" );
                 //hacer login
                 /**
                  * una vez que el usuario y la contraseña pasan por validaciones locales
                  * construimos el objeto que sera enviado al servicio
                  */
                 SessionRequest sessionRequest = new SessionRequest(username, device.getTokenDispositivo(), pasword);
-                Log.w(TAG, "login: 2" );
+//                Log.w(TAG, "login: 2" );
                 NetworkController networkController = lanixApplication.getNetworkController();
-                Log.w(TAG, "login: 3" );
+//                Log.w(TAG, "login: 3" );
                 networkController.requestData(sessionRequest, Request.Method.POST, this, this);
                 return null;
             }else{
@@ -166,6 +169,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             }
             if (sessionNotifier != null) {
                 sessionNotifier.sessionComplete();
+                requestCatalogs();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,5 +216,28 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void requestCatalogs(){
+        CatalogRequest catalogRequest = new CatalogRequest();
+        LanixApplication.getInstance().getNetworkController().requestData(catalogRequest, Request.Method.GET,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e(TAG, "onResponse() called with: response = [" + response + "]");
+                storeCatalogs(response.toString());
+            }
+        },this);
+    }
+
+    private void storeCatalogs(String response) {
+        SharedPreferences sharedPref = ((Activity)controllerNotifier).getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(KEY_CATALOG, response);
+        editor.commit();
+    }
+
+    public String getCatalog(){
+        SharedPreferences sharedPref = ((Activity)controllerNotifier).getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getString(KEY_CATALOG,"");
     }
 }

@@ -17,22 +17,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.devops.krakenlabs.lanix.HomeActivity;
 import com.devops.krakenlabs.lanix.R;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.catalogos.Catalog;
-import com.devops.krakenlabs.lanix.models.catalogos.CatalogRequest;
 import com.devops.krakenlabs.lanix.models.venta.ProductosItem;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -153,20 +149,24 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
     private void initUI(String response) {
         try{
             Log.d(TAG, "initUI() called with: response = [" + response + "]");
-            Gson gson =  new Gson();
-            catalog = gson.fromJson(response, Catalog.class);
-            Log.e(TAG, "initUI: "+catalog );
-            productosAdapter       = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
-            cadenaComercialadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
-            modelosAdapter         = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,2);
-            spinnerProductos.setAdapter(productosAdapter);
-            spinnerProductos.setOnItemSelectedListener(mOnProdcutoSelected);
+            if (!"".equals(response)){
+                Gson gson =  new Gson();
+                catalog = gson.fromJson(response, Catalog.class);
+                Log.e(TAG, "initUI: "+catalog );
+                productosAdapter       = new ModelosAdapter(getActivity(),R.layout.view_list_item,catalog, 0);
+                cadenaComercialadapter = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,1);
+                modelosAdapter         = new ModelosAdapter(getActivity(), R.layout.view_list_item,catalog,2);
+                spinnerProductos.setAdapter(productosAdapter);
+                spinnerProductos.setOnItemSelectedListener(mOnProdcutoSelected);
 
-            spinnerCadenaComercial.setAdapter(cadenaComercialadapter);
-            spinnerCadenaComercial.setOnItemSelectedListener(mOnCadenaComercialSelected);
+                spinnerCadenaComercial.setAdapter(cadenaComercialadapter);
+                spinnerCadenaComercial.setOnItemSelectedListener(mOnCadenaComercialSelected);
 
-            spinnerModelo.setAdapter(modelosAdapter);
-            spinnerModelo.setOnItemSelectedListener(mOnModeloSelected);
+                spinnerModelo.setAdapter(modelosAdapter);
+                spinnerModelo.setOnItemSelectedListener(mOnModeloSelected);
+            }else{
+                Log.e(TAG, "initUI: 3 pesitos de internet" );
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -177,14 +177,16 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
      */
     private void requestModels() {
         try{
-            CatalogRequest catalogRequest = new CatalogRequest();
-            LanixApplication.getInstance().getNetworkController().requestData(catalogRequest, Request.Method.GET,new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.e(TAG, "onResponse() called with: response = [" + response + "]");
-                    initUI(response.toString());
-                }
-            },this);
+
+//            CatalogRequest catalogRequest = new CatalogRequest();
+//            LanixApplication.getInstance().getNetworkController().requestData(catalogRequest, Request.Method.GET,new Response.Listener<JSONObject>() {
+//                @Override
+//                public void onResponse(JSONObject response) {
+//                    Log.e(TAG, "onResponse() called with: response = [" + response + "]");
+//                    initUI(response.toString());
+//                }
+//            },this);
+            initUI(LanixApplication.getInstance().getAuthController().getCatalog());
         }catch (Exception e){
             e.printStackTrace();
         }
