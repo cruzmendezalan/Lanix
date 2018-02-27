@@ -5,10 +5,10 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.devops.krakenlabs.lanix"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 26
-        versionCode 1035
-        versionName "1.035"
+        versionCode 1040
+        versionName "1.040"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

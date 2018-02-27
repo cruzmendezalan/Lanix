@@ -79,10 +79,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private TextView tvPrivacidad;
     private TextView tvVersion;
 
+
+    // The request code used in ActivityCompat.requestPermissions()
+    // and returned in the Activity's onRequestPermissionsResult()
+    int PERMISSION_ALL = 10001;
+    String[] PERMISSIONS = {
+            android.Manifest.permission.WRITE_CONTACTS,
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.INTERNET,
+            android.Manifest.permission.CAMERA};
+
+
     private static Double TIME_SPLASH       = 10.0; //MILISEGUNDOS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!hasPermissions(this, PERMISSIONS)){
+            Log.w(TAG, "onCreate: requestPermissions" );
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }else{
+            Log.e(TAG, "onCreate: PERMISOS OTORGADOS" );
+        }
         setContentView(R.layout.activity_login);
         authController = AuthController.getInstance(this);
         authController.setmContext(this);
@@ -146,10 +165,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 openPrivacidad();
             }
         });
-        mayRequestPermissions();
-        mayRequestDevice();
+//        mayRequestPermissions();
+//        mayRequestDevice();
         Fabric.with(this, new Crashlytics());
         tvVersion.setText("V "+requestVersion());
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }else{
+                    Log.e(TAG, "hasPermissions: NEED PERMISSIONS "+permission );
+                }
+            }
+        }
+        return true;
     }
 
     public void hideSoftKeyboard() {
@@ -174,12 +206,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         recoverPwFragment.show(getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestPermissions()) {
-            return;
-        }
 
-        getLoaderManager().initLoader(0, null, this);
+    private void populateAutoComplete() {
+//        if (!mayRequestPermissions()) {
+//            return;
+//        }
+//
+//        getLoaderManager().initLoader(0, null, this);
     }
 
     private boolean mayRequestPermissions() {
@@ -233,6 +266,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult() called with: requestCode = [" + requestCode + "], permissions = [" + permissions + "], grantResults = [" + grantResults + "]");
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
