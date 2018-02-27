@@ -113,9 +113,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private VentasContainerFragment ventasContainerFragment;
     private VentasThirdStepFragment ventasThirdStepFragmentFragment;
 
-    private static final String SPF_NAME = "vidslogin"; //  <--- Account
-    private static final String USERNAME = "username";  //  <--- To save username
-    private static final String PASSWORD = "password";  //  <--- To save password
+    private static final String SPF_NAME = "SALES"; //  <--- Account
+    private static final String SALES_ID = "SALES_ID_";
+    private static final String SALES_NU = "SALES_NU";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -571,5 +571,31 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return status;
 
+    }
+
+    public void storeSale(String sale){
+        try{
+            SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
+            int saleNumber = loginPreferences.getInt(SALES_NU,0);
+            loginPreferences.edit().putString(SALES_ID+saleNumber, sale).putInt(SALES_NU,1+saleNumber).commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendSales(){
+        try{
+            SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
+            int saleNumber = loginPreferences.getInt(SALES_NU,0);
+            if (saleNumber == 0){
+                Log.e(TAG, "sendSales: No hay ventas por enviar" );
+            }else{
+                for (int i = 0; i < saleNumber; i++) {
+                    Log.w(TAG, "StoredSales => "+loginPreferences.getString(SALES_ID+i,"") );
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -123,6 +123,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 case R.id.btn_sync:{
                     HomeActivity ho = (HomeActivity) getActivity();
                     Log.e(TAG, "onClick: "+ho.isNetworkOnline() );
+                    ho.sendSales();
                     break;
                 }
             }

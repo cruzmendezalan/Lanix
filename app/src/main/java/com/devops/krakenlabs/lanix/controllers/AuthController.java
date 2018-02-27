@@ -74,27 +74,21 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     }
 
     public ArrayList<String> login(String username, String pasword) {
-//        Log.d(TAG, "login() called with: username = [" + username + "], pasword = [" + pasword + "]");
         ArrayList<String> rulesViolated = null;
         try {
             LanixApplication lanixApplication = LanixApplication.getInstance();
-//            Log.e(TAG, "login: 0" );
             rulesViolated = lanixApplication.getMiddlewareController().validateCredentials(username, pasword);
             if (rulesViolated == null && device != null) {//
-//                Log.w(TAG, "login: 1" );
-                //hacer login
                 /**
                  * una vez que el usuario y la contraseña pasan por validaciones locales
                  * construimos el objeto que sera enviado al servicio
                  */
                 SessionRequest sessionRequest = new SessionRequest(username, device.getTokenDispositivo(), pasword);
-//                Log.w(TAG, "login: 2" );
                 NetworkController networkController = lanixApplication.getNetworkController();
-//                Log.w(TAG, "login: 3" );
                 networkController.requestData(sessionRequest, Request.Method.POST, this, this);
                 return null;
-            }else{
-                Log.w(TAG, "login: DEVICE NULL" );
+            } else {
+                Log.w(TAG, "login: DEVICE NULL");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,6 +118,17 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             Log.d("msg", "Device id " + getDeviceIMEI());
             TelephonyManager tm = getDeviceIMEI();
 
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Log.w(TAG, "syncDevice: SIN PERMISOS....." );
+                return;
+            }
             DeviceRequest deviceRequest = new DeviceRequest((user == null ? "" : user.getSesion().getIdentificador()),
                     Build.MODEL,
                     tm.getDeviceId(),

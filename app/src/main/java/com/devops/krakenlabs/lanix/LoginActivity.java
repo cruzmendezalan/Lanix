@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -36,8 +34,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
@@ -48,9 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
-
-import static android.Manifest.permission.READ_CONTACTS;
-import static android.Manifest.permission.READ_PHONE_STATE;
 
 /**
  * A login screen that offers login via email/password.
@@ -106,7 +99,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         authController = AuthController.getInstance(this);
         authController.setmContext(this);
         authController.setControllerNotifier(this);
-        authController.syncDevice();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.user);
         populateAutoComplete();
@@ -215,50 +207,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //        getLoaderManager().initLoader(0, null, this);
     }
 
-    private boolean mayRequestPermissions() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
 
-    public boolean mayRequestDevice(){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Log.e(TAG, "mayRequestDevice: return true;" );
-            return true;
-        }else{
-            requestPermissions(new String[]{READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
-            Log.e(TAG, "mayRequestDevice: Build.VERSION.SDK_INT < Build.VERSION_CODES.M" );
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return true;
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(READ_PHONE_STATE)) {
-                requestPermissions(new String[]{READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
-            } else {
-                requestPermissions(new String[]{READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
-            }
-        }
-        return false;
-    }
 
     /**
      * Callback received when a permissions request has been completed.
@@ -267,6 +216,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult() called with: requestCode = [" + requestCode + "], permissions = [" + permissions + "], grantResults = [" + grantResults + "]");
+        authController.syncDevice();
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();

@@ -67,64 +67,38 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
     private void sendVenta() {
         try{
             HomeActivity ho = (HomeActivity) getActivity();
-//            LanixApplication lanixApplication   = LanixApplication.getInstance();
-//            JsonObjectRequest jsonObjectRequest  = new JsonObjectRequest(Request.Method.POST,
-//                    lanixApplication.getNetworkController().getServiceUrl(VentasRequestt.class.getSimpleName()),
-//                    ho.getVentasFirstStepFragment().getVentaRequest().toJson(),
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-//                            if (response != null){
-//                                Gson g = new Gson();
-//                                try{
-//                                    VentaResponse ve = g.fromJson(response.toString(),VentaResponse.class);
-//                                    if (ve.getVentaId() > 0){
-//                                        sendNotification("Venta registrada", "Se a registrado correctamente tu venta con el folio "+ve.getVentaId());
-//                                    }else{
-//                                        sendNotification("¡Ooops!", "Al parecer hemos tenido un problema al registrar tu venta");
-//                                    }
-//                                }catch (Exception e){
-//                                    e.printStackTrace();
-//                                    sendNotification("¡Ooops!", "Al parecer hemos tenido un problema al registrar tu venta");
-//                                }
-//                            }
-//                        }
-//                    },this);
-//            lanixApplication.getNetworkController().getQueue().add(jsonObjectRequest);
-            LanixApplication.getInstance().getNetworkController().requestData(ho.getVentasFirstStepFragment().getVentaRequest(),Request.Method.POST,new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                    if (response != null){
-                        Gson g = new Gson();
-                        try{
-                            VentaResponse ve = g.fromJson(response.toString(),VentaResponse.class);
-                            if (ve.getVentaId() > 0){
-                                sendNotification("Venta registrada", "Se a registrado correctamente tu venta con el folio "+ve.getVentaId());
-                            }else{
+            if (ho.isNetworkOnline()){
+                LanixApplication.getInstance().getNetworkController().requestData(ho.getVentasFirstStepFragment().getVentaRequest(),Request.Method.POST,new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                        if (response != null){
+                            Gson g = new Gson();
+                            try{
+                                VentaResponse ve = g.fromJson(response.toString(),VentaResponse.class);
+                                if (ve.getVentaId() > 0){
+                                    sendNotification("Venta registrada", "Se a registrado correctamente tu venta con el folio "+ve.getVentaId());
+                                }else{
+                                    sendNotification("¡Ooops!", "Al parecer hemos tenido un problema al registrar tu venta");
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                                 sendNotification("¡Ooops!", "Al parecer hemos tenido un problema al registrar tu venta");
                             }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            sendNotification("¡Ooops!", "Al parecer hemos tenido un problema al registrar tu venta");
                         }
                     }
-                }
-            },this);
+                },this);
+            }else{
+                //Almacenar venta
+                Log.w(TAG, "sendVenta: Almacenando venta." );
+                ho.storeSale(ho.getVentasFirstStepFragment().getVentaRequest().toJson().toString());
+                Intent home = new Intent(getContext(), HomeActivity.class);
+                startActivity(home);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    private void notificarVenta() {
-        HomeActivity ho = (HomeActivity) getActivity();
-        Snackbar sn = Snackbar.make(rootView, "Se a completado el proceso de la venta", Snackbar.LENGTH_LONG);
-        View snackBarView = sn.getView();
-        snackBarView.setBackgroundColor(getResources().getColor(R.color.white));
-        sn.show();
-        Log.e(TAG, "notificarVenta: validar venta" );
-
     }
 
     private void sendNotification(String title, String text) {
