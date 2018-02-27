@@ -598,4 +598,14 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
+
+    public int getNotSendedSales(){
+        try{
+            SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
+            return loginPreferences.getInt(SALES_NU,0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

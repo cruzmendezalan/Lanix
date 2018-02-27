@@ -38,6 +38,20 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        try{
+            HomeActivity ho = (HomeActivity) getActivity();
+            int k = ho.getNotSendedSales();
+            if (k > 0){
+                btnSync.setText("SINCRONIZACIÓN ("+k+")");
+            }else{
+                btnSync.setText("SINCRONIZACIÓN");
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -63,6 +77,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnProfile.setOnClickListener(this);
         btnMisVentas.setOnClickListener(this);
         btnSync.setOnClickListener(this);
+
         return viewRoot;
     }
 
