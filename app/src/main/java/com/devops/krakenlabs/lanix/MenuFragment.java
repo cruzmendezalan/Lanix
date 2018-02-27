@@ -22,6 +22,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private Button btnProfile;
     private Button btnVentas;
     private Button btnAsistencia;
+    private Button btnSync;
     private Button btnConsultas;
     private Button btnMisVentas;
     private TextView tvNombre;
@@ -50,6 +51,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnAsistencia = viewRoot.findViewById(R.id.btn_asistencia);
         btnProfile    = viewRoot.findViewById(R.id.btn_perfil);
         btnConsultas  = viewRoot.findViewById(R.id.btn_pw);
+        btnSync       = viewRoot.findViewById(R.id.btn_sync);
         tvNombre      = viewRoot.findViewById(R.id.tv_nombre);
         btnMisVentas  = viewRoot.findViewById(R.id.btn_mis_ventas);
 
@@ -60,6 +62,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         btnConsultas.setOnClickListener(this);
         btnProfile.setOnClickListener(this);
         btnMisVentas.setOnClickListener(this);
+        btnSync.setOnClickListener(this);
         return viewRoot;
     }
 
@@ -114,7 +117,13 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
                 case R.id.btn_perfil:{
                     initProfile();
-//                    break;
+                    break;
+                }
+
+                case R.id.btn_sync:{
+                    HomeActivity ho = (HomeActivity) getActivity();
+                    Log.e(TAG, "onClick: "+ho.isNetworkOnline() );
+                    break;
                 }
             }
         }

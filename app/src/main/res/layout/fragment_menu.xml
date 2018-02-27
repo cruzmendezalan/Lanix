@@ -109,7 +109,7 @@
                     android:layout_height="50dp" />
                 <Button
                     android:textColor="@color/white"
-                    android:id="@+id/btn_ranking"
+                    android:id="@+id/btn_sync"
                     android:text="Sincronización"
                     android:drawableRight="@drawable/reload"
                     android:layout_margin="0dp"

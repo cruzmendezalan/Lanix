@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -200,19 +202,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }catch (Exception e){
             e.printStackTrace();
         }
-////        Log.d(TAG, "refreshByServices() called with: location = [" + location + "]");
-//        if (location != null){
-//            tLocation = location;
-//        }
-//        if (mapa != null && tLocation != null){
-//            longitude = tLocation.getLongitude();
-//            latitude  = tLocation.getLatitude();
-//            LatLng latLng = new LatLng(latitude, longitude);
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-//            mapa.clear();
-//            mapa.addMarker(new MarkerOptions().position(latLng).title("Tú ubicación"));
-//            mapa.animateCamera(cameraUpdate);
-//        }
     }
 
 
@@ -562,5 +551,25 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
     }
 }
