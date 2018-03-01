@@ -139,6 +139,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
                     "" + Build.VERSION.SDK_INT,
                     ""
             );
+            deviceRequest.setNombre(tm.getDeviceId());
 //            Log.e(TAG, "syncDevice: "+deviceRequest.toString() );
             LanixApplication lanixApplication = LanixApplication.getInstance();
             NetworkController networkController = lanixApplication.getNetworkController();

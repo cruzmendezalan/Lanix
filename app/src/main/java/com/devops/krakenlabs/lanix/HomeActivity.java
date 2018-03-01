@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
@@ -35,6 +36,8 @@ import com.devops.krakenlabs.lanix.controllers.GPSController;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
+import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
+import com.devops.krakenlabs.lanix.models.venta.VentaResponse;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasFirstStepFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasSecondStepFragment;
@@ -303,12 +306,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         isPaused = false;
-//        refreshLocationByGPS();
-        SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME,
-                Context.MODE_PRIVATE);
-//        AuthController.getInstance(this).setRefesh(true);
-//        AuthController.getInstance(this).login(loginPreferences.getString(USERNAME, ""),loginPreferences.getString(PASSWORD, ""));
-
         updateMap();
     }
 
@@ -588,9 +585,15 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void sendSales(){
         try{
-            SharedPreferences loginPreferences = getSharedPreferences("vidslogin", Context.MODE_PRIVATE);
-            AuthController.getInstance(this).setSessionNotifier(this);
-            AuthController.getInstance(this).login(loginPreferences.getString(USERNAME, ""),loginPreferences.getString(PASSWORD, ""));
+            if (isNetworkOnline()){
+                SharedPreferences loginPreferences = getSharedPreferences("vidslogin", Context.MODE_PRIVATE);
+                AuthController.getInstance(this).setSessionNotifier(this);
+                AuthController.getInstance(this).login(loginPreferences.getString(USERNAME, ""),loginPreferences.getString(PASSWORD, ""));
+            }else{
+                Toast.makeText(this, "No hay conexión a internet :(",
+                        Toast.LENGTH_LONG).show();
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -614,10 +617,56 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             if (saleNumber == 0){
                 Log.e(TAG, "sendSales: No hay ventas por enviar" );
             }else{
+                Gson g = new Gson();
                 for (int i = 0; i < saleNumber; i++) {
                     Log.w(TAG, "StoredSales => "+loginPreferences.getString(SALES_ID+i,"") );
+                    VentaRequest r = g.fromJson(loginPreferences.getString(SALES_ID+i,""),VentaRequest.class);
+                    Log.e(TAG, "sessionComplete: "+r.toString() );
+                    LanixApplication.getInstance()
+                            .getNetworkController()
+                            .requestData(r,
+                                         Request.Method.POST,
+                                         new Response.Listener<JSONObject>() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+                                                    Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                                                    if (response != null){
+                                                        Gson g = new Gson();
+                                                        try{
+                                                            VentaResponse ve = g.fromJson(response.toString(),VentaResponse.class);
+                                                            if (ve.getVentaId() > 0){
+                                                                showVenta("Se a registrado correctamente tu venta con el folio "+ve.getVentaId());
+                                                            }
+                                                        }catch (Exception e){
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                    }, new Response.ErrorListener() {
+                        /**
+                         * Callback method that an error has been occurred with the
+                         * provided error code and optional user-readable message.
+                         *
+                         * @param error
+                         */
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                        }
+                    });
                 }
+                loginPreferences.edit().putInt(SALES_NU,0).commit();
+                onResume();
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void showVenta(String msg){
+        try{
+            Toast.makeText(this,  msg,
+                    Toast.LENGTH_LONG).show();
         }catch (Exception e){
             e.printStackTrace();
         }

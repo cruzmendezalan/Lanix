@@ -114,7 +114,7 @@ public class NetworkController {
         Log.d(TAG, "requestData() called with: objectToSend = [" + objectToSend + "],\n  method = [" + method + "],\n responseListener = [" + responseListener + "],\n errorListener = [" + errorListener + "]");
 //        HttpsTrustManager.allowAllSSL();
         String t = "";
-        if(objectToSend instanceof CatalogRequest || objectToSend instanceof SessionRequest || objectToSend instanceof VentasHistoriaRequest){
+        if(objectToSend instanceof CatalogRequest || objectToSend instanceof VentasHistoriaRequest){
             try{
                 if (LanixApplication.getInstance().getAuthController().getUser() != null){
                     t = "/"+LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador();
