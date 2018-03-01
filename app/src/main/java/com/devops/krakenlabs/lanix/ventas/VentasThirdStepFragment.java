@@ -153,7 +153,7 @@ public class VentasThirdStepFragment extends Fragment implements Step, Response.
             HomeActivity ho = (HomeActivity) getActivity();
             String[] values = new String[ho.getVentasFirstStepFragment().getVentaRequest().getProductos().size()];
             for (int i = 0; i < ho.getVentasFirstStepFragment().getVentaRequest().getProductos().size(); i++) {
-                values[i] = ho.getVentasFirstStepFragment().getVentaRequest().getProductos().get(i).getModeloName();
+                values[i] = ho.getVentasFirstStepFragment().getVentaRequest().getProductos().get(i).getImei();
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
             lvProductos.setAdapter(adapter);

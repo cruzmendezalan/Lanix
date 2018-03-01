@@ -158,8 +158,12 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initChangePassword() {
-        Log.d(TAG, "initChangePassword() called");
-        RecoverPwFragment recoverPwFragment = RecoverPwFragment.newInstance();
-        recoverPwFragment.show(getActivity().getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
+        try{
+            Log.d(TAG, "initChangePassword() called");
+            RecoverPwFragment recoverPwFragment = RecoverPwFragment.newInstance();
+            recoverPwFragment.show(getActivity().getSupportFragmentManager(),recoverPwFragment.getClass().getSimpleName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

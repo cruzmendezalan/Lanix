@@ -32,6 +32,7 @@ import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.controllers.GPSController;
+import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
@@ -64,7 +65,7 @@ import io.fabric.sdk.android.Fabric;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
+public class HomeActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener, SessionNotifier {
     public static String TAG = HomeActivity.class.getSimpleName();
     private GoogleMap mapa;
     private ArrayList permissionsToRequest;
@@ -117,6 +118,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String SALES_ID = "SALES_ID_";
     private static final String SALES_NU = "SALES_NU";
 
+    private static final String USERNAME = "username";  //  <--- To save username
+    private static final String PASSWORD = "password";  //  <--- To save password
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -585,15 +588,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void sendSales(){
         try{
-            SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
-            int saleNumber = loginPreferences.getInt(SALES_NU,0);
-            if (saleNumber == 0){
-                Log.e(TAG, "sendSales: No hay ventas por enviar" );
-            }else{
-                for (int i = 0; i < saleNumber; i++) {
-                    Log.w(TAG, "StoredSales => "+loginPreferences.getString(SALES_ID+i,"") );
-                }
-            }
+            SharedPreferences loginPreferences = getSharedPreferences("vidslogin", Context.MODE_PRIVATE);
+            AuthController.getInstance(this).setSessionNotifier(this);
+            AuthController.getInstance(this).login(loginPreferences.getString(USERNAME, ""),loginPreferences.getString(PASSWORD, ""));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -607,5 +604,22 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public void sessionComplete() {
+        try{
+            SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
+            int saleNumber = loginPreferences.getInt(SALES_NU,0);
+            if (saleNumber == 0){
+                Log.e(TAG, "sendSales: No hay ventas por enviar" );
+            }else{
+                for (int i = 0; i < saleNumber; i++) {
+                    Log.w(TAG, "StoredSales => "+loginPreferences.getString(SALES_ID+i,"") );
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -94,6 +94,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }else{
             Log.e(TAG, "onCreate: PERMISOS OTORGADOS" );
+            authController = AuthController.getInstance(this);
+            authController.syncDevice();
         }
         setContentView(R.layout.activity_login);
         authController = AuthController.getInstance(this);
