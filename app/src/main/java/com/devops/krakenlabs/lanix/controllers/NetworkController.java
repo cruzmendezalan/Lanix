@@ -106,6 +106,7 @@ public class NetworkController {
     public String getServiceUrl(String service) {
         Log.d(TAG, "getServiceUrl() called with: service = [" + service + "]");
         String url = properties.getProperty("ProductionUrl"); //Lógica para url de desarrollo y producción aqui
+        Log.w(TAG, "getServiceUrl: " +url + properties.getProperty(service));
         return url + properties.getProperty(service);
     }
 

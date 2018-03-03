@@ -38,6 +38,7 @@ import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
 import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
 import com.devops.krakenlabs.lanix.models.venta.VentaResponse;
+import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasFirstStepFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasSecondStepFragment;
@@ -620,7 +621,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 Gson g = new Gson();
                 for (int i = 0; i < saleNumber; i++) {
                     Log.w(TAG, "StoredSales => "+loginPreferences.getString(SALES_ID+i,"") );
-                    VentaRequest r = g.fromJson(loginPreferences.getString(SALES_ID+i,""),VentaRequest.class);
+                    VentasRequestt r = g.fromJson(loginPreferences.getString(SALES_ID+i,""),VentasRequestt.class);
                     Log.e(TAG, "sessionComplete: "+r.toString() );
                     LanixApplication.getInstance()
                             .getNetworkController()
