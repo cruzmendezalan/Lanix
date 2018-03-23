@@ -461,7 +461,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         if (asistenciaResponse.getError().getNo() == 0){
             dimissDialog("LANIX",eventoString+dateTime,POSITIVE_MSG);
         }else{
-            dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
+            dimissDialog("LANIX","Verifica tu conexión a internet. ","Ok");
             authController.syncDevice();
         }
 

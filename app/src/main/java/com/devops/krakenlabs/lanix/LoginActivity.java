@@ -386,20 +386,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         showProgress(false);
         hideKeyboard();
         // TODO: 12/11/17 implementar si falló la sesion
-        if (authController.getUser() != null){
-            llSplash.setVisibility(View.VISIBLE);
-            if (cbRememberMe.isChecked()){
-                saveCredentials(mEmailView.getText().toString(), mPasswordView.getText().toString());
+        try{
+            if (authController.getUser() != null && (authController.getUser().getError().getNo() == 0)){
+                llSplash.setVisibility(View.VISIBLE);
+                if (cbRememberMe.isChecked()){
+                    saveCredentials(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                }else{
+                    clearCredentials();
+                }
+                Intent home = new Intent(this, HomeActivity.class);
+                startActivity(home);
             }else{
-                clearCredentials();
+                mEmailView.setError(getString(R.string.error_invalid_password));
+                mEmailView.requestFocus();
             }
-            Intent home = new Intent(this, HomeActivity.class);
-            startActivity(home);
-        }else{
-            mEmailView.setError(getString(R.string.error_invalid_password));
-            mEmailView.requestFocus();
+         }catch (Exception e){
+           e.printStackTrace();
         }
-
     }
 
     /**
