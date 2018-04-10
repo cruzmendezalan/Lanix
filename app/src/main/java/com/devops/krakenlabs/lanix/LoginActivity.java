@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String SPF_NAME = "vidslogin"; //  <--- Account
     private static final String USERNAME = "username";  //  <--- To save username
     private static final String PASSWORD = "password";  //  <--- To save password
+    private static final String SAVED    = "saved";  //  <--- To save password
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -102,10 +103,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         authController.setmContext(this);
         authController.setControllerNotifier(this);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.user);
+        mEmailView = findViewById(R.id.user);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -117,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
         llSplash           = findViewById(R.id.ll_splash);
-        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,16 +142,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
         SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME,
                 Context.MODE_PRIVATE);
-        mEmailView.append(loginPreferences.getString(USERNAME, ""));
-        mPasswordView.setText(loginPreferences.getString(PASSWORD, ""));
-//        if (!(loginPreferences.getString(USERNAME, "").equals(""))){
-//            Log.i(TAG, "onCreate: ");
-//            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-//        }
-        if (!loginPreferences.getString(USERNAME, "").equals("")){
+        if (loginPreferences.getBoolean(SAVED,false)){
+            mEmailView.append(loginPreferences.getString(USERNAME, ""));
+            mPasswordView.setText(loginPreferences.getString(PASSWORD, ""));
             cbRememberMe.setChecked(true);
         }
+
         
         tvPrivacidad = findViewById(R.id.tv_privacidad);
         tvPrivacidad.setOnClickListener(new OnClickListener() {
@@ -159,8 +156,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 openPrivacidad();
             }
         });
-//        mayRequestPermissions();
-//        mayRequestDevice();
+
         Fabric.with(this, new Crashlytics());
         tvVersion.setText("V "+requestVersion());
     }
@@ -386,9 +382,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (authController.getUser() != null && (authController.getUser().getError().getNo() == 0)){
                 llSplash.setVisibility(View.VISIBLE);
                 if (cbRememberMe.isChecked()){
-                    saveCredentials(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                    saveCredentials(mEmailView.getText().toString(), mPasswordView.getText().toString(), true);
                 }else{
                     clearCredentials();
+                    saveCredentials(mEmailView.getText().toString(), mPasswordView.getText().toString(), false);
                 }
                 Intent home = new Intent(this, HomeActivity.class);
                 startActivity(home);
@@ -406,10 +403,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @param user
      * @param pw
      */
-    private void saveCredentials(String user, String pw) {
+    private void saveCredentials(String user, String pw, Boolean isPermanent) {
         Log.d(TAG, "saveCredentials() called with: user = [" + user + "], pw = [" + pw + "]");
         SharedPreferences loginPreferences = getSharedPreferences(SPF_NAME, Context.MODE_PRIVATE);
-        loginPreferences.edit().putString(USERNAME, user).putString(PASSWORD, pw).commit();
+        loginPreferences.edit().putString(USERNAME, user).putString(PASSWORD, pw).putBoolean(SAVED,isPermanent).commit();
     }
 
     private void clearCredentials(){

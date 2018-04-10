@@ -36,7 +36,6 @@ import com.devops.krakenlabs.lanix.controllers.GPSController;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
-import com.devops.krakenlabs.lanix.models.venta.VentaRequest;
 import com.devops.krakenlabs.lanix.models.venta.VentaResponse;
 import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
@@ -122,8 +121,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String SALES_ID = "SALES_ID_";
     private static final String SALES_NU = "SALES_NU";
 
-    private static final String USERNAME = "username";  //  <--- To save username
-    private static final String PASSWORD = "password";  //  <--- To save password
+
+    private static final String SPF_NAMEL = "vidslogin"; //  <--- Account
+    private static final String USERNAME  = "username";  //  <--- To save username
+    private static final String PASSWORD  = "password";  //  <--- To save password
+    private static final String SAVED     = "saved";  //  <--- To save password
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,14 +170,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         cardRegresoC.setOnClickListener(this);
         cardSalida.setOnClickListener(this);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
             return;
         }
         mFusedLocationClient.getLastLocation()
@@ -182,11 +177,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
-//                        Log.d(TAG, "onSuccess() called with: location = [" + location + "]");
                         if (location != null) {
-                            // Logic to handle location object
                             locationFromServices = location;
-//                            refreshByServices(location);
                         }
                     }
                 });
@@ -308,6 +300,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
         isPaused = false;
         updateMap();
+        relogin();
     }
 
     private void updateMap(){
@@ -451,49 +444,52 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }catch (Exception e){
             e.printStackTrace();
         }
-//        Log.d(TAG, "dimissDialog() called with: titulo = [" + titulo + "], contenido = [" + contenido + "], positive = [" + positive + "]");
     }
     @Override
     public void onResponse(JSONObject response) {
-        Log.e(TAG, "onResponse: "+response );
         Gson g = new Gson();
         AsistenciaResponse asistenciaResponse = g.fromJson(response.toString(), AsistenciaResponse.class);
+        relogin();
         if (asistenciaResponse.getError().getNo() == 0){
             dimissDialog("LANIX",eventoString+dateTime,POSITIVE_MSG);
         }else{
             dimissDialog("LANIX","Verifica tu conexión a internet. ","Ok");
-            authController.syncDevice();
         }
+    }
 
-//        Log.w(TAG, "onResponse() called with: response = [" + response + "]");
+    private void relogin() {
+        try{
+            SharedPreferences loginPreferences = getSharedPreferences(SPF_NAMEL,
+                    Context.MODE_PRIVATE);
+            authController.setSessionNotifier(null);
+            authController.login(loginPreferences.getString(USERNAME, ""), loginPreferences.getString(PASSWORD, ""));
+            authController.syncDevice();
+         }catch (Exception e){
+           e.printStackTrace();
+        }
     }
 
     @Override
     public void onBackPressed() {
-//        Log.d(TAG, "onBackPressed() called");
         if (activeFragment != null ){
             goHome();
         }
-//        super.onBackPressed();
     }
 
     public void goHome(){
-//        activeFragment = new MenuFragment();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.replace(R.id.fl_container, activeFragment).commit();
-//        llAsistencia.setVisibility(View.GONE);
-//        frameLayout.setVisibility(View.VISIBLE);
-        Intent home = new Intent(this, HomeActivity.class);
-        startActivity(home);
+        try{
+            Intent home = new Intent(this, HomeActivity.class);
+            startActivity(home);
+         }catch (Exception e){
+           e.printStackTrace();
+        }
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-//        Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
         dimissDialog("LANIX","Ooops! Parece que tenemos un problema, por favor vuelve a intentarlo ","Ok");
     }
 
     public void hideFragmentContainer(){
-//        Log.d(TAG, "hideFragmentContainer() called");
         try{
             frameLayout.setVisibility(View.GONE);
             llAsistencia.setVisibility(View.VISIBLE);
