@@ -101,20 +101,6 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     public void syncDevice() {
         Log.d(TAG, "syncDevice() called");
         try {
-//            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-//            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//                Log.e(TAG, "syncDevice: NO HAY PERMISOS" );
-//                if (context instanceof LoginActivity){
-//                    LoginActivity la = (LoginActivity) context;
-//                    la.mayRequestDevice();
-//                }else{
-//                    Log.e(TAG, "syncDevice: NO ES INSTANCIA DE LOGIN" );
-//                }
-//            }
-//            String deviceid = manager.getDeviceId();
-
-            //Device Id is IMEI number
-
             Log.d("msg", "Device id " + getDeviceIMEI());
             TelephonyManager tm = getDeviceIMEI();
 

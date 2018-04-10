@@ -455,7 +455,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
     @Override
     public void onResponse(JSONObject response) {
-//        Log.e(TAG, "onResponse: "+response );
+        Log.e(TAG, "onResponse: "+response );
         Gson g = new Gson();
         AsistenciaResponse asistenciaResponse = g.fromJson(response.toString(), AsistenciaResponse.class);
         if (asistenciaResponse.getError().getNo() == 0){

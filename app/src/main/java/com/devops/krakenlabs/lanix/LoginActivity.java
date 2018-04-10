@@ -202,11 +202,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     private void populateAutoComplete() {
-//        if (!mayRequestPermissions()) {
-//            return;
-//        }
-//
-//        getLoaderManager().initLoader(0, null, this);
+        Log.d(TAG, "populateAutoComplete() called");
     }
 
 
