@@ -105,13 +105,7 @@ public class AuthController implements Response.ErrorListener, Response.Listener
             TelephonyManager tm = getDeviceIMEI();
 
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
                 Log.w(TAG, "syncDevice: SIN PERMISOS....." );
                 return;
             }
@@ -239,18 +233,28 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     }
 
     private void storeProfile(String response){
-        SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(User.TAG, response);
-        editor.commit();
+        if(null != response){
+            Gson gson = new Gson();
+            user = gson.fromJson(response, User.class);
+        }else{
+            SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(User.TAG, response);
+            editor.commit();
+        }
+
     }
 
     private User getProfile(){
-        SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
-        String t = sharedPref.getString(User.TAG,"");
-        if (!"".equals(t)){
-            Gson gson = new Gson();
-            user = gson.fromJson(t, User.class);
+        if(null != user){
+            return user;
+        }else{
+            SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
+            String t = sharedPref.getString(User.TAG,"");
+            if (!"".equals(t)){
+                Gson gson = new Gson();
+                user = gson.fromJson(t, User.class);
+            }
         }
         return user;
     }

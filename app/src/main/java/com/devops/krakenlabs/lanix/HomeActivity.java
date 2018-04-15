@@ -153,12 +153,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         /**
          * init ui
          */
-        cardEntrada = findViewById(R.id.cv_entrada);
-        cardSalidaC = findViewById(R.id.cv_salida_comer);
+        cardEntrada  = findViewById(R.id.cv_entrada);
+        cardSalidaC  = findViewById(R.id.cv_salida_comer);
         cardRegresoC = findViewById(R.id.cv_regreso_comer);
-        cardSalida = findViewById(R.id.cv_salida);
+        cardSalida   = findViewById(R.id.cv_salida);
         promotorName = findViewById(R.id.tv_promotor_name);
-        btnGps      = findViewById(R.id.btn_gps);
+        btnGps       = findViewById(R.id.btn_gps);
         btnGps.setOnClickListener(this);
         try{
             promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
