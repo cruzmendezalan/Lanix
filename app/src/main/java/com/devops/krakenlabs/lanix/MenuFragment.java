@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.devops.krakenlabs.lanix.base.LanixApplication;
+import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.misventas.MisVentasFragment;
 import com.devops.krakenlabs.lanix.ventas.VentasContainerFragment;
 
@@ -136,9 +137,15 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 }
 
                 case R.id.btn_sync:{
-                    HomeActivity ho = (HomeActivity) getActivity();
-                    Log.e(TAG, "onClick: "+ho.isNetworkOnline() );
-                    ho.sendSales();
+                    final HomeActivity ho = (HomeActivity) getActivity();
+                    LanixApplication.getInstance().getAuthController().setSessionNotifier(new SessionNotifier() {
+                        @Override
+                        public void sessionComplete() {
+                            ho.sendSales();
+                        }
+                    });
+                    HomeActivity homeActivity = (HomeActivity) getActivity();
+                    homeActivity.relogin();
                     break;
                 }
             }

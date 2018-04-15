@@ -233,16 +233,19 @@ public class AuthController implements Response.ErrorListener, Response.Listener
     }
 
     private void storeProfile(String response){
-        if(null != response){
-            Gson gson = new Gson();
-            user = gson.fromJson(response, User.class);
-        }else{
-            SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(User.TAG, response);
-            editor.commit();
+        try{
+            if(null != response){
+                Gson gson = new Gson();
+                user = gson.fromJson(response, User.class);
+            }else{
+                SharedPreferences sharedPref = ((Activity)mContext).getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(User.TAG, response);
+                editor.commit();
+            }
+         }catch (Exception e){
+           e.printStackTrace();
         }
-
     }
 
     private User getProfile(){

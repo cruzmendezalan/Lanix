@@ -457,7 +457,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void relogin() {
+    public void relogin() {
         try{
             SharedPreferences loginPreferences = getSharedPreferences(SPF_NAMEL,
                     Context.MODE_PRIVATE);
