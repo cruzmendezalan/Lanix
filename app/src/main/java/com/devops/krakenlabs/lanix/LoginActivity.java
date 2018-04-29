@@ -90,14 +90,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!hasPermissions(this, PERMISSIONS)){
-            Log.w(TAG, "onCreate: requestPermissions" );
-            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-        }else{
-            Log.e(TAG, "onCreate: PERMISOS OTORGADOS" );
-            authController = AuthController.getInstance(this);
-            authController.syncDevice();
-        }
+        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+//        if(!hasPermissions(this, PERMISSIONS)){
+//            Log.w(TAG, "onCreate: requestPermissions" );
+//
+//        }else{
+//
+//        }
+        Log.e(TAG, "onCreate: PERMISOS OTORGADOS" );
+        authController = AuthController.getInstance(this);
+        authController.syncDevice();
+
+
         setContentView(R.layout.activity_login);
         authController = AuthController.getInstance(this);
         authController.setmContext(this);
@@ -164,14 +168,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
+                if (ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
+                    return true;
                 }else{
-                    Log.e(TAG, "hasPermissions: NEED PERMISSIONS "+permission );
+                    Log.e(TAG, "hasPermissions: APP DONT HAVE THIS PERMISSION "+permission );
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public void hideSoftKeyboard() {
