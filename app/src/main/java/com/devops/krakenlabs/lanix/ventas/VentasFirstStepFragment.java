@@ -78,17 +78,6 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
                 showDatePickerDialog();
             }
         });
-//        btn_clear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                tvNombre .setText("");
-//                tvApPat  .setText("");
-//                tvApMat  .setText("");
-//                tvEmail  .setText("");
-//                tvTicket .setText("");
-//                tvFecha .setText("");
-//            }
-//        });
         return rootView;
     }
 
@@ -97,22 +86,6 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     @Override
     public VerificationError verifyStep() {
         String t = "Este campo es obligatorio";
-//        if (tvNombre .getText().length() < 3){
-//            tvNombre.setError(t);
-//            return new VerificationError("Nombre incompleto");
-//        };
-//        if (tvApPat  .getText().length() < 3){
-//            tvApPat.setError(t);
-//            return new VerificationError("Apellido paterno incompleto");
-//        };
-//        if (tvApMat  .getText().length() < 3){
-//            tvApMat.setError(t);
-//            return new VerificationError("Apellido materno incompleto");
-//        };
-//        if (tvEmail  .getText().length() < 3){
-//            tvEmail.setError(t);
-//            return new VerificationError("Email incompleto");
-//        };
         if (tvTicket .getText().length() < 1){
             tvTicket.setError(t);
             return new VerificationError("Ticket incompleto");
