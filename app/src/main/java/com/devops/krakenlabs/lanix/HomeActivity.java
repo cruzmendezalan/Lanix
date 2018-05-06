@@ -106,10 +106,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView promotorName;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location tLocation;
-
     private FrameLayout frameLayout;
     private LinearLayout llAsistencia;
-
     private Fragment activeFragment;
 
     private VentasSecondStepFragment ventasSecondStepFragment;
@@ -332,7 +330,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 //        Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
         mapa = googleMap;
     }
-    
+
     private void updateMap(double lat, double lon){
         try{
             latitude  = lat;
