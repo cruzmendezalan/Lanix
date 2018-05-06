@@ -200,8 +200,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
-
-
+    
     private ArrayList findUnAskedPermissions(ArrayList wanted) {
         ArrayList result = new ArrayList();
 
