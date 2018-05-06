@@ -332,6 +332,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 //        Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
         mapa = googleMap;
     }
+    
     private void updateMap(double lat, double lon){
         try{
             latitude  = lat;
