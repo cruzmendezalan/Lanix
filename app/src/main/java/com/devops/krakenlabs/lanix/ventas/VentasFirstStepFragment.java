@@ -20,16 +20,10 @@ import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-
 import java.util.UUID;
-
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link VentasFirstStepFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class VentasFirstStepFragment extends Fragment implements Step,DatePickerDialog.OnDateSetListener {
     private static final String TAG = VentasFirstStepFragment.class.getSimpleName();
     private View rootView;
@@ -69,7 +63,6 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_ventas1, container, false);
         assignViews();
         tvFecha.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +122,6 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         datePicker.show(ho.getFragmentManager(),DatePickerFragment.class.getSimpleName());
     }
     private void hideSoftKeyboard() {
-        Log.d(TAG, "hideSoftKeyboard() called");
         try{
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
