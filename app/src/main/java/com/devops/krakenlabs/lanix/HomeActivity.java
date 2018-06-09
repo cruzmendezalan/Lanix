@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -125,12 +128,15 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String PASSWORD  = "password";  //  <--- To save password
     private static final String SAVED     = "saved";  //  <--- To save password
 
+    private ImageView         ivPhoto;
+    private ArrayList<Bitmap> photosArray;
+    private PhotoNotifier     photoNotifier;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.f_asistencia);
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -157,6 +163,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         cardSalida   = findViewById(R.id.cv_salida);
         promotorName = findViewById(R.id.tv_promotor_name);
         btnGps       = findViewById(R.id.btn_gps);
+        ivPhoto      = findViewById(R.id.iv_photo);
         btnGps.setOnClickListener(this);
         try{
             promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
@@ -174,18 +181,16 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             locationFromServices = location;
                         }
                     }
                 });
-        frameLayout = findViewById(R.id.fl_container);
+        frameLayout    = findViewById(R.id.fl_container);
         frameLayout.setVisibility(View.VISIBLE);
-
-        llAsistencia = findViewById(R.id.ll_asistencia);
-
+        llAsistencia   = findViewById(R.id.ll_asistencia);
         activeFragment = new MenuFragment();
+        photosArray    = new ArrayList<>();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fl_container, activeFragment).commit();
 
@@ -389,7 +394,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         int id = view.getId();
         switch (id){
             case R.id.btn_gps:{
-                ubicationFromGooglePlay = !ubicationFromGooglePlay;
+//                ubicationFromGooglePlay = !ubicationFromGooglePlay;
+                dispatchTakePictureIntent();
                 break;
             }
 
@@ -531,13 +537,27 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try{
-//            Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                try{
+                    Bundle extras      = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    if(null != imageBitmap){
+                        photosArray.add(imageBitmap);
+                        if (photoNotifier != null){
+                            photoNotifier.photoTaked(imageBitmap);
+                        }
+                    }
+                    ivPhoto.setImageBitmap(imageBitmap);
+                 }catch (Exception e){
+                   e.printStackTrace();
+                }
+
+            }
+
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if(result != null) {
                 if(result.getContents() == null) {
-//                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
                 } else {
-//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                     ventasSecondStepFragment.setTvImei(result.getContents());
                 }
             } else {
@@ -665,5 +685,27 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    static final int REQUEST_IMAGE_CAPTURE = 10001;
+
+    public void dispatchTakePictureIntent() {
+        try{
+            Log.d(TAG, "dispatchTakePictureIntent() called");
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+         }catch (Exception e){
+           e.printStackTrace();
+        }
+    }
+
+    public interface PhotoNotifier{
+        void photoTaked(Bitmap photo);
+    }
+
+    public void setPhotoNotifier(PhotoNotifier photoNotifier) {
+        this.photoNotifier = photoNotifier;
     }
 }

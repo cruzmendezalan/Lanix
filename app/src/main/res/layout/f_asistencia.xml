@@ -103,4 +103,14 @@
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:id           ="@+id/ll_image"
+        android:visibility   ="gone"
+        android:layout_width ="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
 </RelativeLayout>

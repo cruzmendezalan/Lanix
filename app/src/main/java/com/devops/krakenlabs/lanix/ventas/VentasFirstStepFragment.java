@@ -2,6 +2,7 @@ package com.devops.krakenlabs.lanix.ventas;
 
 
 import android.app.DatePickerDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 
 import com.devops.krakenlabs.lanix.HomeActivity;
 import com.devops.krakenlabs.lanix.R;
@@ -24,7 +26,7 @@ import java.util.UUID;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
-public class VentasFirstStepFragment extends Fragment implements Step,DatePickerDialog.OnDateSetListener {
+public class VentasFirstStepFragment extends Fragment implements Step,DatePickerDialog.OnDateSetListener, HomeActivity.PhotoNotifier {
     private static final String TAG = VentasFirstStepFragment.class.getSimpleName();
     private View rootView;
     private AutoCompleteTextView tvNombre;
@@ -34,16 +36,41 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     private AutoCompleteTextView tvTicket;
     private AutoCompleteTextView tvFecha;
     private AutoCompleteTextView tvTienda;
-    private VentasRequestt ventaRequest;
+    private VentasRequestt       ventaRequest;
+    private ImageView            ivCamera;
+    private ImageView            ivPhoto;
 
     private void assignViews() {
-        tvNombre = rootView.findViewById(R.id.tv_nombre);
-        tvApPat  = rootView.findViewById(R.id.tv_ap_pat);
-        tvApMat  = rootView.findViewById(R.id.tv_ap_mat);
-        tvEmail  = rootView.findViewById(R.id.tv_email);
-        tvTicket = rootView.findViewById(R.id.tv_ticket);
-        tvFecha = rootView.findViewById(R.id.tv_fecha);
-        tvTienda = rootView.findViewById(R.id.tv_tienda);
+        try{
+            tvNombre = rootView.findViewById(R.id.tv_nombre);
+            tvApPat  = rootView.findViewById(R.id.tv_ap_pat);
+            tvApMat  = rootView.findViewById(R.id.tv_ap_mat);
+            tvEmail  = rootView.findViewById(R.id.tv_email);
+            tvTicket = rootView.findViewById(R.id.tv_ticket);
+            tvFecha  = rootView.findViewById(R.id.tv_fecha);
+            tvTienda = rootView.findViewById(R.id.tv_tienda);
+            ivCamera = rootView.findViewById(R.id.iv_camera);
+            ivPhoto  = rootView.findViewById(R.id.iv_photo);
+
+            ivCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestPhoto();
+                }
+            });
+         }catch (Exception e){
+           e.printStackTrace();
+        }
+    }
+
+    private void requestPhoto() {
+        try{
+           HomeActivity ho = (HomeActivity) getActivity();
+           ho.setPhotoNotifier(this);
+           ho.dispatchTakePictureIntent();
+         }catch (Exception e){
+           e.printStackTrace();
+        }
     }
 
     public VentasFirstStepFragment() {
@@ -114,6 +141,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         final String selectedDate = day + "/" + (month+1) + "/" + year;
         tvFecha.setText(selectedDate);
     }
+
     private void showDatePickerDialog() {
         hideSoftKeyboard();
         HomeActivity ho = (HomeActivity) getActivity();
@@ -121,6 +149,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         datePicker.setOnDateSetListener(this);
         datePicker.show(ho.getFragmentManager(),DatePickerFragment.class.getSimpleName());
     }
+
     private void hideSoftKeyboard() {
         try{
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
@@ -129,7 +158,16 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
             e.printStackTrace();
         }
     }
+
     public VentasRequestt getVentaRequest() {
         return ventaRequest;
+    }
+
+    @Override
+    public void photoTaked(Bitmap photo) {
+        Log.d(TAG, "photoTaked() called with: photo = [" + photo + "]");
+        if(null != ivPhoto){
+            ivPhoto.setImageBitmap(photo);
+        }
     }
 }

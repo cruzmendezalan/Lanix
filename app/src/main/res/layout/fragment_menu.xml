@@ -111,6 +111,7 @@
                     android:textColor="@color/white"
                     android:id="@+id/btn_sync"
                     android:text="Sincronización"
+                    android:visibility="gone"
                     android:drawableRight="@drawable/reload"
                     android:layout_margin="0dp"
                     android:layout_width="match_parent"
