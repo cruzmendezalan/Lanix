@@ -10,9 +10,11 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -36,6 +38,7 @@ import com.crashlytics.android.Crashlytics;
 import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.controllers.AuthController;
 import com.devops.krakenlabs.lanix.controllers.GPSController;
+import com.devops.krakenlabs.lanix.controllers.ImageManager;
 import com.devops.krakenlabs.lanix.listeners.SessionNotifier;
 import com.devops.krakenlabs.lanix.models.EventEntradaRequest;
 import com.devops.krakenlabs.lanix.models.asistencia.AsistenciaResponse;
@@ -62,9 +65,14 @@ import com.stepstone.stepper.Step;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -129,8 +137,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String SAVED     = "saved";  //  <--- To save password
 
     private ImageView         ivPhoto;
-    private ArrayList<Bitmap> photosArray;
+    private HashMap<String,Bitmap> photosArray;
     private PhotoNotifier     photoNotifier;
+    private  SimpleDateFormat sdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +199,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         frameLayout.setVisibility(View.VISIBLE);
         llAsistencia   = findViewById(R.id.ll_asistencia);
         activeFragment = new MenuFragment();
-        photosArray    = new ArrayList<>();
+        photosArray    = new HashMap<>();
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fl_container, activeFragment).commit();
 
@@ -536,18 +546,25 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
+        super.onActivityResult(requestCode, resultCode, data);
         try{
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 try{
-                    Bundle extras      = data.getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    if(null != imageBitmap){
-                        photosArray.add(imageBitmap);
-                        if (photoNotifier != null){
-                            photoNotifier.photoTaked(imageBitmap);
-                        }
+                    if (photoNotifier != null){
+                        photoNotifier.photoTaked(data.getData());
                     }
-                    ivPhoto.setImageBitmap(imageBitmap);
+//                    Bundle extras      = data.getExtras();
+//                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+//
+//                    if(null != imageBitmap){
+//                        if (photoNotifier != null){
+//                            photoNotifier.photoTaked(data.getData());
+//                        }
+//                    }
+//                    ivPhoto.setImageBitmap(imageBitmap);
+                    return;
+
                  }catch (Exception e){
                    e.printStackTrace();
                 }
@@ -560,13 +577,57 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     ventasSecondStepFragment.setTvImei(result.getContents());
                 }
-            } else {
-                super.onActivityResult(requestCode, resultCode, data);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    public void uploadImage(Uri bitmap, final String imageName) {
+        Log.d(TAG, "uploadImage() called with: imageUri = [" + bitmap + "]");
+        try {
+
+//            int byteSize = bitmap.getRowBytes() * bitmap.getHeight();
+//            ByteBuffer byteBuffer = ByteBuffer.allocate(byteSize);
+//            bitmap.copyPixelsToBuffer(byteBuffer);
+//
+//            byte[] byteArray = byteBuffer.array();
+//            final InputStream imageStream = new ByteArrayInputStream(byteArray);
+            final InputStream imageStream = getContentResolver().openInputStream(bitmap);
+            final int imageLength = imageStream.available();
+
+            final Handler handler = new Handler();
+
+            Thread th = new Thread(new Runnable() {
+                public void run() {
+                    try {
+                         ImageManager.UploadImage(imageStream, imageLength, imageName);
+
+                        handler.post(new Runnable() {
+
+                            public void run() {
+                                Toast.makeText(HomeActivity.this, "Imagen enviada. Nombre = " + imageName, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    catch(Exception ex) {
+                        ex.printStackTrace();
+                        final String exceptionMessage = ex.getMessage();
+                        handler.post(new Runnable() {
+                            public void run() {
+                                Toast.makeText(HomeActivity.this, "error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }});
+            th.start();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public boolean isNetworkOnline() {
         boolean status=false;
@@ -692,17 +753,21 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public void dispatchTakePictureIntent() {
         try{
             Log.d(TAG, "dispatchTakePictureIntent() called");
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+//            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//            }
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
          }catch (Exception e){
            e.printStackTrace();
         }
     }
 
     public interface PhotoNotifier{
-        void photoTaked(Bitmap photo);
+        void photoTaked(Uri photo);
     }
 
     public void setPhotoNotifier(PhotoNotifier photoNotifier) {

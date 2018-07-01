@@ -38,6 +38,7 @@ dependencies {
     implementation 'gr.escsoft.michaelprimez.revealedittext:RevealEditText:1.0.2'//Searchable inputs
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'//Dinamic textviewers
     implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
+    implementation 'com.microsoft.azure.android:azure-storage-android:0.8.0@aar'
 
     compile 'com.github.florent37:singledateandtimepicker:1.2.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {

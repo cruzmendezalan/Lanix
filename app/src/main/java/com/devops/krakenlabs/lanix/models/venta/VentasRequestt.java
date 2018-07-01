@@ -206,6 +206,7 @@ public class VentasRequestt implements LanixRequest {
 		this.cadenaComercialId = cadenaComercialId;
 	}
 
+
 	@Override
  	public String toString(){
 		return 

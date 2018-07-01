@@ -287,7 +287,13 @@ public class VentasSecondStepFragment extends Fragment implements Response.Error
         @Override
         public void onItemSelected(View view, int position, long id) {
             Log.d(TAG, "mOnModeloSelected() called with: view = [" + view + "], position = [" + position + "], id = [" + id + "]");
-            positionCatalogSelected = modelosAdapter.getmProductoId().get(position-1);
+            try{
+                positionCatalogSelected = modelosAdapter.getmProductoId().get(position-1);
+             }catch (Exception e){
+               e.printStackTrace();
+               positionCatalogSelected = 0;
+            }
+
         }
 
         @Override

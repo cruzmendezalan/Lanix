@@ -3,6 +3,7 @@ package com.devops.krakenlabs.lanix.ventas;
 
 import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,9 @@ import com.devops.krakenlabs.lanix.base.LanixApplication;
 import com.devops.krakenlabs.lanix.models.venta.VentasRequestt;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -39,6 +43,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     private VentasRequestt       ventaRequest;
     private ImageView            ivCamera;
     private ImageView            ivPhoto;
+    private Uri               image;
 
     private void assignViews() {
         try{
@@ -119,6 +124,15 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
         ventaRequest  = new VentasRequestt(tvNombre.getText().toString(), "",tvFecha.getText().toString(),tvApPat.getText().toString(),tvEmail.getText().toString(),
                 "", UUID.randomUUID().toString(), tvTicket.getText().toString(), "",
                 LanixApplication.getInstance().getAuthController().getUser().getSesion().getIdentificador(), "" );
+
+        if(null != image){
+            HomeActivity ho = (HomeActivity) getActivity();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
+            String name          = sdf.format(new Date());
+            Log.w(TAG, "verifyStep: "+name );
+            ho.uploadImage(image, name);
+            ventaRequest.setImagenTicket(name);
+        }
         ventaRequest.setTienda(tvTienda.getText().toString());
         //return null if the user can go to the next step, create a new VerificationError instance otherwise
         return null;
@@ -164,10 +178,11 @@ public class VentasFirstStepFragment extends Fragment implements Step,DatePicker
     }
 
     @Override
-    public void photoTaked(Bitmap photo) {
+    public void photoTaked(Uri photo) {
         Log.d(TAG, "photoTaked() called with: photo = [" + photo + "]");
+        this.image = photo;
         if(null != ivPhoto){
-            ivPhoto.setImageBitmap(photo);
+            ivPhoto.setImageURI(photo);
         }
     }
 }
