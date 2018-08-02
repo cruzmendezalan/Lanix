@@ -69,8 +69,6 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     btnSync = viewRoot.findViewById(R.id.btn_sync);
     tvNombre = viewRoot.findViewById(R.id.tv_nombre);
     btnMisVentas = viewRoot.findViewById(R.id.btn_mis_ventas);
-
-
     fillUI();
     btnVentas.setOnClickListener(this);
     btnAsistencia.setOnClickListener(this);
