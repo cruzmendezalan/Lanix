@@ -176,8 +176,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         btnGps.setOnClickListener(this);
         try{
             promotorName.setText(authController.getUser().getPromotor().getNombres() + " " + authController.getUser().getPromotor().getApellidoPaterno());
+
+
+
+
         }catch (Exception e){
             e.printStackTrace();
+            Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         }
         cardEntrada.setOnClickListener(this);
         cardSalidaC.setOnClickListener(this);
