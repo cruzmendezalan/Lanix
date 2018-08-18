@@ -7,19 +7,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -62,9 +66,11 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.Step;
 import org.json.JSONObject;
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,6 +79,8 @@ import java.util.HashMap;
 import io.fabric.sdk.android.Fabric;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class HomeActivity extends FragmentActivity implements OnMapReadyCallback,
     View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener, SessionNotifier {
@@ -149,6 +157,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     mapFragment.getMapAsync(this);
     permissions.add(ACCESS_FINE_LOCATION);
     permissions.add(ACCESS_COARSE_LOCATION);
+    permissions.add(WRITE_EXTERNAL_STORAGE);
+    permissions.add(READ_EXTERNAL_STORAGE);
 
     permissionsToRequest = findUnAskedPermissions(permissions);
     // get the permissions we have asked for before but are not granted..
@@ -409,7 +419,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     switch (id) {
       case R.id.btn_gps: {
         // ubicationFromGooglePlay = !ubicationFromGooglePlay;
-        dispatchTakePictureIntent();
+        try {
+          dispatchTakePictureIntent();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         break;
       }
 
@@ -549,35 +563,67 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     this.ventasThirdStepFragmentFragment = ventasThirdStepFragmentFragment;
   }
 
+  private static final int REQUEST_TAKE_PHOTO = 1;
+  private Uri imageUri;
+  String mCurrentPhotoPath;
+
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode
         + "], resultCode = [" + resultCode + "], data = [" + data + "]");
     super.onActivityResult(requestCode, resultCode, data);
     try {
-      if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-        try {
-          if (photoNotifier != null) {
-            photoNotifier.photoTaked(data.getData());
-          }
-          // Bundle extras = data.getExtras();
-          // Bitmap imageBitmap = (Bitmap) extras.get("data");
-          //
-          // if(null != imageBitmap){
-          // if (photoNotifier != null){
-          // photoNotifier.photoTaked(data.getData());
-          // }
-          // }
-          // ivPhoto.setImageBitmap(imageBitmap);
-          return;
 
-        } catch (Exception e) {
-          e.printStackTrace();
+      if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+        this.imageUri = data.getData();
+        // this.imageView.setImageURI(this.imageUri);
+        // this.uploadImageButton.setEnabled(true);
+
+        // Show the thumbnail on ImageView
+        this.imageUri = Uri.parse(mCurrentPhotoPath);
+        File file = new File(this.imageUri.getPath());
+        try {
+          InputStream ims = new FileInputStream(file);
+          // imageView.setImageBitmap(BitmapFactory.decodeStream(ims));
+          if (photoNotifier != null) {
+            photoNotifier.photoTaked(BitmapFactory.decodeStream(ims));
+          }
+        } catch (FileNotFoundException e) {
+          return;
         }
 
+        // ScanFile so it will be appeared on Gallery
+        MediaScannerConnection.scanFile(HomeActivity.this, new String[] {imageUri.getPath()}, null,
+            new MediaScannerConnection.OnScanCompletedListener() {
+              public void onScanCompleted(String path, Uri uri) {}
+            });
       }
 
+      // if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+      // try {
+      // if (photoNotifier != null) {
+      // photoNotifier.photoTaked(data.getData());
+      // }
+      // // Bundle extras = data.getExtras();
+      // // Bitmap imageBitmap = (Bitmap) extras.get("data");
+      // //
+      // // if(null != imageBitmap){
+      // // if (photoNotifier != null){
+      // // photoNotifier.photoTaked(data.getData());
+      // // }
+      // // }
+      // // ivPhoto.setImageBitmap(imageBitmap);
+      // return;
+      //
+      // } catch (Exception e) {
+      // e.printStackTrace();
+      // }
+      //
+      // }
+
       IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      Log.i(TAG, "onActivityResult: " + result);
       if (result != null) {
         if (result.getContents() == null) {
         } else {
@@ -589,17 +635,60 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
   }
 
+
+  private File createImageFile() throws IOException {
+    // Create an image file name
+    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    String imageFileName = "JPEG_" + timeStamp + "_";
+    File storageDir =
+        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+            "Camera");
+    File image = File.createTempFile(imageFileName, /* prefix */
+        ".jpg", /* suffix */
+        storageDir /* directory */
+    );
+
+    // Save a file: path for use with ACTION_VIEW intents
+    mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+    return image;
+  }
+
+  public void dispatchTakePictureIntent() throws IOException {
+    Log.d(TAG, "dispatchTakePictureIntent() called");
+    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    // Ensure that there's a camera activity to handle the intent
+    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+      // Create the File where the photo should go
+      File photoFile = null;
+      try {
+        photoFile = createImageFile();
+      } catch (IOException ex) {
+        ex.printStackTrace();
+        // Error occurred while creating the File
+        return;
+      }
+      // Continue only if the File was successfully created
+      if (photoFile != null) {
+        Uri photoURI =
+            FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider",
+                createImageFile());
+        Log.i(TAG, "dispatchTakePictureIntent: " + photoURI);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+      }
+    }
+  }
+
   public void uploadImage(Uri bitmap, final String imageName) {
     Log.d(TAG, "uploadImage() called with: imageUri = [" + bitmap + "]");
     try {
-
       // int byteSize = bitmap.getRowBytes() * bitmap.getHeight();
       // ByteBuffer byteBuffer = ByteBuffer.allocate(byteSize);
       // bitmap.copyPixelsToBuffer(byteBuffer);
       //
       // byte[] byteArray = byteBuffer.array();
       // final InputStream imageStream = new ByteArrayInputStream(byteArray);
-      final InputStream imageStream = getContentResolver().openInputStream(bitmap);
+      final InputStream imageStream = getContentResolver().openInputStream(this.imageUri);
       final int imageLength = imageStream.available();
 
       final Handler handler = new Handler();
@@ -610,7 +699,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             ImageManager.UploadImage(imageStream, imageLength, imageName);
 
             handler.post(new Runnable() {
-
               public void run() {
                 Toast.makeText(HomeActivity.this, "Imagen enviada. Nombre = " + imageName,
                     Toast.LENGTH_SHORT).show();
@@ -756,24 +844,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
   static final int REQUEST_IMAGE_CAPTURE = 10001;
 
-  public void dispatchTakePictureIntent() {
-    try {
-      Log.d(TAG, "dispatchTakePictureIntent() called");
-      // Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      // if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-      // startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-      // }
-      Intent intent = new Intent();
-      intent.setType("image/*");
-      intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
   public interface PhotoNotifier {
-    void photoTaked(Uri photo);
+    void photoTaked(Bitmap photo);
   }
 
   public void setPhotoNotifier(PhotoNotifier photoNotifier) {
