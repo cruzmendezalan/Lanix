@@ -7,8 +7,8 @@ android {
         applicationId "com.devops.krakenlabs.lanix"
         minSdkVersion 23
         targetSdkVersion 26
-        versionCode 1069
-        versionName "1.069"
+        versionCode 1085
+        versionName "1.085"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
