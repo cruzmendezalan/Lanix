@@ -22,12 +22,20 @@
         <item name="android:textColorPrimaryInverse">@color/lanix_gris_claro</item>
         <item name="md_content_color">@color/colorPrimary</item>
         <item name="md_title_color">@color/colorPrimary</item>
+        <item name="android:popupBackground">@android:color/transparent</item>
+
     </style>
 
     <style name="LanixTextView" parent="android:Widget.TextView">
         <item name="android:textColor">#F00</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Autocomplete" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:popupBackground">@android:color/transparent</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
     <!--<style name="Autocomplete">-->
         <!--<item name="colorControlNormal">@color/colorPrimary</item>-->
         <!--<item name="colorControlActivated">@color/colorPrimary</item>-->

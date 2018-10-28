@@ -98,6 +98,13 @@ public class GPSController extends Service implements LocationListener {
             e.printStackTrace();
         }
 
+        boolean isMock = false;
+        if (android.os.Build.VERSION.SDK_INT >= 18) {
+            isMock = loc.isFromMockProvider();
+        } else {
+            isMock = !Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
+        }
+        Log.e(TAG, "getLocation: "+isMock );
         return loc;
     }
 

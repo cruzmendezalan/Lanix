@@ -217,7 +217,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     ft.add(R.id.fl_container, activeFragment).commit();
-
   }
 
   private void refreshByServices(Location location) {
@@ -418,12 +417,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     int id = view.getId();
     switch (id) {
       case R.id.btn_gps: {
-        // ubicationFromGooglePlay = !ubicationFromGooglePlay;
-        try {
-          dispatchTakePictureIntent();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        ubicationFromGooglePlay = !ubicationFromGooglePlay;
         break;
       }
 
