@@ -19,6 +19,7 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -370,13 +371,36 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     }
   }
 
+  private AlertDialog.Builder builder;
   private void refreshLocationByGPS() {
     try {
       // Log.d(TAG, "refreshLocationByGPS() called");
       if (mapa != null) {
         GPSController = new GPSController(HomeActivity.this);
         if (GPSController.canGetLocation() && GPSController.getLoc() != null) {
+          boolean isMock = false;
+          if (android.os.Build.VERSION.SDK_INT >= 18) {
+            isMock = GPSController.getLoc().isFromMockProvider();
+          } else {
+            isMock = !Settings.Secure.getString(btnGps.getContext().getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
+          }
+          if (isMock ){
+            if (builder == null){
+              builder = new AlertDialog.Builder(this);
+              builder.setMessage("Desactiva el modo desarrollador para regitrar tu asistencia")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                      }
+                    });
+              AlertDialog alert = builder.create();
+              alert.show();
+            }
+
+          }
           updateMap(GPSController.getLatitude(), GPSController.getLongitude());
+
         }
       }
     } catch (Exception e) {
