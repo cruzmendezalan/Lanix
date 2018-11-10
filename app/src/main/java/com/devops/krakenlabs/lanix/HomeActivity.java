@@ -67,6 +67,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.Step;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -149,6 +151,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Log.i(TAG, "onCreate: ");
     Fabric.with(this, new Crashlytics());
     setContentView(R.layout.f_asistencia);
     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -186,8 +189,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     try {
       promotorName.setText(authController.getUser().getPromotor().getNombres() + " "
           + authController.getUser().getPromotor().getApellidoPaterno());
-
-
     } catch (Exception e) {
       e.printStackTrace();
 
@@ -323,6 +324,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
   @Override
   protected void onResume() {
     super.onResume();
+    Log.d(TAG, "onResume() called");
     isPaused = false;
     updateMap();
     relogin();
@@ -581,35 +583,84 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     this.ventasThirdStepFragmentFragment = ventasThirdStepFragmentFragment;
   }
 
-  private static final int REQUEST_TAKE_PHOTO = 1;
+  private static final int REQUEST_TAKE_PHOTO = 10001;
   private Uri imageUri;
   String mCurrentPhotoPath;
 
+  public void dispatchTakePictureIntent() throws IOException {
+    Log.d(TAG, "dispatchTakePictureIntent() called");
+    Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//    // Ensure that there's a camera activity to handle the intent
+//    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//      // Create the File where the photo should go
+//      File photoFile = null;
+//      try {
+//        photoFile = createImageFile();
+//      } catch (IOException ex) {
+//        ex.printStackTrace();
+//        // Error occurred while creating the File
+//        return;
+//      }
+//      // Continue only if the File was successfully created
+//      if (photoFile != null) {
+//        Uri photoURI =
+//              FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider",
+//                    createImageFile());
+//        Log.i(TAG, "dispatchTakePictureIntent: " + photoURI);
+//        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//      }
+//    }
+  }
+
+  public Uri getImageUri(Context inContext, Bitmap inImage, String imageName) {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+    String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+    return Uri.parse(path);
+  }
+
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode
-        + "], resultCode = [" + resultCode + "], data = [" + data + "]");
     super.onActivityResult(requestCode, resultCode, data);
+    Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode
+          + "], resultCode = [" + resultCode + "], data = [" + data + "]");
     try {
 
-      if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+      if (requestCode == REQUEST_TAKE_PHOTO) {
 
         this.imageUri = data.getData();
+        Bitmap photo = (Bitmap) data.getExtras().get("data");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_.jpg";
+        imageUri = getImageUri(this,photo,imageFileName);
+        uploadImage(imageUri,imageFileName);
+        if (photoNotifier != null) {
+          Log.i(TAG, "onActivityResult: sending bitmap");
+          photoNotifier.photoTaked(photo,imageFileName);
+        }else{
+          Log.w(TAG, "onActivityResult: photoNotifier is null");
+        }
+
         // this.imageView.setImageURI(this.imageUri);
         // this.uploadImageButton.setEnabled(true);
 
         // Show the thumbnail on ImageView
-        this.imageUri = Uri.parse(mCurrentPhotoPath);
-        File file = new File(this.imageUri.getPath());
-        try {
-          InputStream ims = new FileInputStream(file);
-          // imageView.setImageBitmap(BitmapFactory.decodeStream(ims));
-          if (photoNotifier != null) {
-            photoNotifier.photoTaked(BitmapFactory.decodeStream(ims));
-          }
-        } catch (FileNotFoundException e) {
-          return;
-        }
+//        this.imageUri = Uri.parse(mCurrentPhotoPath);
+//        File file = new File(this.imageUri.getPath());
+//
+//        try {
+//          InputStream ims = new FileInputStream(file);
+//          // imageView.setImageBitmap(BitmapFactory.decodeStream(ims));
+//          if (photoNotifier != null) {
+//            photoNotifier.photoTaked(BitmapFactory.decodeStream(ims));
+//          }
+//        } catch (FileNotFoundException e) {
+//          e.printStackTrace();
+//          return;
+//        }
 
         // ScanFile so it will be appeared on Gallery
         MediaScannerConnection.scanFile(HomeActivity.this, new String[] {imageUri.getPath()}, null,
@@ -617,6 +668,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
               public void onScanCompleted(String path, Uri uri) {}
             });
       }
+
 
       // if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       // try {
@@ -640,14 +692,14 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
       //
       // }
 
-      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-      Log.i(TAG, "onActivityResult: " + result);
-      if (result != null) {
-        if (result.getContents() == null) {
-        } else {
-          ventasSecondStepFragment.setTvImei(result.getContents());
-        }
-      }
+//      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//      Log.i(TAG, "onActivityResult: " + result);
+//      if (result != null) {
+//        if (result.getContents() == null) {
+//        } else {
+//          ventasSecondStepFragment.setTvImei(result.getContents());
+//        }
+//      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -655,6 +707,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
 
   private File createImageFile() throws IOException {
+    Log.d(TAG, "createImageFile() called");
     // Create an image file name
     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     String imageFileName = "JPEG_" + timeStamp + "_";
@@ -671,34 +724,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     return image;
   }
 
-  public void dispatchTakePictureIntent() throws IOException {
-    Log.d(TAG, "dispatchTakePictureIntent() called");
-    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    // Ensure that there's a camera activity to handle the intent
-    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-      // Create the File where the photo should go
-      File photoFile = null;
-      try {
-        photoFile = createImageFile();
-      } catch (IOException ex) {
-        ex.printStackTrace();
-        // Error occurred while creating the File
-        return;
-      }
-      // Continue only if the File was successfully created
-      if (photoFile != null) {
-        Uri photoURI =
-            FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider",
-                createImageFile());
-        Log.i(TAG, "dispatchTakePictureIntent: " + photoURI);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-      }
-    }
-  }
 
   public void uploadImage(Uri bitmap, final String imageName) {
-    Log.d(TAG, "uploadImage() called with: imageUri = [" + bitmap + "]");
+    Log.d(TAG, "uploadImage() called with: bitmap = [" + bitmap + "], imageName = [" + imageName + "]");
     try {
       // int byteSize = bitmap.getRowBytes() * bitmap.getHeight();
       // ByteBuffer byteBuffer = ByteBuffer.allocate(byteSize);
@@ -718,6 +746,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
             handler.post(new Runnable() {
               public void run() {
+                Log.i(TAG, "run: ");
                 Toast.makeText(HomeActivity.this, "Imagen enviada. Nombre = " + imageName,
                     Toast.LENGTH_SHORT).show();
               }
@@ -863,10 +892,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
   static final int REQUEST_IMAGE_CAPTURE = 10001;
 
   public interface PhotoNotifier {
-    void photoTaked(Bitmap photo);
+    void photoTaked(Bitmap photo, String fileName);
   }
 
   public void setPhotoNotifier(PhotoNotifier photoNotifier) {
+    Log.d(TAG, "setPhotoNotifier() called with: photoNotifier = [" + photoNotifier + "]");
     this.photoNotifier = photoNotifier;
   }
 }

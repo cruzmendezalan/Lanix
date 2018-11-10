@@ -101,6 +101,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,
         showDatePickerDialog();
       }
     });
+    Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
     return rootView;
   }
 
@@ -181,11 +182,12 @@ public class VentasFirstStepFragment extends Fragment implements Step,
   }
 
   @Override
-  public void photoTaked(Bitmap photo) {
+  public void photoTaked(Bitmap photo,String fileName) {
     Log.d(TAG, "photoTaked() called with: photo = [" + photo + "]");
     this.image = photo;
     if (null != ivPhoto) {
       ivPhoto.setImageBitmap(photo);
+      tvTicket.setText(fileName);
     }
   }
 }
