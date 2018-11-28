@@ -110,7 +110,8 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/iv_photo"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:visibility="gone"
+            android:layout_width="540dp"
+            android:layout_height="540dp" />
     </LinearLayout>
 </RelativeLayout>

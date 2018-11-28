@@ -122,7 +122,7 @@ public class VentasFirstStepFragment extends Fragment implements Step,
 
     ventaRequest =
         new VentasRequestt(tvNombre.getText().toString(), "", tvFecha.getText().toString(), tvApPat
-            .getText().toString(), tvEmail.getText().toString(), "", UUID.randomUUID().toString(),
+            .getText().toString(), tvEmail.getText().toString(), fileNAme, UUID.randomUUID().toString(),
             tvTicket.getText().toString(), "", LanixApplication.getInstance().getAuthController()
                 .getUser().getSesion().getIdentificador(), "");
 
@@ -181,13 +181,14 @@ public class VentasFirstStepFragment extends Fragment implements Step,
     return ventaRequest;
   }
 
+  String fileNAme;
   @Override
   public void photoTaked(Bitmap photo,String fileName) {
     Log.d(TAG, "photoTaked() called with: photo = [" + photo + "]");
     this.image = photo;
     if (null != ivPhoto) {
+      this.fileNAme = fileName;
       ivPhoto.setImageBitmap(photo);
-      tvTicket.setText(fileName);
     }
   }
 }

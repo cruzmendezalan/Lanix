@@ -587,32 +587,31 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
   private Uri imageUri;
   String mCurrentPhotoPath;
 
-  public void dispatchTakePictureIntent() throws IOException {
-    Log.d(TAG, "dispatchTakePictureIntent() called");
-    Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+  private String pictureImagePath = "";
 
-    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//    // Ensure that there's a camera activity to handle the intent
-//    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//      // Create the File where the photo should go
-//      File photoFile = null;
-//      try {
-//        photoFile = createImageFile();
-//      } catch (IOException ex) {
-//        ex.printStackTrace();
-//        // Error occurred while creating the File
-//        return;
-//      }
-//      // Continue only if the File was successfully created
-//      if (photoFile != null) {
-//        Uri photoURI =
-//              FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider",
-//                    createImageFile());
-//        Log.i(TAG, "dispatchTakePictureIntent: " + photoURI);
-//        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-//        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//      }
-//    }
+
+  File file;
+  String imageFileName;
+  public void dispatchTakePictureIntent() throws IOException {
+
+    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    this.imageFileName = timeStamp + ".jpg";
+    final String dir = Environment.getExternalStorageDirectory() + "/";
+    File newdir = new File(dir);
+    newdir.mkdirs();
+
+
+    pictureImagePath = dir + "/" + imageFileName;
+    File file = new File(pictureImagePath);
+    this.imageUri = FileProvider.getUriForFile(
+          HomeActivity.this,
+          getApplication().getPackageName() + ".provider",
+          file);
+
+    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+    startActivityForResult(cameraIntent, REQUEST_TAKE_PHOTO);
+
   }
 
   public Uri getImageUri(Context inContext, Bitmap inImage, String imageName) {
@@ -631,75 +630,28 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
       if (requestCode == REQUEST_TAKE_PHOTO) {
 
-        this.imageUri = data.getData();
-        Bitmap photo = (Bitmap) data.getExtras().get("data");
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_.jpg";
-        imageUri = getImageUri(this,photo,imageFileName);
-        uploadImage(imageUri,imageFileName);
+        File imgFile = new  File(pictureImagePath);
+        if(imgFile.exists()){
+          Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+          uploadImage(myBitmap, this.imageFileName);
+          ivPhoto.setImageBitmap(myBitmap);
+        }else{
+          Log.e(TAG, "onActivityResult: file not exist" );
+        }
+
+        this.ivPhoto.setImageURI(this.imageUri);
+
+
         if (photoNotifier != null) {
           Log.i(TAG, "onActivityResult: sending bitmap");
-          photoNotifier.photoTaked(photo,imageFileName);
+          photoNotifier.photoTaked(null,imageFileName);
         }else{
           Log.w(TAG, "onActivityResult: photoNotifier is null");
         }
 
-        // this.imageView.setImageURI(this.imageUri);
-        // this.uploadImageButton.setEnabled(true);
 
-        // Show the thumbnail on ImageView
-//        this.imageUri = Uri.parse(mCurrentPhotoPath);
-//        File file = new File(this.imageUri.getPath());
-//
-//        try {
-//          InputStream ims = new FileInputStream(file);
-//          // imageView.setImageBitmap(BitmapFactory.decodeStream(ims));
-//          if (photoNotifier != null) {
-//            photoNotifier.photoTaked(BitmapFactory.decodeStream(ims));
-//          }
-//        } catch (FileNotFoundException e) {
-//          e.printStackTrace();
-//          return;
-//        }
-
-        // ScanFile so it will be appeared on Gallery
-        MediaScannerConnection.scanFile(HomeActivity.this, new String[] {imageUri.getPath()}, null,
-            new MediaScannerConnection.OnScanCompletedListener() {
-              public void onScanCompleted(String path, Uri uri) {}
-            });
       }
 
-
-      // if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      // try {
-      // if (photoNotifier != null) {
-      // photoNotifier.photoTaked(data.getData());
-      // }
-      // // Bundle extras = data.getExtras();
-      // // Bitmap imageBitmap = (Bitmap) extras.get("data");
-      // //
-      // // if(null != imageBitmap){
-      // // if (photoNotifier != null){
-      // // photoNotifier.photoTaked(data.getData());
-      // // }
-      // // }
-      // // ivPhoto.setImageBitmap(imageBitmap);
-      // return;
-      //
-      // } catch (Exception e) {
-      // e.printStackTrace();
-      // }
-      //
-      // }
-
-//      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//      Log.i(TAG, "onActivityResult: " + result);
-//      if (result != null) {
-//        if (result.getContents() == null) {
-//        } else {
-//          ventasSecondStepFragment.setTvImei(result.getContents());
-//        }
-//      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -721,11 +673,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Save a file: path for use with ACTION_VIEW intents
     mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+    Log.e(TAG, "createImageFile: "+image );
     return image;
   }
 
 
-  public void uploadImage(Uri bitmap, final String imageName) {
+  public void uploadImage(Bitmap bitmap, final String imageName) {
     Log.d(TAG, "uploadImage() called with: bitmap = [" + bitmap + "], imageName = [" + imageName + "]");
     try {
       // int byteSize = bitmap.getRowBytes() * bitmap.getHeight();
@@ -736,6 +689,9 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
       // final InputStream imageStream = new ByteArrayInputStream(byteArray);
       final InputStream imageStream = getContentResolver().openInputStream(this.imageUri);
       final int imageLength = imageStream.available();
+
+      Log.w(TAG, "uploadImage: "+imageStream );
+      Log.i(TAG, "uploadImage: "+imageLength);
 
       final Handler handler = new Handler();
 
